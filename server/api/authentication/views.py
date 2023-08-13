@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt import exceptions
 from django.conf import settings
+from django.core.mail import send_mail
 
 
 from .models import AuthCodeModel, UserModel
@@ -23,6 +24,14 @@ class SendCodeView(APIView):
         
         phone = serializer.validated_data['phone']
         code = AuthCodeModel.generate_code(phone)
+        
+        send_mail(
+            "Baza code",
+            f"Phone: {phone}\nCode: {code}",
+            "fofuhupopo@gmail.com",
+            ["dajngo.email@yandex.ru"],
+            fail_silently=False,
+        )
         
         print(f"{code.phone}: {code.code}")
 
