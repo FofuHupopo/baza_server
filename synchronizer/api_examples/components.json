@@ -1,0 +1,60 @@
+{
+    "context": {
+        "employee": {
+            "meta": {
+                "href": "https://online.moysklad.ru/api/remap/1.2/context/employee",
+                "metadataHref": "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                "type": "employee",
+                "mediaType": "application/json"
+            }
+        }
+    },
+    "meta": {
+        "href": "https://online.moysklad.ru/api/remap/1.2/entity/bundle/39e945b2-14e7-11ee-0a80-043b0011d8c6/components",
+        "type": "bundlecomponent",
+        "mediaType": "application/json",
+        "size": 2,
+        "limit": 1000,
+        "offset": 0
+    },
+    "rows": [
+        {
+            "meta": {
+                "href": "https://online.moysklad.ru/api/remap/1.2/entity/bundle/39e945b2-14e7-11ee-0a80-043b0011d8c6/components/39e94aca-14e7-11ee-0a80-043b0011d8ca",
+                "type": "bundlecomponent",
+                "mediaType": "application/json"
+            },
+            "id": "39e94aca-14e7-11ee-0a80-043b0011d8ca",
+            "accountId": "c5ce8d2c-b068-11ed-0a80-0e9500015e94",
+            "assortment": {
+                "meta": {
+                    "href": "https://online.moysklad.ru/api/remap/1.2/entity/variant/cad9fbea-136e-11ee-0a80-14690025c678",
+                    "metadataHref": "https://online.moysklad.ru/api/remap/1.2/entity/variant/metadata",
+                    "type": "variant",
+                    "mediaType": "application/json",
+                    "uuidHref": "https://online.moysklad.ru/app/#feature/edit?id=cad9f65e-136e-11ee-0a80-14690025c675"
+                }
+            },
+            "quantity": 1.0
+        },
+        {
+            "meta": {
+                "href": "https://online.moysklad.ru/api/remap/1.2/entity/bundle/39e945b2-14e7-11ee-0a80-043b0011d8c6/components/39e94b3a-14e7-11ee-0a80-043b0011d8cb",
+                "type": "bundlecomponent",
+                "mediaType": "application/json"
+            },
+            "id": "39e94b3a-14e7-11ee-0a80-043b0011d8cb",
+            "accountId": "c5ce8d2c-b068-11ed-0a80-0e9500015e94",
+            "assortment": {
+                "meta": {
+                    "href": "https://online.moysklad.ru/api/remap/1.2/entity/variant/7cc7d1f0-14e6-11ee-0a80-089c00106a6d",
+                    "metadataHref": "https://online.moysklad.ru/api/remap/1.2/entity/variant/metadata",
+                    "type": "variant",
+                    "mediaType": "application/json",
+                    "uuidHref": "https://online.moysklad.ru/app/#feature/edit?id=7cc7c8ef-14e6-11ee-0a80-089c00106a6b"
+                }
+            },
+            "quantity": 1.0
+        }
+    ]
+}
