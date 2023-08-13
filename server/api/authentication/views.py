@@ -9,7 +9,7 @@ from django.conf import settings
 
 
 from .models import AuthCodeModel, UserModel
-from .serializers import PhoneNumberSerializer, LoginSerializer
+from .serializers import PhoneNumberSerializer, LoginSerializer, UserDataSerialzier
 
 
 class SendCodeView(APIView):
@@ -69,25 +69,38 @@ class LoginView(APIView):
     def generate_response(user: UserModel) -> Response:
         refresh_token: RefreshToken = RefreshToken.for_user(user)
         access_token = refresh_token.access_token
-    
+
+        user_serializer = UserDataSerialzier(user)
+
         response = Response(
             {
                 "access_token": str(access_token),
+                "user": user_serializer.data,
                 # "refresh_token": str(refresh_token),
             },
             status.HTTP_200_OK
         )
 
+        # response.set_cookie(
+        #     key=settings.SIMPLE_JWT["AUTH_COOKIE"],
+        #     value=str(refresh_token),
+        #     max_age=settings.SIMPLE_JWT["MAX_AGE"],
+        #     secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+        #     httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+        #     samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+        #     domain=settings.SIMPLE_JWT['AUTH_COOKIE_DOMAIN']
+        # )
+
         response.set_cookie(
-            key=settings.SIMPLE_JWT["AUTH_COOKIE"],
-            value=str(refresh_token),
-            max_age=settings.SIMPLE_JWT["MAX_AGE"],
+            key="access_token",
+            value=str(access_token),
+            max_age=60 * 60 * 24 * 30,
             secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
             httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
             samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
             domain=settings.SIMPLE_JWT['AUTH_COOKIE_DOMAIN']
         )
-        
+
         return response
 
 

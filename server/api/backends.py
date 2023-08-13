@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import BaseBackend
-from django.core.exceptions import ValidationError
 
+from rest_framework_simplejwt import authentication
 
 
 class PhoneBackend(BaseBackend):
@@ -28,3 +28,11 @@ class PhoneBackend(BaseBackend):
             return UserModel.objects.get(pk=user_id)
         except UserModel.DoesNotExist:
             return None
+
+
+class CookiesJWTAuthentication(authentication.JWTAuthentication):
+    def get_header(self, request):
+        access_token = request.COOKIES.get("access_token")
+
+        if access_token:
+            return f"Bearer {access_token}".encode("utf-8")
