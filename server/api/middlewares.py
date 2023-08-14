@@ -1,4 +1,4 @@
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, TokenError
 from django.contrib.auth import get_user_model
 from django.conf import settings
 
@@ -15,7 +15,12 @@ class UpdateAccessTokenMiddleware(object):
         if not token:
             return response
         
-        access_token = AccessToken(token)
+        try:
+            access_token = AccessToken(token)
+        except TokenError:
+            response.delete_cookie("access_token")
+            return response
+
         user_id = access_token.payload.get("user_id")
         
         if not user_id:
