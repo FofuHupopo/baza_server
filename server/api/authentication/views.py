@@ -6,7 +6,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt import exceptions
 from django.conf import settings
-from django.core.mail import send_mail
 
 
 from .models import AuthCodeModel, UserModel
@@ -15,9 +14,10 @@ from .serializers import PhoneNumberSerializer, LoginSerializer, UserDataSerialz
 
 class SendCodeView(APIView):
     permission_classes = (AllowAny, )
+    serializer_class = PhoneNumberSerializer
 
     def post(self, request: Request):
-        serializer = PhoneNumberSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
     
         if not serializer.is_valid():
             return Response(serializer.errors)
@@ -25,19 +25,12 @@ class SendCodeView(APIView):
         phone = serializer.validated_data['phone']
         code = AuthCodeModel.generate_code(phone)
         
-        send_mail(
-            "Baza code",
-            f"Phone: {phone}\nCode: {code}",
-            "fofuhupopo@gmail.com",
-            ["dajngo.email@yandex.ru"],
-            fail_silently=False,
-        )
-        
         print(f"{code.phone}: {code.code}")
 
         return Response(
             {
-                "success": "Код был успешно отправлен."
+                "success": "Код был успешно отправлен.",
+                "code": f"{code.code}"
             },
             status.HTTP_201_CREATED
         )
@@ -45,9 +38,10 @@ class SendCodeView(APIView):
 
 class LoginView(APIView):
     permission_classes = (AllowAny, )
+    serializer_class= LoginSerializer
 
     def post(self, request: Request):
-        serializer = LoginSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
     
         if serializer.is_valid():
             phone = serializer.validated_data['phone']

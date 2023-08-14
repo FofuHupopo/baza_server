@@ -8,6 +8,7 @@ from django.conf import settings
 
 from api.products import models as product_models
 from api.products import serializers as product_serializers
+from api.authentication import serializers as auth_serializers
 
 
 class FavoritesView(APIView):
@@ -147,6 +148,33 @@ class BasketView(APIView):
         return product_modification
 
 
-class EditInfoView(APIView):
-    serializer_class = ...
+class InfoView(APIView):
+    serializer_class = auth_serializers.UserDataSerialzier
+    permission_classes = (IsAuthenticated, )
     
+    def get(self, request: Request):
+        serializer = self.serializer_class(request.user)
+        
+        return Response(
+            serializer.data,
+            status.HTTP_200_OK
+        )
+    
+    def put(self, request: Request):
+        serializer = self.serializer_class(
+            request.user,
+            request.data
+        )
+        
+        if serializer.is_valid():
+            serializer.save()
+            
+            return Response(
+                serializer.data,
+                status.HTTP_200_OK
+            )
+        
+        return Response(
+            serializer.errors,
+            status.HTTP_400_BAD_REQUEST
+        )

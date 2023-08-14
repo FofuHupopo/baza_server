@@ -44,6 +44,9 @@ class LoginSerializer(serializers.Serializer):
 
 
 class UserDataSerialzier(serializers.ModelSerializer):
+    email = serializers.EmailField(read_only=True)
+    phone = serializers.CharField(read_only=True)
+
     class Meta:
         model = models.UserModel
         fields = (
