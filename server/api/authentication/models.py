@@ -114,7 +114,7 @@ class AuthCodeModel(models.Model):
     @staticmethod
     def generate_code(phone: str) -> AuthCodeModel:
         return AuthCodeModel.objects.create(
-            phone=phone,
+            phone=UserModel.clear_phone(phone),
             code=random.randint(111111, 999999)
         )
         
