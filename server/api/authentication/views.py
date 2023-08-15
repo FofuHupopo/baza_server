@@ -56,12 +56,11 @@ class LoginView(APIView):
                     user = UserModel.objects.create_user(
                         phone=phone
                     )
-                    
-                print("!!!Ok")
         
                 return LoginView.generate_response(user)
 
             print("!!!Bad code")
+            print(phone, code)
             
             return Response(
                 {
@@ -144,7 +143,7 @@ class UpdateTokensView(APIView):
 
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated, )
-    
+
     def get(self, request: Request):
         response = Response(
             {
@@ -153,6 +152,7 @@ class LogoutView(APIView):
             status.HTTP_200_OK
         )
         
-        response.delete_cookie("access_token")
-        
+        if request.COOKIES.get("access_token"):
+            response.delete_cookie("access_token")
+
         return response
