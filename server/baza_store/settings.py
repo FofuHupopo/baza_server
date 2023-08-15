@@ -92,7 +92,7 @@ DATABASES = {
         'NAME': 'baza_store',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'iizhukov.site',
+        'HOST': 'iizhukov.sitbae',
         'PORT': '5432'
     }
 }
@@ -170,7 +170,7 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_SECURE': False,
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_PATH': '/',
-    'AUTH_COOKIE_SAMESITE': "Lax",
+    'AUTH_COOKIE_SAMESITE': "Strict",
 }
 
 
