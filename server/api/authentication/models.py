@@ -134,6 +134,8 @@ class AuthCodeModel(models.Model):
             code=code
         ).first()
         
+        print(authcode)
+        
         if authcode and authcode.lifetime > timezone.now():
             authcode.delete()
             return True
