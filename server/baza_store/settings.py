@@ -92,7 +92,7 @@ DATABASES = {
         'NAME': 'baza_store',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
+        'HOST': 'iizhukov.site',
         'PORT': '5432'
     }
 }
