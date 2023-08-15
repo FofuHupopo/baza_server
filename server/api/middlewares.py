@@ -1,6 +1,7 @@
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, TokenError
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.http.cookie import SimpleCookie
 
 
 class UpdateAccessTokenMiddleware(object):
@@ -12,9 +13,9 @@ class UpdateAccessTokenMiddleware(object):
         
         token = request.COOKIES.get("access_token")
         
-        if not token:
+        if not token or not response.get("access_token", {}).get("comment"):
             return response
-        
+
         try:
             access_token = AccessToken(token)
         except TokenError:

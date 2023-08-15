@@ -16,7 +16,6 @@ class PhoneBackend(BaseBackend):
             return None
         
         if user.check_password(password):
-            print("yes")
             return user
         else:
             return None
