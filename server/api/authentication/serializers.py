@@ -11,7 +11,7 @@ class PhoneNumberSerializer(serializers.Serializer):
         phone = PhoneNumberSerializer.clear_phone(value)
         
         if len(phone) != 11:
-            raise serializers.ValidationError("Номер телефона не соответствует формату.")
+            raise serializers.ValidationError("Номер телефона не соответствует формату.", 406)
         
         return phone
     
@@ -31,7 +31,7 @@ class LoginSerializer(serializers.Serializer):
         phone = PhoneNumberSerializer.clear_phone(value)
         
         if len(phone) != 11:
-            raise serializers.ValidationError("Номер телефона не соответствует формату.")
+            raise serializers.ValidationError("Номер телефона не соответствует формату.", 406)
 
         return phone
     
