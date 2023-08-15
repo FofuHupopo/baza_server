@@ -58,13 +58,13 @@ class LoginView(APIView):
                     )
         
                 return LoginView.generate_response(user)
-            else:
-                return Response(
-                    {
-                        "error": "Неправильный код."
-                    },
-                    status.HTTP_400_BAD_REQUEST
-                )
+
+            return Response(
+                {
+                    "error": "Неправильный код."
+                },
+                status.HTTP_400_BAD_REQUEST
+            )
         else:
             return Response(serializer.errors)
     
@@ -75,12 +75,17 @@ class LoginView(APIView):
 
         user_serializer = UserDataSerialzier(user)
 
+        # response = Response(
+        #     {
+        #         "access_token": str(access_token),
+        #         "user": user_serializer.data,
+        #         # "refresh_token": str(refresh_token),
+        #     },
+        #     status.HTTP_200_OK
+        # )
+        
         response = Response(
-            {
-                "access_token": str(access_token),
-                "user": user_serializer.data,
-                # "refresh_token": str(refresh_token),
-            },
+            user_serializer.data,
             status.HTTP_200_OK
         )
 
