@@ -85,5 +85,5 @@ def sync_bundle_by_id(bundle_id: str):
 if __name__ == "__main__":
     # uvicorn.run("main:app", host="0.0.0.0", port=4444, reload=True)
 
-    # sync.sync_products()
-    sync.sync_bundles()
+    sync.sync_products()
+    # sync.sync_bundles()
