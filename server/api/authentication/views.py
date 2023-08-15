@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request, HttpRequest
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt import exceptions
 from django.conf import settings
@@ -121,7 +121,7 @@ class LoginView(APIView):
 class UpdateTokensView(APIView):
     permission_classes = (AllowAny, )
 
-    def get(self, request: HttpRequest):
+    def get(self, request: Request):
         refresh_token = request.COOKIES.get("refresh_token", "")
         
         try:
@@ -140,3 +140,19 @@ class UpdateTokensView(APIView):
             },
             status.HTTP_400_BAD_REQUEST
         )
+
+
+class LogoutView(APIView):
+    permission_classes = (IsAuthenticated, )
+    
+    def get(self, request: Request):
+        response = Response(
+            {
+                "status": "logout"
+            },
+            status.HTTP_200_OK
+        )
+        
+        response.delete_cookie("access_token")
+        
+        return response
