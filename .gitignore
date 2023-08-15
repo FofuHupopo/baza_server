@@ -3,6 +3,7 @@ env/
 __pycache__/
 
 media/
+!media/product_images/Заглушка фото карточки товара.jpg
 
 .idea/
 
