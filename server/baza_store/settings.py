@@ -92,7 +92,7 @@ DATABASES = {
         'NAME': 'baza_store',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'iizhukov.sitbae',
+        'HOST': '127.0.0.1',
         'PORT': '5432'
     }
 }
@@ -204,5 +204,30 @@ MEDIA_ROOT = BASE_DIR / "media/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "POST",
+    "PUT",
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'filename',
+    "Content-Disposition",
+    'name',
+    "boundary",
+    "Set-Cookie",
+]
