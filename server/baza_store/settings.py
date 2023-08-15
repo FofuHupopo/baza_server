@@ -170,7 +170,7 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_SECURE': False,
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_PATH': '/',
-    'AUTH_COOKIE_SAMESITE': None,
+    'AUTH_COOKIE_SAMESITE': "Lax",
 }
 
 
