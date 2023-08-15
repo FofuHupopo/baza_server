@@ -89,6 +89,10 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         phone = self.phone[1:]
         
         return f"+7 ({phone[0:3]}) {phone[3:6]} {phone[6:8]}-{phone[8:10]}"
+    
+
+def now_plus_5_minutes():
+    return timezone.now() + timedelta(minutes=5)
 
 
 class AuthCodeModel(models.Model):
@@ -100,7 +104,7 @@ class AuthCodeModel(models.Model):
     )
     lifetime = models.DateTimeField(
         "Lifetime",
-        default=lambda: timezone.now() + timedelta(minutes=5)
+        default=now_plus_5_minutes
     )
     
     class Meta:
