@@ -117,9 +117,18 @@ class AuthCodeModel(models.Model):
             phone=UserModel.clear_phone(phone),
             code=random.randint(111111, 999999)
         )
-        
+    
+    @staticmethod
+    def clear_code(code: str) -> str:
+        code = re.sub(r"\D", "", code)
+
+        return code
+
     @staticmethod
     def check_code(phone: str, code: str) -> bool:
+        code = AuthCodeModel.clear_code(code)
+        phone = UserModel.clear_phone(phone)
+
         authcode = AuthCodeModel.objects.filter(
             phone=phone,
             code=code

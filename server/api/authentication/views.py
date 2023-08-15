@@ -56,9 +56,13 @@ class LoginView(APIView):
                     user = UserModel.objects.create_user(
                         phone=phone
                     )
+                    
+                print("!!!Ok")
         
                 return LoginView.generate_response(user)
 
+            print("!!!Bad code")
+            
             return Response(
                 {
                     "error": "Неправильный код."
@@ -66,6 +70,8 @@ class LoginView(APIView):
                 status.HTTP_400_BAD_REQUEST
             )
         else:
+            print(f"!!!Bad request: {serializer.error_messages}")
+
             return Response(serializer.errors)
     
     @staticmethod
