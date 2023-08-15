@@ -100,7 +100,7 @@ class AuthCodeModel(models.Model):
     )
     lifetime = models.DateTimeField(
         "Lifetime",
-        default=timezone.now() + timedelta(minutes=5)
+        default=lambda: timezone.now() + timedelta(minutes=5)
     )
     
     class Meta:
