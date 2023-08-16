@@ -53,7 +53,7 @@ async def webhook(requestId: str, request: Request):
         action = event["action"]
         meta = event["meta"]
 
-        if action in ("CREATE", "PRODUCT_UPDATE"):
+        if action in ("CREATE", "UPDATE"):
             uiid = meta.get("href").split("/")[-1]
 
             if not uiid:
