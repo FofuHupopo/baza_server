@@ -50,20 +50,22 @@ async def webhook(requestId: str, request: Request):
     print(body)
 
     if "event" in body and "meta" in body:
-        event_type = body["event"]
+        action = body["action"]
         meta = body["meta"]
 
-        if event_type == "PRODUCT_CREATED" or event_type == "PRODUCT_UPDATED":
-            product_id = meta.get("uuid")
-            if product_id:
-                sync.sync_product_by_id(product_id)
+        if action in ("CREATE", "PRODUCT_UPDATE"):
+            uiid = meta.get("href").split("/")[-1]
 
-        elif event_type == "BUNDLE_CREATED" or event_type == "BUNDLE_UPDATED":
-            bundle_id = meta.get("uuid")
-            if bundle_id:
-                sync.sync_bundle_by_id(bundle_id)
+            if not uiid:
+                return {"status": "error"}, 400
+            
+            if meta["type"] == "product":
+                sync.sync_product_by_id(uiid)
+            
+            if meta["type"] == "bundle":
+                sync.sync_bundle_by_id(uiid)
 
-    return {"status": "success"}
+    return {"status": "success"}, 200
 
 
 @app.get("/synchronizer/sync_all")
