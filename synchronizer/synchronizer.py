@@ -66,7 +66,7 @@ class MoySkaldSynchronizer:
                 print(f"{product['name']} not synchronized ({ind}/{products_count})")
     
     def sync_product_by_id(self, product_id: str):
-        response = self.moysklad_request("PRODUCT_DETAIL", product_id)
+        response = self.moysklad_request("PRODUCT_DETAIL", [product_id])
         
         print(response)
         
@@ -312,8 +312,8 @@ class MoySkaldSynchronizer:
                 print(e)
                 print(f"{bundle['name']} not synchronized ({ind}/{bundles_count})")
     
-    def sync_bundle_by_id(self, product_id: str):
-        response = self.moysklad_request("BUNDLE_DETAIL", product_id)
+    def sync_bundle_by_id(self, bundle_id: str):
+        response = self.moysklad_request("BUNDLE_DETAIL", [bundle_id])
 
         self._sync_bundle(response)
 
