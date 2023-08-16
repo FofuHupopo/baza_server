@@ -33,7 +33,7 @@ class ProductAdmin(admin.ModelAdmin):
         "name", "category", "price", "visible"
     ]
     fields = [
-        "id", "name", "description", "price",
+        "pk", "name", "description", "price",
         "image_preview", "image", "visible",
         "category", "path"
     ]
@@ -47,7 +47,7 @@ class ProductAdmin(admin.ModelAdmin):
     ]
     
     readonly_fields = [
-        "image_preview"
+        "pk", "image_preview"
     ]
 
     def image_preview(self, obj):
@@ -64,11 +64,11 @@ class ProductModificationAdmin(admin.ModelAdmin):
         "product", "color", "size", "quantity"
     ]
     fields = [
-        "id", "color", "color_preview", "size", "quantity"
+        "pk", "color", "color_preview", "size", "quantity"
     ]
     
     readonly_fields = [
-        "color_preview"
+        "pk", "color_preview"
     ]
     
     def color_preview(self, obj):

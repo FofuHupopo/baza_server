@@ -71,7 +71,7 @@ class ProductModificationSerializer(serializers.ModelSerializer):
         return serializer
     
     def get_size(self, obj):
-        return obj.size.name
+        return obj.size.name if obj.size else None
 
 
 class ListProductSerializer(serializers.ModelSerializer):
