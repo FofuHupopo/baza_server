@@ -67,9 +67,7 @@ class MoySkaldSynchronizer:
     
     def sync_product_by_id(self, product_id: str):
         response = self.moysklad_request("PRODUCT_DETAIL", [product_id])
-        
-        print(response)
-        
+
         self._sync_product(response)
 
     def _sync_product(self, product: dict):

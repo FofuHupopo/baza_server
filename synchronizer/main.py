@@ -46,8 +46,6 @@ def shutdown_scheduler():
 @app.post("/synchronizer/webhook")
 async def webhook(requestId: str, request: Request):
     body = await request.json()
-    
-    print(body)
 
     for event in body["events"]:
         action = event["action"]
