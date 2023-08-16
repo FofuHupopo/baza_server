@@ -44,7 +44,7 @@ def shutdown_scheduler():
 
 
 @app.post("synchronizer/webhook")
-async def webhook(request: Request):
+async def webhook(requestId: str, request: Request):
     body = await request.json()
 
     if "event" in body and "meta" in body:
