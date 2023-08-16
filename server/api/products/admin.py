@@ -30,10 +30,10 @@ class ProductModificationInline(admin.TabularInline):
 @admin.register(models.ProductModel)
 class ProductAdmin(admin.ModelAdmin):
     list_display = [
-        "pk", "name", "category", "price", "visible"
+        "name", "category", "price", "visible"
     ]
     fields = [
-        "name", "description", "price",
+        "pk", "name", "description", "price",
         "image_preview", "image", "visible",
         "category", "path"
     ]
@@ -61,10 +61,10 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(models.ProductModificationModel)
 class ProductModificationAdmin(admin.ModelAdmin):
     list_display = [
-        "pk", "product", "color", "size", "quantity"
+        "product", "color", "size", "quantity"
     ]
     fields = [
-        "color", "color_preview", "size", "quantity"
+        "pk", "color", "color_preview", "size", "quantity"
     ]
     
     readonly_fields = [
