@@ -286,6 +286,15 @@ class MoySkaldSynchronizer:
 
                     session.add(image_instance)
                     session.commit()
+                    
+            if not response["rows"]:
+                image_instance = models.ProductModificationImageModel(
+                    product_modification_id=modification_instance.id,
+                    image=self.default_product_image
+                )
+
+                session.add(image_instance)
+                session.commit()
 
     def sync_bundles(self):
         response = MoySkaldSynchronizer.moysklad_request("BUNDLES")
