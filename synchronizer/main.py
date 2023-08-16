@@ -43,9 +43,11 @@ def shutdown_scheduler():
     scheduler.shutdown()
 
 
-@app.post("synchronizer/webhook")
+@app.post("/synchronizer/webhook")
 async def webhook(requestId: str, request: Request):
     body = await request.json()
+    
+    print(body)
 
     if "event" in body and "meta" in body:
         event_type = body["event"]
@@ -83,7 +85,7 @@ def sync_bundle_by_id(bundle_id: str):
 
 
 if __name__ == "__main__":
-    # uvicorn.run("main:app", host="0.0.0.0", port=4444, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)
 
-    sync.sync_products()
+    # sync.sync_products()
     # sync.sync_bundles()
