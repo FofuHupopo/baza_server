@@ -33,7 +33,7 @@ class ProductAdmin(admin.ModelAdmin):
         "name", "category", "price", "visible"
     ]
     fields = [
-        "pk", "name", "description", "price",
+        "id", "name", "description", "price",
         "image_preview", "image", "visible",
         "category", "path"
     ]
@@ -64,7 +64,7 @@ class ProductModificationAdmin(admin.ModelAdmin):
         "product", "color", "size", "quantity"
     ]
     fields = [
-        "pk", "color", "color_preview", "size", "quantity"
+        "id", "color", "color_preview", "size", "quantity"
     ]
     
     readonly_fields = [
