@@ -49,9 +49,9 @@ async def webhook(requestId: str, request: Request):
     
     print(body)
 
-    if "event" in body and "meta" in body:
-        action = body["action"]
-        meta = body["meta"]
+    for event in body["events"]:
+        action = event["action"]
+        meta = event["meta"]
 
         if action in ("CREATE", "PRODUCT_UPDATE"):
             uiid = meta.get("href").split("/")[-1]
@@ -60,9 +60,11 @@ async def webhook(requestId: str, request: Request):
                 return {"status": "error"}, 400
             
             if meta["type"] == "product":
+                print(f"sync product uiid: {uiid}")
                 sync.sync_product_by_id(uiid)
             
             if meta["type"] == "bundle":
+                print(f"sync bundle uiid: {uiid}")
                 sync.sync_bundle_by_id(uiid)
 
     return {"status": "success"}, 200
