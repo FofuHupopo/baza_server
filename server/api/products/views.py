@@ -25,8 +25,9 @@ class ListProductPagination(PageNumberPagination):
 class ListProductView(generics.ListAPIView):
     permission_classes = (AllowAny, )
     queryset = models.ProductModel.objects.filter(
-        visible=True
-    )
+        visible=True,
+        productmodificationmodel__isnull=False
+    ).distinct().order_by("id")
     serializer_class = serializers.ListProductSerializer
     pagination_class = ListProductPagination
 
@@ -58,8 +59,9 @@ class ListProductView(generics.ListAPIView):
 class ProductView(generics.RetrieveAPIView):
     permission_classes = (AllowAny, )
     queryset = models.ProductModel.objects.filter(
-        visible=True
-    )
+        visible=True,
+        productmodificationmodel__isnull=False
+    ).distinct().order_by("id")
     serializer_class = serializers.ProductSerializer
 
     def get_serializer_context(self):
