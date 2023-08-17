@@ -95,34 +95,21 @@ class MoySkaldSynchronizer:
             if self.only_valid and full_path[0].lower() not in self.valid_root_path.keys():
                 return
 
-            last_path = session.query(
-                models.ProductPathModel
-            ).filter(models.ProductPathModel.name == full_path[0]).first()
-            
-            if not last_path:
-                last_path = models.ProductPathModel(
-                    name=full_path[0].title(),
-                    slug=self.valid_root_path[full_path[0].lower()]
-                )
-                
-                session.add(last_path)
-                session.commit()
+            if full_path[0].lower() in self.valid_root_path.keys():
+                full_path[0] = self.valid_root_path[full_path[0].lower()]
 
-            for ind, path in enumerate(full_path[1:]):
+            last_path = None
+            for ind, path in enumerate(full_path):
                 instances = session.query(
                     models.ProductPathModel
-                ).filter(
-                    models.ProductPathModel.name == path
-                )
-                
+                ).filter(models.ProductPathModel.name == path)
+
                 instance = None
-                
+
                 for inst in instances:
-                    if inst.full_path().lower() == "/".join(full_path).lower():
+                    if inst.full_path().lower() == "/".join(full_path[:ind + 1]).lower():
                         instance = inst
                         break
-                
-                print(instance)
 
                 if instance:
                     last_path = instance
@@ -133,7 +120,8 @@ class MoySkaldSynchronizer:
                     slug=slugify(" ".join(full_path[:ind + 1]))
                 )
 
-                instance.parent_id = last_path.id
+                if last_path:
+                    instance.parent_id = last_path.id
 
                 session.add(instance)
                 session.commit()
