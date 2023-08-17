@@ -139,6 +139,8 @@ class MoySkaldSynchronizer:
                 session.commit()
 
                 last_path = instance
+            
+            print(last_path)
 
         return last_path
 
