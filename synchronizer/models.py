@@ -154,4 +154,4 @@ class BundleProductModificationsModel(Base):
         session.commit()
 
 
-engine = create_engine('postgresql://postgres:postgres@iizhukov.site:5432/baza_store')
+engine = create_engine('postgresql://postgres:postgres@localhost:5432/baza_store')
