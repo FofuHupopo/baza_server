@@ -18,6 +18,9 @@ class ProductPathModel(Base):
 
     def __repr__(self):
         return f"ProductPathModel(id={self.id}, parent_id={self.parent_id}, name='{self.name}', slug='{self.slug}')"
+    
+    def full_path(self):
+        return f"{self.parent.full_path()}/{self.name}" if self.parent else f"{self.name}"
 
 
 class ProductCategoryModel(Base):
@@ -151,4 +154,4 @@ class BundleProductModificationsModel(Base):
         session.commit()
 
 
-engine = create_engine('postgresql://postgres:postgres@localhost:5432/baza_store')
+engine = create_engine('postgresql://postgres:postgres@iizhukov.site:5432/baza_store')
