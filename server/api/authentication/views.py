@@ -3,8 +3,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request, HttpRequest
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt import exceptions
+from rest_framework.authtoken.models import Token
+# from rest_framework_simplejwt.tokens import RefreshToken
+# from rest_framework_simplejwt import exceptions
 from django.conf import settings
 
 
@@ -58,9 +59,6 @@ class LoginView(APIView):
                     )
         
                 return LoginView.generate_response(user)
-
-            print("!!!Bad code")
-            print(phone, code)
             
             return Response(
                 {
@@ -69,76 +67,30 @@ class LoginView(APIView):
                 status.HTTP_400_BAD_REQUEST
             )
         else:
-            print(f"!!!Bad request: {serializer.error_messages}")
-
             return Response(serializer.errors)
     
     @staticmethod
     def generate_response(user: UserModel) -> Response:
-        refresh_token: RefreshToken = RefreshToken.for_user(user)
-        access_token = refresh_token.access_token
+        token, created = Token.objects.get_or_create(user=user)
 
         user_serializer = UserDataSerialzier(user)
 
-        # response = Response(
-        #     {
-        #         "access_token": str(access_token),
-        #         "user": user_serializer.data,
-        #         # "refresh_token": str(refresh_token),
-        #     },
-        #     status.HTTP_200_OK
-        # )
-        
         response = Response(
             user_serializer.data,
-            status.HTTP_200_OK
+            status.HTTP_201_CREATED if created else status.HTTP_200_OK
         )
 
-        # response.set_cookie(
-        #     key=settings.SIMPLE_JWT["AUTH_COOKIE"],
-        #     value=str(refresh_token),
-        #     max_age=settings.SIMPLE_JWT["MAX_AGE"],
-        #     secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
-        #     httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
-        #     samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
-        #     domain=settings.SIMPLE_JWT['AUTH_COOKIE_DOMAIN']
-        # )
-
         response.set_cookie(
-            key="access_token",
-            value=str(access_token),
-            max_age=60 * 60 * 24 * 30,
-            secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
-            httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
-            samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
-            domain=settings.SIMPLE_JWT['AUTH_COOKIE_DOMAIN']
+            key=settings.TOKEN_SETTINGS["COOKIE_NAME"],
+            value=token.key,
+            max_age=settings.TOKEN_SETTINGS["COOKIE_MAX_AGE"],
+            secure=settings.TOKEN_SETTINGS['COOKIE_SECURE'],
+            httponly=settings.TOKEN_SETTINGS['COOKIE_HTTP_ONLY'],
+            samesite=settings.TOKEN_SETTINGS['COOKIE_SAMESITE'],
+            domain=settings.TOKEN_SETTINGS['COOKIE_DOMAIN']
         )
 
         return response
-
-
-class UpdateTokensView(APIView):
-    permission_classes = (AllowAny, )
-
-    def get(self, request: Request):
-        refresh_token = request.COOKIES.get("refresh_token", "")
-        
-        try:
-            payload = RefreshToken(refresh_token).payload
-            user = UserModel.objects.get(id=payload['user_id'])
-
-            return LoginView.generate_response(user)
-        except exceptions.TokenError as e:
-            print(e)
-        except UserModel.DoesNotExist as e:
-            print(e)
-        
-        return Response(
-            {
-                "error": "Ошибка refresh токена"
-            },
-            status.HTTP_400_BAD_REQUEST
-        )
 
 
 class LogoutView(APIView):
@@ -152,7 +104,7 @@ class LogoutView(APIView):
             status.HTTP_200_OK
         )
         
-        if request.COOKIES.get("access_token"):
-            response.delete_cookie("access_token")
+        if request.COOKIES.get(settings.TOKEN_SETTINGS["COOKIE_NAME"]):
+            response.delete_cookie(settings.TOKEN_SETTINGS["COOKIE_NAME"])
 
         return response

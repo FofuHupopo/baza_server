@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     "corsheaders",
     
     'rest_framework',
-    'rest_framework_simplejwt',
+    'rest_framework.authtoken',
+    # 'rest_framework_simplejwt',
     
     'api.authentication',
     'api.profile',
@@ -46,10 +47,11 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'api.middlewares.CookiesTokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
-    'api.middlewares.UpdateAccessTokenMiddleware',
+    # 'api.middlewares.UpdateAccessTokenMiddleware',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -100,8 +102,9 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'api.backends.CookiesJWTAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        # 'api.backends.CookiesJWTAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
@@ -133,8 +136,19 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+TOKEN_SETTINGS = {
+    'COOKIE_NAME': 'token',
+    'COOKIE_MAX_AGE': 60 * 60 * 24 * 30,
+    'COOKIE_DOMAIN': None,
+    'COOKIE_SECURE': False,
+    'COOKIE_HTTP_ONLY': True,
+    'COOKIE_PATH': '/',
+    'COOKIE_SAMESITE': "Lax",
+}
+
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'MAX_AGE': 60 * 60 * 24 * 30,
     'ROTATE_REFRESH_TOKENS': True,
