@@ -28,13 +28,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     "corsheaders",
-    
+
     'rest_framework',
     'rest_framework.authtoken',
-    # 'rest_framework_simplejwt',
-    
+
     'api.authentication',
     'api.profile',
     'api.products',
@@ -50,8 +49,6 @@ MIDDLEWARE = [
     'api.middlewares.CookiesTokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
-    # 'api.middlewares.UpdateAccessTokenMiddleware',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -81,14 +78,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'baza_store.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR.parent / 'db.sqlite3',
-    # },
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'baza_store',
@@ -103,8 +93,6 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-        # 'api.backends.CookiesJWTAuthentication',
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
