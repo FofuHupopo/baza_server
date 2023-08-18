@@ -85,14 +85,14 @@ WSGI_APPLICATION = 'baza_store.wsgi.application'
 DATABASES = {
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
+    #     'NAME': BASE_DIR.parent / 'db.sqlite3',
     # },
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'baza_store',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'iizhukov.site',
+        'USER': 'baza',
+        'PASSWORD': 'Ot?y\CJN=Qh7uU',
+        'HOST': '92.53.97.102',
         'PORT': '5432'
     }
 }

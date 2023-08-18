@@ -104,12 +104,12 @@ class MoySkaldSynchronizer:
                     models.ProductPathModel
                 ).filter(models.ProductPathModel.name == path)
 
-                instance = None
-
                 for inst in instances:
                     if inst.full_path().lower() == "/".join(full_path[:ind + 1]).lower():
                         instance = inst
                         break
+                else:
+                    instance = None
 
                 if instance:
                     last_path = instance
