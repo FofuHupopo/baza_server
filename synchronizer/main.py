@@ -10,7 +10,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from synchronizer import MoySkaldSynchronizer
 
 
-DJANGO_MEDIA_PATH = Path("/home/ilya/baza/server/media")
+# DJANGO_MEDIA_PATH = Path("/home/ilya/baza/server/media")
+DJANGO_MEDIA_PATH = Path("/root/baza/server/server/media")
 PRODUCT_MEDIA_PATH = Path("product_images")
 VALID_ROOT_PATH = {
     "женское": "women",
@@ -32,15 +33,15 @@ sync = MoySkaldSynchronizer(
 )
 
 
-@app.on_event("startup")
-def start_scheduler():
-    # scheduler.add_job(sync_products, "interval", seconds=10)
-    scheduler.start()
+# @app.on_event("startup")
+# def start_scheduler():
+#     # scheduler.add_job(sync_products, "interval", seconds=10)
+#     scheduler.start()
 
-    
-@app.on_event("shutdown")
-def shutdown_scheduler():
-    scheduler.shutdown()
+
+# @app.on_event("shutdown")
+# def shutdown_scheduler():
+#     scheduler.shutdown()
 
 
 @app.post("/synchronizer/webhook")
@@ -56,11 +57,11 @@ async def webhook(requestId: str, request: Request):
 
             if not uiid:
                 return {"status": "error"}, 400
-            
+
             if meta["type"] == "product":
                 print(f"sync product uiid: {uiid}")
                 sync.sync_product_by_id(uiid)
-            
+
             if meta["type"] == "bundle":
                 print(f"sync bundle uiid: {uiid}")
                 sync.sync_bundle_by_id(uiid)
@@ -87,8 +88,8 @@ def sync_bundle_by_id(bundle_id: str):
 
 
 if __name__ == "__main__":
-    # uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)
 
-    sync.sync_products()
+    # sync.sync_products()
     # sync.sync_bundles()
     # sync.sync_product_by_id("fe485046-edb1-11ed-0a80-034d00a3f03a")
