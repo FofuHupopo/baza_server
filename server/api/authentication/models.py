@@ -47,7 +47,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         "Улица", max_length=128,
         blank=True, null=True,
     )
-    number = models.CharField(
+    house = models.CharField(
         "Дом", max_length=16,
         blank=True, null=True,
     )

@@ -4,20 +4,20 @@ from django.utils.safestring import mark_safe
 from . import models
 
 
-class ProductModificationImageInline(admin.StackedInline):
-    model = models.ProductModificationImageModel
-    extra = 1
+# class ProductModificationImageInline(admin.StackedInline):
+#     model = models.ProductModificationImageModel
+#     extra = 1
     
-    fields = [
-        "image_preview", "image"
-    ]
+#     fields = [
+#         "image_preview", "image"
+#     ]
 
-    readonly_fields = ["image_preview"]
+#     readonly_fields = ["image_preview"]
 
-    def image_preview(self, obj):
-        return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
+#     def image_preview(self, obj):
+#         return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
     
-    image_preview.short_description = "Изображение"
+#     image_preview.short_description = "Изображение"
 
 
 class ProductModificationInline(admin.TabularInline):
@@ -76,7 +76,7 @@ class ProductModificationAdmin(admin.ModelAdmin):
     
     color_preview.short_description = "Пример цвета"
 
-    inlines = [ProductModificationImageInline]
+    # inlines = [ProductModificationImageInline]
     
 
 @admin.register(models.ProductColorModel)

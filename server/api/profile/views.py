@@ -9,6 +9,7 @@ from django.conf import settings
 from api.products import models as product_models
 from api.products import serializers as product_serializers
 from api.authentication import serializers as auth_serializers
+from api.authentication import models as auth_models
 
 
 class FavoritesView(APIView):
@@ -168,14 +169,18 @@ class InfoView(APIView):
             status.HTTP_200_OK
         )
     
-    def put(self, request: Request):
-        serializer = self.serializer_class(
+    def post(self, request: Request):
+        serializer = auth_serializers.UpdateUserInfoSerializer(
             request.user,
             request.data
         )
         
         if serializer.is_valid():
             serializer.save()
+            
+            serializer = self.serializer_class(
+                request.user
+            )
             
             return Response(
                 serializer.data,

@@ -1,3 +1,4 @@
+from types import NoneType
 from django.db import models
 from django.core import validators
 from slugify import slugify
@@ -183,36 +184,67 @@ class ProductModificationModel(models.Model):
             return f"{self.product.name} ({self.color.name}, {self.size})"
         else:
             return f"{self.product.name} ({self.size})"
+    
+    def save(self, *args, **kwargs) -> None:
+        if type(self.color) is NoneType:
+            self.color, _ = ProductColorModel.objects.get_or_create(
+                name="Стандартный"
+            )
+        
+        if type(self.size) is NoneType:
+            self.size, _ = ProductSizeModel.objects.get_or_create(
+                name="OS"
+            )
+
+        return super().save(*args, **kwargs)
 
 
-def product_modification_image_upload_path(instance, filename):
+def product_color_images_upload_path(instance, filename):
     return 'product_images/{}/{}/{}'.format(
         instance.product_modification.product.product_id,
-        instance.id,
+        instance.color.name,
         filename
     )
 
 
-class ProductModificationImageModel(models.Model):
-    product_modification = models.ForeignKey(
-        ProductModificationModel, models.CASCADE,
-        related_name="images",
-        verbose_name="Модификация товара"
+class ProductColorImagesModel(models.Model):
+    product = models.ForeignKey(
+        ProductModel, models.CASCADE,
+        verbose_name="Товар"
+    )
+    color = models.ForeignKey(
+        ProductColorModel, models.CASCADE,
+        verbose_name="Цвет"
+    )
+    
+    class Meta:
+        db_table = "product__product_color_images"
+        verbose_name = "Изображения товара по цвету"
+        verbose_name_plural = "Изображения товаров по цветам"
+    
+    def __str__(self) -> str:
+        return f"{self.product.name}"
+
+
+class ColorImageModel(models.Model):
+    product_color = models.ForeignKey(
+        ProductColorImagesModel, models.CASCADE,
+        verbose_name="Цвет товара"
     )
     image = models.ImageField(
-        upload_to=product_modification_image_upload_path,
+        upload_to=product_color_images_upload_path,
         max_length=511,
         default="product_images/Заглушка фото карточки товара.jpg",
         verbose_name="Выбрать изображение"
     )
     
     class Meta:
-        db_table = "product__product_modification_image"
-        verbose_name = "Изображение товара"
-        verbose_name_plural = "Изображения товаров"
+        db_table = "product__color_image"
+        verbose_name = "Изображение цвету"
+        verbose_name_plural = "Изображения по цветам"
     
     def __str__(self) -> str:
-        return f"{self.product_modification}"
+        return f"{self.product_color.product.name}"
     
 
 def bundle_image_upload_path(instance, filename):
@@ -299,3 +331,11 @@ class BundleImageModel(models.Model):
     
     def __str__(self) -> str:
         return f"{self.bundle}"
+
+
+def product_modification_image_upload_path():
+    ...
+    
+
+class ProductModificationImageModel:
+    ...

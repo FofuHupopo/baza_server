@@ -70,9 +70,9 @@ class UserDataSerialzier(serializers.ModelSerializer):
     class Meta:
         model = models.UserModel
         fields = (
-            "pk", "email", "phone",
+            "id", "email", "phone",
             "name", "surname", "birthday_date",
-            "city", "street", "number", "frame", "apartment",
+            "city", "street", "house", "frame", "apartment",
             "favorites", "basket"
         )
 
@@ -84,3 +84,12 @@ class UserDataSerialzier(serializers.ModelSerializer):
             many=True,
             context=self.context
         ).data
+
+
+class UpdateUserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserModel
+        fields = (
+            "email", "name", "surname", "birthday_date",
+            "city", "street", "house", "frame", "apartment",
+        )

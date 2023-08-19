@@ -26,12 +26,13 @@ class SendCodeView(APIView):
         
         code = AuthCodeModel.generate_code(phone)
         
-        message_status = 200
+        
+        print(code.phone, code.code)
         
         if settings.SEND_CODE:
             message_status = SendMessage.send(code.phone, code.code)
         else:
-            print(code.phone, code.code)
+            message_status = 200
 
         if message_status:
             return Response(

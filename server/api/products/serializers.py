@@ -42,12 +42,12 @@ class ProductSizeSerializer(serializers.ModelSerializer):
         )
         
 
-class ProductModificationImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.ProductModificationImageModel
-        fields = (
-            "image",
-        )
+# class ProductModificationImageSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.ProductModificationImageModel
+#         fields = (
+#             "image",
+#         )
 
 
 class ProductModificationSerializer(serializers.ModelSerializer):
@@ -133,7 +133,6 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
-    images = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
     path = serializers.SerializerMethodField()
     full_path = serializers.SerializerMethodField()
@@ -144,7 +143,7 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductModificationModel
         fields = (
-            "id", "name", "description", "price", "images",
+            "id", "name", "description", "price",
             "category", "path", "full_path", "slug_path", "size", "color"
         )
         depth = 2
@@ -175,13 +174,3 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
     
     def get_color(self, obj):
         return obj.color.name if obj.color else None
-    
-    def get_images(self, obj):
-        serializer = ProductModificationImageSerializer(
-            models.ProductModificationImageModel.objects.filter(
-                product_modification=obj
-            ),
-            many=True
-        )
-    
-        return serializer.data

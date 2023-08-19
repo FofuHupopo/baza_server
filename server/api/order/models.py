@@ -51,7 +51,7 @@ class OrderModel(models.Model):
         "Улица", max_length=128,
         null=True, blank=True
     )
-    number = models.CharField(
+    house = models.CharField(
         "Дом", max_length=16,
         null=True, blank=True
     )
