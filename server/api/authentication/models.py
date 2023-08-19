@@ -2,6 +2,7 @@ from __future__ import annotations
 import re
 import random
 from datetime import timedelta
+from typing import Iterable, Optional
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
@@ -37,9 +38,27 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         ProductModel, blank=True,
         verbose_name="Избранное"
     )
-    basket = models.ManyToManyField(
-        ProductModificationModel, blank=True,
-        verbose_name="Корзина"
+    
+    city = models.CharField(
+        "Город", max_length=128,
+        blank=True, null=True,
+    )
+    street = models.CharField(
+        "Улица", max_length=128,
+        blank=True, null=True,
+    )
+    number = models.CharField(
+        "Дом", max_length=16,
+        blank=True, null=True,
+    )
+    
+    frame = models.CharField(
+        "Корпус", max_length=16,
+        null=True, blank=True
+    )
+    apartment = models.CharField(
+        "Квартира", max_length=16,
+        null=True, blank=True
     )
 
     is_active = models.BooleanField(
@@ -49,6 +68,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         "Администратор",
         default=False
     )
+
     @property
     def is_staff(self):
         return self.is_superuser
@@ -90,6 +110,39 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         
         return f"+7 ({phone[0:3]}) {phone[3:6]} {phone[6:8]}-{phone[8:10]}"
     
+
+class BasketModel(models.Model):
+    user_model = models.ForeignKey(
+        UserModel, verbose_name="Пользователь",
+        on_delete=models.CASCADE
+    )
+    product_modification_model = models.ForeignKey(
+        ProductModificationModel, verbose_name="Модификация продукта",
+        on_delete=models.CASCADE
+    )
+    quantity = models.PositiveIntegerField(
+        "Количество", default=0
+    )
+
+    class Meta:
+        db_table = "profile__basket"
+        verbose_name = "Корзина"
+        verbose_name_plural = "Корзины"
+        unique_together = ('user_model', 'product_modification_model')
+    
+    def save(self, *args, **kwargs) -> None:
+        try: 
+            basket_instance = BasketModel.objects.get(
+                user_model=self.user_model,
+                product_modification_model=self.product_modification_model
+            )
+            
+            basket_instance.quantity += 1
+            
+            basket_instance.save()
+        except BasketModel.DoesNotExist:
+            return super().save(*args, **kwargs)
+
 
 def now_plus_5_minutes():
     return timezone.now() + timedelta(minutes=5)

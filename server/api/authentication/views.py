@@ -4,8 +4,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request, HttpRequest
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
-# from rest_framework_simplejwt.tokens import RefreshToken
-# from rest_framework_simplejwt import exceptions
+from api.request import SendMessage
 from django.conf import settings
 
 
@@ -24,17 +23,30 @@ class SendCodeView(APIView):
             return Response(serializer.errors)
         
         phone = serializer.validated_data['phone']
+        
         code = AuthCodeModel.generate_code(phone)
         
-        print(f"{code.phone}: {code.code}")
+        message_status = 200
+        
+        if settings.SEND_CODE:
+            message_status = SendMessage.send(code.phone, code.code)
+        else:
+            print(code.phone, code.code)
 
-        return Response(
-            {
-                "success": "Код был успешно отправлен.",
-                "code": f"{code.code}"
-            },
-            status.HTTP_201_CREATED
-        )
+        if message_status:
+            return Response(
+                {
+                    "success": "Код был успешно отправлен."
+                },
+                status.HTTP_201_CREATED
+            )
+        else:
+            return Response(
+                {
+                    "error": "Не удалось отправить код, попробуйте снова"
+                },
+                status.HTTP_400_BAD_REQUEST
+            )
 
 
 class LoginView(APIView):
@@ -42,7 +54,7 @@ class LoginView(APIView):
     serializer_class= LoginSerializer
 
     def post(self, request: Request):
-        serializer = self.serializer_class(data=request.data)
+        serializer = self.serializer_class(data=request.data, context={"request": request})
     
         if serializer.is_valid():
             phone = serializer.validated_data['phone']
@@ -58,7 +70,7 @@ class LoginView(APIView):
                         phone=phone
                     )
         
-                return LoginView.generate_response(user)
+                return LoginView.generate_response(request, user)
             
             return Response(
                 {
@@ -70,10 +82,10 @@ class LoginView(APIView):
             return Response(serializer.errors)
     
     @staticmethod
-    def generate_response(user: UserModel) -> Response:
+    def generate_response(request: Request, user: UserModel) -> Response:
         token, created = Token.objects.get_or_create(user=user)
 
-        user_serializer = UserDataSerialzier(user)
+        user_serializer = UserDataSerialzier(user, context={"request": request})
 
         response = Response(
             user_serializer.data,

@@ -75,6 +75,10 @@ class ProductModel(models.Model):
         "Описание",
         null=True, blank=True
     )
+    old_price = models.IntegerField(
+        "Старая цена",
+        null=True, blank=True
+    )
     price = models.IntegerField(
         "Цена"
     )

@@ -17,7 +17,10 @@ class FavoritesView(APIView):
     def get(self, request: Request):
         serializer = product_serializers.ListProductSerializer(
             request.user.favorites.all(),
-            many=True
+            many=True,
+            context={
+                "request": request
+            }
         )
         
         return Response(
@@ -153,7 +156,12 @@ class InfoView(APIView):
     permission_classes = (IsAuthenticated, )
     
     def get(self, request: Request):
-        serializer = self.serializer_class(request.user)
+        serializer = self.serializer_class(
+            request.user,
+            context={
+                "request": request
+            }
+        )
         
         return Response(
             serializer.data,

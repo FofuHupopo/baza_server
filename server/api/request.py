@@ -50,3 +50,30 @@ class DadataAddressAutoComplete:
             "lat": result.get("data", {}).get("geo_lat"),
             "lon": result.get("data", {}).get("geo_lon")
         }
+        
+
+class SendMessage:
+    TOKEN = "7d411796-32ff-4222-aa0b-980fa320a25f"
+    URL = "https://api.imobis.ru/v3/message/sendSMS"
+    
+    @staticmethod
+    def send(phone: str, code: str):
+        result = requests.post(
+            url=SendMessage.URL,
+            json={
+                "sender": "baza-store",
+                "phone": phone,
+                "text": f"Ваш код авторизации: {code}",
+                "ttl": 300,
+            },
+            headers={
+                "Authorization": f"Token {SendMessage.TOKEN}",
+                "Content-Type": "application/json"
+            }
+        )
+        
+        return result.status_code == 200
+        
+
+if __name__ == "__main__":
+    SendMessage.send("89619358651", "123321")

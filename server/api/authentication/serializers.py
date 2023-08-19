@@ -2,6 +2,8 @@ import re
 from rest_framework import serializers
 
 from . import models
+from api.products import serializers as product_serializers
+from api.products import models as products_models
 
 
 class PhoneNumberSerializer(serializers.Serializer):
@@ -41,15 +43,44 @@ class LoginSerializer(serializers.Serializer):
         phone = re.sub(r"\D", "", phone)
 
         return phone
+    
+    
+class BasketSerializer(serializers.ModelSerializer):
+    product_modification = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = models.BasketModel
+        fields = (
+            "product_modification", "quantity"
+        )
+        
+    def get_product_modification(self, obj):
+        return product_serializers.ProductModificationSerializer(
+            obj.product_modification_model,
+            context=self.context
+        ).data
 
 
 class UserDataSerialzier(serializers.ModelSerializer):
     email = serializers.EmailField(read_only=True)
     phone = serializers.CharField(read_only=True)
+    favorites = product_serializers.ListProductSerializer(many=True)
+    basket = serializers.SerializerMethodField()
 
     class Meta:
         model = models.UserModel
         fields = (
             "pk", "email", "phone",
-            "name", "surname", "birthday_date"
+            "name", "surname", "birthday_date",
+            "city", "street", "number", "frame", "apartment",
+            "favorites", "basket"
         )
+
+    def get_basket(self, obj):
+        return BasketSerializer(
+            models.BasketModel.objects.filter(
+                user_model=obj
+            ),
+            many=True,
+            context=self.context
+        ).data
