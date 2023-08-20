@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-sy^l3ace!nhpr-)uv=vevi&m3mb_!_7q4*89nim%5t-d!r2pc&
 DADATA_TOKEN = "48ab36191d6ef5b11a3ae58d406b7d641a1fbd32"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "*"
@@ -203,7 +203,7 @@ ROOT_URLCONF = 'baza_store.urls'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'django_static/'
+STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / "static/"
 
 MEDIA_URL = 'media/'
