@@ -243,4 +243,4 @@ CORS_ALLOW_HEADERS = [
     "Set-Cookie",
 ]
 
-SEND_CODE = True
+SEND_CODE = False

@@ -201,8 +201,8 @@ class ProductModificationModel(models.Model):
 
 def product_color_images_upload_path(instance, filename):
     return 'product_images/{}/{}/{}'.format(
-        instance.product_modification.product.product_id,
-        instance.color.name,
+        instance.product_color.product.product_id,
+        instance.product_color.color.name,
         filename
     )
 
@@ -223,7 +223,7 @@ class ProductColorImagesModel(models.Model):
         verbose_name_plural = "Изображения товаров по цветам"
     
     def __str__(self) -> str:
-        return f"{self.product.name}"
+        return f"{self.product.name} {self.color}"
 
 
 class ColorImageModel(models.Model):

@@ -4,20 +4,45 @@ from django.utils.safestring import mark_safe
 from . import models
 
 
-# class ProductModificationImageInline(admin.StackedInline):
-#     model = models.ProductModificationImageModel
-#     extra = 1
+class ColorImageInline(admin.StackedInline):
+    model = models.ColorImageModel
+    extra = 1
     
-#     fields = [
-#         "image_preview", "image"
-#     ]
-
-#     readonly_fields = ["image_preview"]
-
-#     def image_preview(self, obj):
-#         return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
+    readonly_fields = ["image_preview"]
     
-#     image_preview.short_description = "Изображение"
+    def image_preview(self, obj):
+        return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
+    
+    image_preview.short_description = "Изображение"
+    
+
+
+class ProductColorImagesInline(admin.StackedInline):
+    model = models.ProductColorImagesModel
+    extra = 1
+    
+    fields = [
+        "color"
+    ]
+
+    readonly_fields = ["images", "go_to_images"]
+
+    def images(self, obj):
+        images = models.ColorImageModel.objects.filter(
+           product_color=obj 
+        )
+        print(images, obj)
+        return "".join([
+            mark_safe(f'<img src="{image.image.url}" style="max-height: 200px;">')
+            for image in images
+        ])
+    
+    images.short_description = "Изображения"
+    
+    def go_to_images(self, obj):
+        return mark_safe("<a href={{  }}></a>")
+    
+    inlines = [ColorImageInline]
 
 
 class ProductModificationInline(admin.TabularInline):
@@ -55,7 +80,7 @@ class ProductAdmin(admin.ModelAdmin):
     
     image_preview.short_description = "Главное изображение"
 
-    inlines = [ProductModificationInline]
+    inlines = [ProductColorImagesInline, ProductModificationInline]
 
 
 @admin.register(models.ProductModificationModel)
@@ -172,7 +197,11 @@ class BundleAdmin(admin.ModelAdmin):
     inlines = [BundleImageInline]
 
 
-# admin.site.register(models.ProductModificationImageModel)
+@admin.register(models.ProductColorImagesModel)
+class ProductColorImagesAdmin(admin.ModelAdmin):
+    inlines = [ColorImageInline]
+
+# admin.site.register(models.ColorImageModel)
 # admin.site.register(models.ProductModel)
 # admin.site.register(models.ProductPathModel)
 # admin.site.register(models.ProductCategoryModel)

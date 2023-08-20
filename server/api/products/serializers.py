@@ -40,36 +40,19 @@ class ProductSizeSerializer(serializers.ModelSerializer):
         fields = (
             "name",
         )
-        
-
-# class ProductModificationImageSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.ProductModificationImageModel
-#         fields = (
-#             "image",
-#         )
 
 
 class ProductModificationSerializer(serializers.ModelSerializer):
     color = ProductColorSerializer()
     size = ProductSizeSerializer()
-    images = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ProductModificationModel
         fields = (
-            "id", "color", "size", "images", "quantity"
+            "id", "color", "size", "quantity"
         )
-    
-    def get_images(self, obj):
-        serializer = [
-            self.context['request'].build_absolute_uri(image.image.url)
-            for image in obj.images.all()
-        ]
-        
-        return serializer
-    
+
     def get_size(self, obj):
         return obj.size.name if obj.size else None
 
@@ -93,6 +76,28 @@ class ListProductSerializer(serializers.ModelSerializer):
         ).distinct()
         
         return filter(lambda color: color, colours)
+    
+    
+class ProductColorImagesSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ProductColorImagesModel
+        fields = (
+            "color", "images"
+        )
+    
+    def get_images(self, obj):
+        images = models.ColorImageModel.objects.filter(
+            product_color=obj
+        ).values_list("image", flat=True)
+        
+        request = self.context.get('request')
+
+        return [
+            request.build_absolute_uri(image.url)
+            for image in images
+        ]
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -100,6 +105,7 @@ class ProductSerializer(serializers.ModelSerializer):
     path = AloneProductPathSerializer()
     full_path = serializers.SerializerMethodField()
     slug_path = serializers.SerializerMethodField()
+    color_images = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ProductModel
@@ -108,25 +114,19 @@ class ProductSerializer(serializers.ModelSerializer):
             "category", "path", "modifications", "full_path", "slug_path"
         )
     
-    def get_modifications(self, obj):
-        modifications = models.ProductModificationModel.objects.filter(
-            product=obj
-        )
-        serializer = ProductModificationSerializer(
-            modifications,
-            many=True,
-            context={
-                "request": self.context["request"]
-            }
-        )
-
-        return serializer.data
-    
     def get_full_path(self, obj):
         return obj.path.__str__()
     
     def get_slug_path(self, obj):
         return obj.path.get_slug_path()
+    
+    def get_color_images(self, obj):
+        return ProductColorImagesSerializer(
+            models.ProductColorImagesModel.objects.filter(
+                product=obj
+            ),
+            many=True
+        ).data
 
 
 class ListProductModificationSerializer(serializers.ModelSerializer):
