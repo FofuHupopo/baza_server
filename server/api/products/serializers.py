@@ -44,7 +44,6 @@ class ProductSizeSerializer(serializers.ModelSerializer):
 
 class ProductModificationSerializer(serializers.ModelSerializer):
     color = ProductColorSerializer()
-    size = ProductSizeSerializer()
     size = serializers.SerializerMethodField()
 
     class Meta:
@@ -80,6 +79,7 @@ class ListProductSerializer(serializers.ModelSerializer):
     
 class ProductColorImagesSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
+    color = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ProductColorImagesModel
@@ -90,14 +90,17 @@ class ProductColorImagesSerializer(serializers.ModelSerializer):
     def get_images(self, obj):
         images = models.ColorImageModel.objects.filter(
             product_color=obj
-        ).values_list("image", flat=True)
+        )
         
         request = self.context.get('request')
 
         return [
-            request.build_absolute_uri(image.url)
+            request.build_absolute_uri(image.image.url)
             for image in images
         ]
+    
+    def get_color(self, obj):
+        return obj.color.name
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -110,7 +113,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductModel
         fields = (
-            "id", "name", "description", "price", "image",
+            "id", "name", "description", "price", "image", "color_images",
             "category", "path", "modifications", "full_path", "slug_path"
         )
     
@@ -123,6 +126,17 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_color_images(self, obj):
         return ProductColorImagesSerializer(
             models.ProductColorImagesModel.objects.filter(
+                product=obj
+            ),
+            many=True,
+            context={
+                "request": self.context["request"]
+            }
+        ).data
+    
+    def get_modifications(self, obj):
+        return ListProductModificationSerializer(
+            models.ProductModificationModel.objects.filter(
                 product=obj
             ),
             many=True
