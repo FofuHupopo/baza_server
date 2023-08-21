@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
+from django.utils.html import escape
 
 from . import models
 
@@ -22,7 +23,7 @@ class ProductColorImagesInline(admin.StackedInline):
     extra = 1
     
     fields = [
-        "color"
+        "color", "images", "go_to_images"
     ]
 
     readonly_fields = ["images", "go_to_images"]
@@ -31,18 +32,23 @@ class ProductColorImagesInline(admin.StackedInline):
         images = models.ColorImageModel.objects.filter(
            product_color=obj 
         )
-        print(images, obj)
-        return "".join([
-            mark_safe(f'<img src="{image.image.url}" style="max-height: 200px;">')
+
+        return mark_safe("".join([
+            f'<img src="{image.image.url}" style="max-height: 200px;">'
             for image in images
-        ])
+        ]))
     
     images.short_description = "Изображения"
+    images.allow_tags = True
     
     def go_to_images(self, obj):
-        return mark_safe("<a href={{  }}></a>")
-    
-    inlines = [ColorImageInline]
+        if obj.pk:
+            return mark_safe(f'<a href="/admin/products/productcolorimagesmodel/{obj.pk}/change/"><input type="button" value="Добавить"></a>')
+        else:
+            return mark_safe("<h3>Сначала выберите цвет и сохраните товар.</h3>")
+
+    go_to_images.short_description = "Добавить изображения"
+    go_to_images.allow_tags = True
 
 
 class ProductModificationInline(admin.TabularInline):
@@ -199,6 +205,17 @@ class BundleAdmin(admin.ModelAdmin):
 
 @admin.register(models.ProductColorImagesModel)
 class ProductColorImagesAdmin(admin.ModelAdmin):
+    fields = [
+        "color", "go_product"
+    ]
+    readonly_fields = ["go_product"]
+    
+    def go_product(self, obj):
+        return mark_safe(f'<a href="/admin/products/productmodel/{obj.product.pk}/change/"><input type="button" value="Вернуться"></a>')
+    
+    go_product.short_description = "Вернуться к товару"
+    go_product.allow_tags = True
+
     inlines = [ColorImageInline]
 
 # admin.site.register(models.ColorImageModel)

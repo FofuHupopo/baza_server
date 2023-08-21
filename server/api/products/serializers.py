@@ -54,16 +54,52 @@ class ProductModificationSerializer(serializers.ModelSerializer):
 
     def get_size(self, obj):
         return obj.size.name if obj.size else None
+    
+    
+class ShortProductModificationSerializer(serializers.ModelSerializer):
+    color = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = models.ProductModificationModel
+        fields = (
+            "id", "color", "size", "images"
+        )
+        
+    def get_size(self, obj):
+        return obj.size.name if obj.size else None
+    
+    def get_color(self, obj):
+        return obj.color.name if obj.color else None
+    
+    def get_images(self, obj):
+        product_colors = models.ProductColorImagesModel.objects.filter(
+            product=obj.product,
+            color=obj.color
+        )
+        
+        images = models.ColorImageModel.objects.filter(
+            product_color__in=product_colors
+        )
+        
+        request = self.context.get('request')
+
+        return [
+            request.build_absolute_uri(image.image.url)
+            for image in images
+        ]
 
 
 class ListProductSerializer(serializers.ModelSerializer):
     path = AloneProductPathSerializer()
     colours = serializers.SerializerMethodField()
+    modifications = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ProductModel
         fields = (
-            "id", "name", "price", "image", "colours", "path"
+            "id", "name", "price", "image", "colours", "path", "modifications"
         )
         
     def get_colours(self, obj):
@@ -75,6 +111,17 @@ class ListProductSerializer(serializers.ModelSerializer):
         ).distinct()
         
         return filter(lambda color: color, colours)
+
+    def get_modifications(self, obj):
+        return ShortProductModificationSerializer(
+            models.ProductModificationModel.objects.filter(
+                product=obj
+            ),
+            many=True,
+            context={
+                "request": self.context.get("request")
+            }
+        ).data
     
     
 class ProductColorImagesSerializer(serializers.ModelSerializer):
@@ -157,7 +204,7 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductModificationModel
         fields = (
-            "id", "name", "description", "price",
+            "id", "name", "description", "price"
             "category", "path", "full_path", "slug_path", "size", "color"
         )
         depth = 2
