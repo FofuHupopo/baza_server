@@ -7,17 +7,64 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.conf import settings
 
 from . import models
+from api.authentication import models as auth_models
 from . import serializers
 
 
-class ListOrderView(generics.ListAPIView):
-    queryset = models.OrderModel.objects.all()
+class OrderView(APIView):
     permission_classes = (IsAuthenticated, )
-    serializer_class = serializers.ListOrderSerializer
+    serializer_class = serializers.OrderSerializer
     
-    def get_queryset(self, request: Request):
-        queryset = super().get_queryset()
+    def get(self, request: Request):
+        serializer = self.serializer_class(
+            models.OrderModel.objects.filter(
+                user=request.user
+            ),
+            many=True
+        )
         
-        return queryset.filter(
-            user=request.user
+        return Response(
+            serializer.data,
+            status.HTTP_200_OK
+        )
+    
+    def post(self, request: Request):
+        cart = auth_models.BasketModel.objects.filter(
+            user_model=request.user
+        )
+        
+        if not cart:
+            return Response(
+                {"error": "no products in cart"},
+                status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = self.serializer_class(
+            data=request.data
+        )
+        
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status.HTTP_400_BAD_REQUEST
+            )
+
+        order_instance: models.OrderModel = serializer.save(user=request.user)
+        
+        for item in cart:
+            models.Order2ModificationModel.objects.create(
+                order_model=order_instance,
+                product_modification_model=item.product_modification_model,
+                quantity=item.quantity
+            )
+        
+        cart.delete()
+        
+        serializer = self.serializer_class(
+            order_instance
+        )
+        
+        return Response(
+            serializer.data,
+            status.HTTP_200_OK
         )

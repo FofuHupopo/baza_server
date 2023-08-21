@@ -204,7 +204,7 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductModificationModel
         fields = (
-            "id", "name", "description", "price"
+            "id", "name", "description", "price",
             "category", "path", "full_path", "slug_path", "size", "color"
         )
         depth = 2

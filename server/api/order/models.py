@@ -87,7 +87,7 @@ class OrderModel(models.Model):
 class Order2ModificationModel(models.Model):
     order_model = models.ForeignKey(
         OrderModel,
-        verbose_name="Пользователь",
+        verbose_name="Заказ",
         on_delete=models.CASCADE
     )
     product_modification_model = models.ForeignKey(
