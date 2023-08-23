@@ -91,7 +91,7 @@ class MoySkaldSynchronizer:
         if product["images"]["meta"]["size"] < 0:
             return False
         
-        response = MoySkaldSynchronizer.moysklad_request("PRODUCT_IMAGES", [product["id"]])
+        response = MoySkaldSynchronizer.moysklad_request("MODIFICATIONS", [product["id"]])
         if not response["rows"]:
             return False
 
