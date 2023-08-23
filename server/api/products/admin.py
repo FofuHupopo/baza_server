@@ -20,7 +20,7 @@ class ColorImageInline(admin.StackedInline):
 
 class ProductColorImagesInline(admin.StackedInline):
     model = models.ProductColorImagesModel
-    extra = 1
+    extra = 0
     
     fields = [
         "color", "images", "go_to_images"
@@ -53,7 +53,7 @@ class ProductColorImagesInline(admin.StackedInline):
 
 class ProductModificationInline(admin.TabularInline):
     model = models.ProductModificationModel
-    extra = 1
+    extra = 0
 
     show_change_link = True
 
