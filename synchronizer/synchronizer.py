@@ -101,7 +101,7 @@ class MoySkaldSynchronizer:
         with Session(engine) as session:
             full_path = product["pathName"].split("/")
 
-            if full_path[0].lower() == self.root_path:
+            if full_path and full_path[0].lower() != self.root_path:
                 return
 
             full_path = full_path[1:]
