@@ -41,6 +41,7 @@ class ProductModel(Base):
     product_id = Column(String(63))
     name = Column(String(255))
     description = Column(Text, nullable=True)
+    code = Column(String(32), nullable=True)
     price = Column(Integer)
     old_price = Column(Integer, nullable=True)
     visible = Column(Boolean, default=True)

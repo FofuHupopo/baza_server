@@ -32,10 +32,10 @@ class MoySkaldSynchronizer:
         "COMPONENTS": "https://online.moysklad.ru/api/remap/1.2/entity/bundle/{}/components",
     }
 
-    def __init__(self, django_media_path: Path, product_media_path: Path, valid_root_path: dict[str, str], only_valid: bool=True) -> None:
+    def __init__(self, django_media_path: Path, product_media_path: Path, root_path: str, only_valid: bool=True) -> None:
         self.django_media_path = django_media_path
         self.product_media_path = product_media_path
-        self.valid_root_path = valid_root_path
+        self.root_path = root_path
         self.default_product_image = "product_images/Заглушка фото карточки товара.jpg"
         self.only_valid = only_valid
 
@@ -101,11 +101,10 @@ class MoySkaldSynchronizer:
         with Session(engine) as session:
             full_path = product["pathName"].split("/")
 
-            if self.only_valid and full_path[0].lower() not in self.valid_root_path.keys():
+            if full_path[0].lower() == self.root_path:
                 return
 
-            if full_path[0].lower() in self.valid_root_path.keys():
-                full_path[0] = self.valid_root_path[full_path[0].lower()]
+            full_path = full_path[1:]
 
             last_path = None
             for ind, path in enumerate(full_path):
@@ -165,6 +164,7 @@ class MoySkaldSynchronizer:
             
             product_instance.product_id = product["id"]
             product_instance.name = product["name"]
+            product_instance.code = product["code"]
             product_instance.description = product.get("description", "")
             product_instance.path_id = product_path.id
             
@@ -266,23 +266,24 @@ class MoySkaldSynchronizer:
                 if not modification_instance:
                     modification_instance = models.ProductModificationModel(
                         product=product_instance,
-                        color_id=color_instance_id,
-                        size_id=size_instance_id
+                        modification_id=modification["id"]
                     )
 
-                modification_instance.modification_id = modification["id"]
                 modification_instance.quantity = modification.get("quantity", -1)
                 modification_instance.color_id = color_instance_id
                 modification_instance.size_id = size_instance_id
-                modification_instance.slug = slugify(f"{product_instance.name} {color_instance.name} {size_instance.name}")
+                modification_instance.slug = slugify(f"{product_instance.name} {product_instance.code} {color_instance.name} {size_instance.name}")
+
 
                 session.add(modification_instance)
                 session.commit()
 
-                # self._sync_product_modification_images(product_id, modification_instance)
                 self._add_standart_product_modification_image(product_instance.id, modification_instance)
                 
     def _add_standart_product_modification_image(self, product_id: str, modification_instance: models.ProductModificationModel) -> None:
+        # if self._sync_product_modification_images(product_id, modification_instance):
+        #     return
+
         with Session(engine) as session:
             color_id: int = modification_instance.color_id
             
@@ -317,6 +318,9 @@ class MoySkaldSynchronizer:
         with Session(engine) as session:
             response = MoySkaldSynchronizer.moysklad_request("MODIFICATION_IMAGES", [modification_instance.modification_id])
             
+            if not response["rows"]:
+                return False
+            
             for image in response["rows"]:
                 image_response = requests.get(
                     image["meta"]["downloadHref"],
@@ -349,19 +353,7 @@ class MoySkaldSynchronizer:
                     session.add(image_instance)
                     session.commit()
 
-            if not response["rows"]:
-                have_image = session.query(models.ProductModificationImageModel).filter(
-                    models.ProductModificationImageModel.product_modification_id == modification_instance.id
-                ).first()
-
-                if not have_image:
-                    image_instance = models.ProductModificationImageModel(
-                        product_modification_id=modification_instance.id,
-                        image=self.default_product_image
-                    )
-
-                    session.add(image_instance)
-                    session.commit()
+        return True
 
     def sync_bundles(self):
         response = MoySkaldSynchronizer.moysklad_request("BUNDLES")

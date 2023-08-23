@@ -15,12 +15,7 @@ from synchronizer import MoySkaldSynchronizer
 # DJANGO_MEDIA_PATH = Path("/root/baza/server/server/media")
 DJANGO_MEDIA_PATH = Path("/var/www/baza/server/server/media")
 PRODUCT_MEDIA_PATH = Path("product_images")
-VALID_ROOT_PATH = {
-    "женское": "women",
-    "мужское": "men",
-    "детское": "children",
-    "тест для сайта": "test-for-site"
-}
+ROOT_PATH = "Сайт"
 ROOT_DIRECTORY = Path(__file__).parent
 
 
@@ -30,7 +25,7 @@ scheduler = BackgroundScheduler()
 sync = MoySkaldSynchronizer(
     django_media_path=DJANGO_MEDIA_PATH,
     product_media_path=PRODUCT_MEDIA_PATH,
-    valid_root_path=VALID_ROOT_PATH,
+    root_path=ROOT_PATH,
     only_valid=True
 )
 
