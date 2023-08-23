@@ -130,7 +130,7 @@ class ColorImageModel(Base):
     __tablename__ = 'product__color_image'
 
     id = Column(Integer, primary_key=True)
-    product_color_images_id = Column(Integer, ForeignKey('product__product_color_images.id'))
+    product_color_id = Column(Integer, ForeignKey('product__product_color_images.id'))
     image = Column(String(511), default="product_images/Заглушка фото карточки товара.jpg")
 
     product_color = relationship("ProductColorImagesModel")
