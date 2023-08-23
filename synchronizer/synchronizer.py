@@ -149,7 +149,7 @@ class MoySkaldSynchronizer:
             
             if not category_instance:
                 category_instance = models.ProductCategoryModel(
-                    category=category_name
+                    name=category_name
                 )
                 
                 session.add(category_instance)
@@ -422,7 +422,7 @@ class MoySkaldSynchronizer:
             
             if not category_instance:
                 category_instance = models.ProductCategoryModel(
-                    category=category_name
+                    name=category_name
                 )
                 
                 session.add(category_instance)
