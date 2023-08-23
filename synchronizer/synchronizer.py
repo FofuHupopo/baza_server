@@ -304,7 +304,7 @@ class MoySkaldSynchronizer:
             
             images = session.query(models.ColorImageModel).filter(
                 models.ColorImageModel.product_color_images_id == product_color_images_instance.id
-            )
+            ).first()
             
             if not images:
                 image = models.ColorImageModel(
