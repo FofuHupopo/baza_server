@@ -15,7 +15,7 @@ from synchronizer import MoySkaldSynchronizer
 # DJANGO_MEDIA_PATH = Path("/root/baza/server/server/media")
 DJANGO_MEDIA_PATH = Path("/var/www/baza/server/server/media")
 PRODUCT_MEDIA_PATH = Path("product_images")
-ROOT_PATH = "Сайт"
+ROOT_PATH = "сайт"
 ROOT_DIRECTORY = Path(__file__).parent
 
 
