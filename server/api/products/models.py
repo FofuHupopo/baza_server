@@ -117,6 +117,10 @@ class ProductColorModel(models.Model):
     name = models.CharField(
         "Название", max_length=127
     )
+    eng_name = models.CharField(
+        "Английское название", max_length=127,
+        null=True, blank=True
+    )
     hex_code = models.CharField(
         "HEX цвета", max_length=6,
         validators=[validators.MinLengthValidator(6)],
@@ -133,6 +137,9 @@ class ProductColorModel(models.Model):
     
     def save(self, *args, **kwargs) -> None:
         self.hex_code = self.hex_code.replace("#", "")
+        
+        if not self.eng_name:
+            self.eng_name = slugify(self.name)
 
         return super().save(*args, **kwargs)
 
@@ -157,6 +164,11 @@ class ProductModificationModel(models.Model):
         ProductModel, models.CASCADE,
         verbose_name="Родительский товар"
     )
+    slug = models.SlugField(
+        "Слаг", max_length=255,
+        unique=True, db_index=True,
+        null=True, blank=True
+    )
     modification_id = models.CharField(
         "МойСклад id", max_length=63
     )
@@ -173,28 +185,30 @@ class ProductModificationModel(models.Model):
     quantity = models.IntegerField(
         "Количество", default=0
     )
-    
+
     class Meta:
         db_table = "product__product_modification"
         verbose_name = "Модификация товара"
         verbose_name_plural = "Модификации товаров"
-    
+
     def __str__(self) -> str:
         if self.color:
             return f"{self.product.name} ({self.color.name}, {self.size})"
         else:
             return f"{self.product.name} ({self.size})"
-    
+
     def save(self, *args, **kwargs) -> None:
         if type(self.color) is NoneType:
             self.color, _ = ProductColorModel.objects.get_or_create(
                 name="Стандартный"
             )
-        
+
         if type(self.size) is NoneType:
             self.size, _ = ProductSizeModel.objects.get_or_create(
                 name="OS"
             )
+
+        self.slug = slugify(f"{self.product.name} {self.color.name} {self.size.name}")
 
         return super().save(*args, **kwargs)
 
