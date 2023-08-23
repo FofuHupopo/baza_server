@@ -12,7 +12,8 @@ from synchronizer import MoySkaldSynchronizer
 
 # DJANGO_MEDIA_PATH = Path("/Users/ilyazhukov/projects/projects/baza_store/server/media")
 # DJANGO_MEDIA_PATH = Path("/home/ilya/baza/server/media")
-DJANGO_MEDIA_PATH = Path("/root/baza/server/server/media")
+# DJANGO_MEDIA_PATH = Path("/root/baza/server/server/media")
+DJANGO_MEDIA_PATH = Path("/var/www/baza/server/server/media")
 PRODUCT_MEDIA_PATH = Path("product_images")
 VALID_ROOT_PATH = {
     "женское": "women",
