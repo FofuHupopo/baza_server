@@ -216,56 +216,51 @@ class MoySkaldSynchronizer:
                     models.ProductModel.product_id == product_id
                 ).first()
 
-                color_instance_id = None
-                size_instance_id = None
-    
-                for characteristic in modification["characteristics"]:
-                    color_name = "Стандартный"
+                color_name = "Стандартный"
+                size_name = "OS"
 
+                for characteristic in modification["characteristics"]:
                     if characteristic["name"].lower() == "цвет":
                         color_name = characteristic["value"]
-                    
-                    color_instance = session.query(models.ProductColorModel).filter(
-                        models.ProductColorModel.name == color_name
-                    ).first()
-                    
-                    if not color_instance:
-                        color_instance = models.ProductColorModel(
-                            name=color_name,
-                            eng_name=slugify(color_name)
-                        )
-
-                        session.add(color_instance)
-                        session.commit()
-                    
-                    color_instance_id = color_instance.id
-
-                    
-                    size_name = "OS"
-                    
+                        
                     if characteristic["name"].lower() == "размер":
                         size_name = characteristic["value"]
 
-                    size_instance = session.query(models.ProductSizeModel).filter(
-                        models.ProductSizeModel.name == size_name
-                    ).first()
+
+                color_instance = session.query(models.ProductColorModel).filter(
+                    models.ProductColorModel.name == color_name
+                ).first()
+                
+                if not color_instance:
+                    color_instance = models.ProductColorModel(
+                        name=color_name,
+                        eng_name=slugify(color_name)
+                    )
+
+                    session.add(color_instance)
+                    session.commit()
+                
+                color_instance_id = color_instance.id
+
+
+                size_instance = session.query(models.ProductSizeModel).filter(
+                    models.ProductSizeModel.name == size_name
+                ).first()
+                
+                if not size_instance:
+                    size_instance = models.ProductSizeModel(
+                        name=size_name
+                    )
                     
-                    if not size_instance:
-                        size_instance = models.ProductSizeModel(
-                            name=size_name
-                        )
-                        
-                        session.add(size_instance)
-                        session.commit()
-                    
-                    size_instance_id = size_instance.id
+                    session.add(size_instance)
+                    session.commit()
+                
+                size_instance_id = size_instance.id
 
 
                 modification_instance = session.query(models.ProductModificationModel).filter(
                     models.ProductModificationModel.product_id == product_instance.id,
-                    models.ProductModificationModel.modification_id == modification["id"],
-                    models.ProductModificationModel.color_id == color_instance_id,
-                    models.ProductModificationModel.size_id == size_instance_id
+                    models.ProductModificationModel.modification_id == modification["id"]
                 ).first()
 
                 if not modification_instance:
@@ -277,6 +272,8 @@ class MoySkaldSynchronizer:
 
                 modification_instance.modification_id = modification["id"]
                 modification_instance.quantity = modification.get("quantity", -1)
+                modification_instance.color_id = color_instance_id
+                modification_instance.size_id = size_instance_id
                 modification_instance.slug = slugify(f"{product_instance.name} {color_instance.name} {size_instance.name}")
 
                 session.add(modification_instance)
