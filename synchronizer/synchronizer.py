@@ -263,6 +263,7 @@ class MoySkaldSynchronizer:
 
                 modification_instance = session.query(models.ProductModificationModel).filter(
                     models.ProductModificationModel.product_id == product_instance.id,
+                    models.ProductModificationModel.modification_id == modification["id"],
                     models.ProductModificationModel.color_id == color_instance_id,
                     models.ProductModificationModel.size_id == size_instance_id
                 ).first()
