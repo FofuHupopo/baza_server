@@ -42,7 +42,7 @@ def category_image_upload_path(instance, filename):
 
 
 class ProductCategoryModel(models.Model):
-    category = models.CharField(
+    name = models.CharField(
         "Название категории", max_length=127
     )
     size_image = models.ImageField(
@@ -58,7 +58,7 @@ class ProductCategoryModel(models.Model):
         verbose_name_plural = "Категории товаров"
     
     def __str__(self) -> str:
-        return f"{self.category}"
+        return f"{self.name}"
 
 
 def product_image_upload_path(instance, filename):

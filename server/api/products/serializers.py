@@ -3,6 +3,12 @@ from rest_framework import serializers
 from . import models
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ProductCategoryModel
+        fields = ("name", "size_image")
+
+
 class ProductPathSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
 
@@ -301,3 +307,22 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
     
     def get_color(self, obj):
         return obj.color.name if obj.color else None
+
+
+class ProductDetailSerializer(serializers.ModelSerializer):
+    path = AloneProductPathSerializer()
+    category = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = models.ProductModel
+        fields = (
+            "name", "description", "price", "old_price", "path", "category"
+        )
+    
+    def get_category(self, obj):
+        return CategorySerializer(
+            obj.category,
+            context={
+                "request": self.context["request"]
+            }
+        ).data

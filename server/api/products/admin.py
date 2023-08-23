@@ -145,13 +145,13 @@ class ProductSizeAdmin(admin.ModelAdmin):
 @admin.register(models.ProductCategoryModel)
 class ProductCategoryAdmin(admin.ModelAdmin):
     list_display = [
-        "category"
+        "name"
     ]
     fields = [
-        "category"
+        "name", "size_image"
     ]
     search_fields = [
-        "category"
+        "name"
     ]
 
 

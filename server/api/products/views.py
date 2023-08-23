@@ -127,10 +127,51 @@ class ProductDetailView(APIView):
                 status.HTTP_400_BAD_REQUEST
             )
         
-        colors = modifications.values_list("color", "id")
-        print(modifications.values_list())
+        product = modifications[0].product
+        
+        sizes = modifications.values_list("size__name", "id")
+
+        colors = models.ProductModificationModel.objects.filter(
+            product=product
+        ).distinct("color").values_list("slug", "color__name", "color__hex_code")
+        
+        current_color = modifications[0].color
+        images = models.ColorImageModel.objects.filter(
+            product_color=models.ProductColorImagesModel.objects.filter(
+                color=current_color,
+                product=product
+            ).first()
+        ).values_list("image", flat=True)
+        
+        
+        serializer = serializers.ProductDetailSerializer(product, context={"request": request})
         
         return Response(
-            "ok",
+            {
+                **serializer.data,
+                "images": [
+                    request.build_absolute_uri(image)
+                    for image in images    
+                ],
+                "sizes": [
+                    {
+                        "name": size_name,
+                        "mod_id": mod_id
+                    }
+                    for size_name, mod_id in sizes
+                ],
+                "current_color": {
+                    "name": current_color.name,
+                    "hex_code": current_color.hex_code
+                },
+                "colors": [
+                    {
+                        "slug": "-".join(slug.split("-")[:-1]),
+                        "name": color_name,
+                        "hex_code": color_hex
+                    }
+                    for slug, color_name, color_hex in colors
+                ]
+            },
             status.HTTP_200_OK
         )
