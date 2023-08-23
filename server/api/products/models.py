@@ -76,6 +76,11 @@ class ProductModel(models.Model):
         "Описание",
         null=True, blank=True
     )
+    code = models.CharField(
+        "Код MoySklad", max_length=32,
+        null=True, blank=True
+    )
+    
     old_price = models.IntegerField(
         "Старая цена",
         null=True, blank=True
@@ -83,6 +88,7 @@ class ProductModel(models.Model):
     price = models.IntegerField(
         "Цена"
     )
+    
     visible = models.BooleanField(
         "Отображается на сайте?",
         default=True
@@ -208,7 +214,7 @@ class ProductModificationModel(models.Model):
                 name="OS"
             )
 
-        self.slug = slugify(f"{self.product.name} {self.color.name} {self.size.name}")
+        self.slug = slugify(f"{self.product.name} {self.product.code} {self.color.name} {self.size.name}")
 
         return super().save(*args, **kwargs)
 
