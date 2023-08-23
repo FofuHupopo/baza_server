@@ -42,6 +42,7 @@ class ProductModel(Base):
     name = Column(String(255))
     description = Column(Text, nullable=True)
     price = Column(Integer)
+    old_price = Column(Integer, nullable=True)
     visible = Column(Boolean, default=True)
     image = Column(String(511), default="product_images/Заглушка фото карточки товара.jpg")
     category_id = Column(Integer, ForeignKey('product__product_category.id'))
@@ -59,6 +60,7 @@ class ProductColorModel(Base):
     
     id = Column(Integer, primary_key=True)
     name = Column(String(127))
+    eng_name = Column(String(127), nullable=True)
     hex_code = Column(String(6), nullable=True)
 
     def __repr__(self):
@@ -81,6 +83,7 @@ class ProductModificationModel(Base):
     id = Column(Integer, primary_key=True)
     product_id = Column(Integer, ForeignKey('product__product.id'))
     modification_id = Column(String(63))
+    slug = Column(String(255), nullable=True)
     color_id = Column(Integer, ForeignKey('product__product_color.id'), nullable=True)
     size_id = Column(Integer, ForeignKey('product__product_size.id'), nullable=True)
     quantity = Column(Integer, default=0)
@@ -107,6 +110,33 @@ class ProductModificationImageModel(Base):
 
     def __repr__(self):
         return f"ProductModificationImageModel(id={self.id}, modification_id={self.modification_id}, image='{self.image}')"
+
+
+class ProductColorImagesModel(Base):
+    __tablename__ = 'product__product_color_images'
+
+    id = Column(Integer, primary_key=True)
+    product_id = Column(Integer, ForeignKey('product__product.id'))
+    color_id = Column(Integer, ForeignKey('product__product_color.id'), nullable=True)
+
+    product = relationship("ProductModel")
+    color = relationship("ProductColorModel")
+
+    def __repr__(self):
+        return f"<ProductColorImagesModel(product={self.product.name}, color={self.color})>"
+    
+
+class ColorImageModel(Base):
+    __tablename__ = 'product__color_image'
+
+    id = Column(Integer, primary_key=True)
+    product_color_images_id = Column(Integer, ForeignKey('product__product_color_images.id'))
+    image = Column(String(511), default="product_images/Заглушка фото карточки товара.jpg")
+
+    product_color = relationship("ProductColorImagesModel")
+
+    def __repr__(self):
+        return f"<ColorImageModel(product={self.product_color.product.name})>"
 
 
 class BundleModel(Base):

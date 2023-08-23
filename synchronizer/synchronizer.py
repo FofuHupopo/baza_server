@@ -57,13 +57,16 @@ class MoySkaldSynchronizer:
         products_count = len(response["rows"])
     
         for ind, product in enumerate(response["rows"], start=1):
-            try:
-                self._sync_product(product)
-
-                print(f"{product['name']} synchronized ({ind}/{products_count})")
-            except Exception as e:
-                print(e)
-                print(f"{product['name']} not synchronized ({ind}/{products_count})")
+            # try:
+                status = self._sync_product(product)
+                
+                if status:
+                    print(f"{product['name']} synchronized ({ind}/{products_count})")
+                else:
+                    print(f"{product['name']} not synchronized ({ind}/{products_count})")
+            # except Exception as e:
+            #     print(e)
+            #     print(f"{product['name']} not synchronized ({ind}/{products_count})")
     
     def sync_product_by_id(self, product_id: str):
         response = self.moysklad_request("PRODUCT_DETAIL", [product_id])
@@ -72,7 +75,7 @@ class MoySkaldSynchronizer:
 
     def _sync_product(self, product: dict):
         if not self._checking_product_sync(product):
-            return
+            return False
 
         product_path = self._sync_product_path(product)
         
@@ -81,9 +84,15 @@ class MoySkaldSynchronizer:
         
         product_instance = self._sync_product_detail(product, product_path)
         self._sync_product_modifications(product["id"])
+        
+        return True
 
     def _checking_product_sync(self, product: dict) -> bool:        
         if product["images"]["meta"]["size"] < 0:
+            return False
+        
+        response = MoySkaldSynchronizer.moysklad_request("PRODUCT_IMAGES", [product["id"]])
+        if not response["rows"]:
             return False
 
         return True
@@ -157,9 +166,13 @@ class MoySkaldSynchronizer:
             product_instance.product_id = product["id"]
             product_instance.name = product["name"]
             product_instance.description = product.get("description", "")
-            product_instance.price = int(product["salePrices"][0]["value"])
             product_instance.path_id = product_path.id
             
+            product_instance.price = int(product["salePrices"][0]["value"])
+            
+            if len(product["salePrices"]) > 1:
+                product_instance.old_price = int(product["salePrices"][1]["value"])
+
             product_instance.category_id = category_instance.id
             product_instance.image = self._sync_product_image(product["id"])
 
@@ -207,57 +220,100 @@ class MoySkaldSynchronizer:
                 size_instance_id = None
     
                 for characteristic in modification["characteristics"]:
+                    color_name = "Стандартный"
+
                     if characteristic["name"].lower() == "цвет":
-                        color_instance = session.query(models.ProductColorModel).filter(
-                            models.ProductColorModel.name == characteristic["value"]
-                        ).first()
-                        
-                        if not color_instance:
-                            color_instance = models.ProductColorModel(
-                                name=characteristic["value"]
-                            )
-                            
-                            session.add(color_instance)
-                            session.commit()
-                        
-                        color_instance_id = color_instance.id
+                        color_name = characteristic["value"]
+                    
+                    color_instance = session.query(models.ProductColorModel).filter(
+                        models.ProductColorModel.name == color_name
+                    ).first()
+                    
+                    if not color_instance:
+                        color_instance = models.ProductColorModel(
+                            name=color_name,
+                            eng_name=slugify(color_name)
+                        )
+
+                        session.add(color_instance)
+                        session.commit()
+                    
+                    color_instance_id = color_instance.id
+
+                    
+                    size_name = "OS"
                     
                     if characteristic["name"].lower() == "размер":
-                        size_instance = session.query(models.ProductSizeModel).filter(
-                            models.ProductSizeModel.name == characteristic["value"]
-                        ).first()
+                        size_name = characteristic["value"]
+
+                    size_instance = session.query(models.ProductSizeModel).filter(
+                        models.ProductSizeModel.name == size_name
+                    ).first()
+                    
+                    if not size_instance:
+                        size_instance = models.ProductSizeModel(
+                            name=size_name
+                        )
                         
-                        if not size_instance:
-                            size_instance = models.ProductSizeModel(
-                                name=characteristic["value"]
-                            )
-                            
-                            session.add(size_instance)
-                            session.commit()
-                        
-                        size_instance_id = size_instance.id
-            
+                        session.add(size_instance)
+                        session.commit()
+                    
+                    size_instance_id = size_instance.id
+
+
                 modification_instance = session.query(models.ProductModificationModel).filter(
                     models.ProductModificationModel.product_id == product_instance.id,
                     models.ProductModificationModel.color_id == color_instance_id,
                     models.ProductModificationModel.size_id == size_instance_id
                 ).first()
-                
+
                 if not modification_instance:
                     modification_instance = models.ProductModificationModel(
                         product=product_instance,
                         color_id=color_instance_id,
                         size_id=size_instance_id
                     )
-                
+
                 modification_instance.modification_id = modification["id"]
                 modification_instance.quantity = modification.get("quantity", -1)
-                
+                modification_instance.slug = slugify(f"{product_instance.name} {color_instance.name} {size_instance.name}")
+
                 session.add(modification_instance)
                 session.commit()
+
+                # self._sync_product_modification_images(product_id, modification_instance)
+                self._add_standart_product_modification_image(product_instance.id, modification_instance)
                 
-                self._sync_product_modification_images(product_id, modification_instance)
+    def _add_standart_product_modification_image(self, product_id: str, modification_instance: models.ProductModificationModel) -> None:
+        with Session(engine) as session:
+            color_id: int = modification_instance.color_id
+            
+            product_color_images_instance = session.query(models.ProductColorImagesModel).filter(
+                models.ProductColorImagesModel.product_id == product_id,
+                models.ProductColorImagesModel.color_id == color_id
+            ).first()
+            
+            if not product_color_images_instance:
+                product_color_images_instance = models.ProductColorImagesModel(
+                    product_id=product_id,
+                    color_id=color_id
+                )
                 
+                session.add(product_color_images_instance)
+                session.commit()
+            
+            images = session.query(models.ColorImageModel).filter(
+                models.ColorImageModel.product_color_images_id == product_color_images_instance.id
+            )
+            
+            if not images:
+                image = models.ColorImageModel(
+                    product_color_images_id=product_color_images_instance.id
+                )
+                
+                session.add(image)
+                session.commit()
+
     def _sync_product_modification_images(self, product_id: str, modification_instance: models.ProductModificationModel) -> None:
         with Session(engine) as session:
             response = MoySkaldSynchronizer.moysklad_request("MODIFICATION_IMAGES", [modification_instance.modification_id])
@@ -295,13 +351,18 @@ class MoySkaldSynchronizer:
                     session.commit()
                     
             if not response["rows"]:
-                image_instance = models.ProductModificationImageModel(
-                    product_modification_id=modification_instance.id,
-                    image=self.default_product_image
-                )
+                have_image = session.query(models.ProductModificationImageModel).filter(
+                    models.ProductModificationImageModel.product_modification_id == modification_instance.id
+                ).first()
 
-                session.add(image_instance)
-                session.commit()
+                if not have_image:
+                    image_instance = models.ProductModificationImageModel(
+                        product_modification_id=modification_instance.id,
+                        image=self.default_product_image
+                    )
+
+                    session.add(image_instance)
+                    session.commit()
 
     def sync_bundles(self):
         response = MoySkaldSynchronizer.moysklad_request("BUNDLES")

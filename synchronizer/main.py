@@ -10,6 +10,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from synchronizer import MoySkaldSynchronizer
 
 
+# DJANGO_MEDIA_PATH = Path("/Users/ilyazhukov/projects/projects/baza_store/server/media")
 # DJANGO_MEDIA_PATH = Path("/home/ilya/baza/server/media")
 DJANGO_MEDIA_PATH = Path("/root/baza/server/server/media")
 PRODUCT_MEDIA_PATH = Path("product_images")
@@ -88,8 +89,8 @@ def sync_bundle_by_id(bundle_id: str):
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)
+    # uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)
 
-    # sync.sync_products()
+    sync.sync_products()
     # sync.sync_bundles()
     # sync.sync_product_by_id("fe485046-edb1-11ed-0a80-034d00a3f03a")
