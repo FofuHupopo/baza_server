@@ -309,7 +309,7 @@ class MoySkaldSynchronizer:
             if not images:
                 image = models.ColorImageModel(
                     product_color_images_id=product_color_images_instance.id,
-                    image="product_images/Заглушка фото карточки товара.jpg"
+                    image=self.default_product_image
                 )
                 
                 session.add(image)
@@ -341,7 +341,7 @@ class MoySkaldSynchronizer:
                 image_instance = session.query(models.ProductModificationImageModel).filter(
                     models.ProductModificationImageModel.image == django_image_path
                 ).first()
-                
+
                 if not image_instance:
                     image_instance = models.ProductModificationImageModel(
                         product_modification_id=modification_instance.id,
@@ -350,7 +350,7 @@ class MoySkaldSynchronizer:
 
                     session.add(image_instance)
                     session.commit()
-                    
+
             if not response["rows"]:
                 have_image = session.query(models.ProductModificationImageModel).filter(
                     models.ProductModificationImageModel.product_modification_id == modification_instance.id
