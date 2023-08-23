@@ -27,7 +27,7 @@ class ProductCategoryModel(Base):
     __tablename__ = "product__product_category"
     
     id = Column(Integer, primary_key=True)
-    category = Column(String(127))
+    name = Column(String(127))
     size_image = Column(String(511), default="product_images/Заглушка фото карточки товара.jpg")
 
     def __repr__(self):
