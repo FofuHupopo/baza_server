@@ -122,8 +122,74 @@ class ListProductSerializer(serializers.ModelSerializer):
                 "request": self.context.get("request")
             }
         ).data
+
+
+class ListProductsSerializer(serializers.ModelSerializer):
+    product_id = serializers.SerializerMethodField()
+    modification_id = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
+    old_price = serializers.SerializerMethodField()
+    slug = serializers.SerializerMethodField()
+    path = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()
+    colors_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ProductModificationModel
+        fields = (
+            "product_id", "modification_id", "name", "price", "old_price", "images", "colors_count", "path", "slug"
+        )
     
+    def get_name(self, obj):
+        return f"{obj.product.name} {obj.color.name}"
     
+    def get_price(self, obj):
+        return obj.product.price
+
+    def get_old_price(self, obj):
+        return obj.product.old_price
+    
+    def get_product_id(self, obj):
+        return obj.product.id
+    
+    def get_modification_id(self, obj):
+        return obj.id
+    
+    def get_path(self, obj):
+        return AloneProductPathSerializer(obj.product.path).data
+    
+    def get_colors_count(self, obj):
+        colors = models.ProductModificationModel.objects.filter(
+            product=obj.product
+        ).values_list(
+            'color__name',
+            flat=True
+        ).distinct()
+        
+        return len(colors)
+
+    def get_images(self, obj):
+        product_color = models.ProductColorImagesModel.objects.filter(
+            product=obj.product,
+            color=obj.color
+        ).first()
+
+        images = models.ColorImageModel.objects.filter(
+            product_color=product_color
+        )
+
+        request = self.context.get('request')
+
+        return [
+            request.build_absolute_uri(image.image.url)
+            for image in images
+        ]
+    
+    def get_slug(self, obj):
+        return "-".join(obj.slug.split("-")[:-1])
+
+
 class ProductColorImagesSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     color = serializers.SerializerMethodField()

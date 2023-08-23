@@ -69,3 +69,68 @@ class ProductView(generics.RetrieveAPIView):
         context['request'] = self.request
 
         return context
+
+
+class ListProductsView(generics.ListAPIView):
+    permission_classes = (AllowAny, )
+    queryset = models.ProductModificationModel.objects.filter(
+        product__visible=True,
+    ).distinct("color", "product").order_by("product__id")
+    serializer_class = serializers.ListProductsSerializer
+    pagination_class = ListProductPagination
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query_params = self.request.query_params
+
+        if (slug := query_params.get("slug")):
+            path = models.ProductPathModel.objects.filter(
+                slug=slug
+            ).first()
+
+            return queryset.filter(
+                product__path=path
+            )
+
+        if (path_id := query_params.get("path_id")):
+            path = models.ProductPathModel.objects.filter(
+                pk=path_id
+            ).first()
+
+            return queryset.filter(
+                product__path=path
+            )
+
+        return queryset
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+
+        return context
+
+
+class ProductDetailView(APIView):
+    permission_classes = (AllowAny, )
+    serializer_class = serializers.ProductSerializer
+
+    def get(self, request: Request, slug):
+        modifications = models.ProductModificationModel.objects.filter(
+            slug__icontains=slug
+        )
+        
+        if not modifications:
+            return Response(
+                {
+                    "error": "Incorrect slug"
+                },
+                status.HTTP_400_BAD_REQUEST
+            )
+        
+        colors = modifications.values_list("color", "id")
+        print(modifications.values_list())
+        
+        return Response(
+            "ok",
+            status.HTTP_200_OK
+        )

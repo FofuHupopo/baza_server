@@ -16,8 +16,11 @@ DADATA_TOKEN = "48ab36191d6ef5b11a3ae58d406b7d641a1fbd32"
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "*"
+    "*",
+    "thebaza.ru"
 ]
+
+CSRF_TRUSTED_ORIGINS = ['https://thebaza.ru']
 
 # Application definition
 
@@ -137,7 +140,7 @@ TOKEN_SETTINGS = {
     'COOKIE_NAME': 'token',
     'COOKIE_MAX_AGE': 60 * 60 * 24 * 30,
     'COOKIE_DOMAIN': None,
-    'COOKIE_SECURE': False,
+    'COOKIE_SECURE': True,
     'COOKIE_HTTP_ONLY': True,
     'COOKIE_PATH': '/',
     'COOKIE_SAMESITE': "Lax",
