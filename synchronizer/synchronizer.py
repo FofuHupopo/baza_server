@@ -283,7 +283,7 @@ class MoySkaldSynchronizer:
         
     def _sync_product_modification_quantity(self, modification_id: str):
         response = MoySkaldSynchronizer.moysklad_request("MODIFICATION_QUANTITY", [modification_id])
-        return int(response.get("quantity", 0))
+        return int(response["rows"][0].get("quantity", 0))
                 
     def _add_standart_product_modification_image(self, product_id: str, modification_instance: models.ProductModificationModel) -> None:
         # if self._sync_product_modification_images(product_id, modification_instance):
