@@ -308,7 +308,8 @@ class MoySkaldSynchronizer:
             
             if not images:
                 image = models.ColorImageModel(
-                    product_color_images_id=product_color_images_instance.id
+                    product_color_images_id=product_color_images_instance.id,
+                    image="product_images/Заглушка фото карточки товара.jpg"
                 )
                 
                 session.add(image)
