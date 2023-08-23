@@ -144,7 +144,7 @@ class MoySkaldSynchronizer:
 
             category_name = product_path.name        
             category_instance = session.query(models.ProductCategoryModel).filter(
-                models.ProductCategoryModel.category == category_name
+                models.ProductCategoryModel.name == category_name
             ).first()
             
             if not category_instance:
@@ -417,7 +417,7 @@ class MoySkaldSynchronizer:
         with Session(engine) as session:
             category_name = bundle_path.name
             category_instance = session.query(models.ProductCategoryModel).filter(
-                models.ProductCategoryModel.category == category_name
+                models.ProductCategoryModel.name == category_name
             ).first()
             
             if not category_instance:
