@@ -64,12 +64,12 @@ class ProductAdmin(admin.ModelAdmin):
         "name", "category", "price", "visible"
     ]
     fields = [
-        "pk", "name", "description", "price",
+        "pk", "name", "description", "code", "price", "old_price",
         "image_preview", "image", "visible",
         "category", "path"
     ]
     search_fields = [
-        "name", "description", "category"
+        "name", "description", "code"
     ]
     list_filter = [
         "visible",
