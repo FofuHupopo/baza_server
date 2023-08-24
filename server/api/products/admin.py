@@ -113,10 +113,10 @@ class ProductModificationAdmin(admin.ModelAdmin):
 @admin.register(models.ProductColorModel)
 class ProductColorAdmin(admin.ModelAdmin):
     list_display = [
-        "name", "hex_code", "color_preview"
+        "name", "eng_name", "hex_code", "color_preview"
     ]
     fields = [
-        "name", "hex_code", "color_preview"
+        "name", "eng_name", "hex_code", "color_preview"
     ]
     
     readonly_fields = [
