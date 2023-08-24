@@ -77,7 +77,7 @@ class ListProductsView(generics.ListAPIView):
         product__visible=True,
     ).distinct("color", "product").order_by("product__id")
     serializer_class = serializers.ListProductsSerializer
-    pagination_class = ListProductPagination
+    # pagination_class = ListProductPagination
 
     def get_queryset(self):
         queryset = super().get_queryset()
