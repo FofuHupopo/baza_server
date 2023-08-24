@@ -112,7 +112,6 @@ class ListProductsView(generics.ListAPIView):
 
 class ProductDetailView(APIView):
     permission_classes = (AllowAny, )
-    serializer_class = serializers.ProductSerializer
 
     def get(self, request: Request, slug):
         modifications = models.ProductModificationModel.objects.filter(
