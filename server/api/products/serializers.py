@@ -148,7 +148,7 @@ class ListProductsSerializer(serializers.ModelSerializer):
         )
     
     def get_name(self, obj):
-        return f"{obj.product.name} {obj.color.eng_name}"
+        return f"{obj.product.name} {obj.color.eng_name.title()}"
     
     def get_price(self, obj):
         return obj.product.price
