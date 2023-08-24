@@ -141,8 +141,7 @@ class ProductDetailView(APIView):
                 color=current_color,
                 product=product
             ).first()
-        ).values_list("image", flat=True)
-        
+        )
         
         serializer = serializers.ProductDetailSerializer(product, context={"request": request})
         
@@ -150,7 +149,7 @@ class ProductDetailView(APIView):
             {
                 **serializer.data,
                 "images": [
-                    request.build_absolute_uri(image)
+                    request.build_absolute_uri(image.image.url)
                     for image in images    
                 ],
                 "sizes": [
@@ -161,13 +160,16 @@ class ProductDetailView(APIView):
                     for size_name, mod_id in sizes
                 ],
                 "current_color": {
+                    "slug": slug,
                     "name": current_color.name,
-                    "hex_code": current_color.hex_code
+                    "eng_name": current_color.eng_name,
+                    "hex_code": current_color.hex_code,
                 },
                 "colors": [
                     {
                         "slug": "-".join(slug.split("-")[:-1]),
                         "name": color_name,
+                        "eng_name": current_color.eng_name,
                         "hex_code": color_hex
                     }
                     for slug, color_name, color_hex in colors
