@@ -69,7 +69,7 @@ class OrderModel(models.Model):
         "Оплачено?", default=False
     )
     
-    products_modification = models.ManyToManyField(
+    products = models.ManyToManyField(
         product_models.ProductModificationModel,
         through="Order2ModificationModel",
         verbose_name="Модификации продуктов"
@@ -104,19 +104,6 @@ class Order2ModificationModel(models.Model):
         verbose_name = "Заказ к модификации товара"
         verbose_name_plural = "Заказ к модификациям товаров"
         unique_together = ('order_model', 'product_modification_model')
-
-    def save(self, *args, **kwargs) -> None:
-        try: 
-            basket_instance = Order2ModificationModel.objects.get(
-                order_model=self.order_model,
-                product_modification_model=self.product_modification_model
-            )
-            
-            basket_instance.quantity += 1
-            
-            basket_instance.save()
-        except Order2ModificationModel.DoesNotExist:
-            return super().save(*args, **kwargs)
     
     def __str__(self) -> str:
         return f"{self.product_modification_model.product.name} ({self.product_modification_model.color.name}, {self.product_modification_model.size.name}) - {self.quantity}"

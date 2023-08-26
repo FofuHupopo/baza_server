@@ -4,7 +4,7 @@ from . import models
 
 
 class ProductModificationInline(admin.StackedInline):
-    model = models.OrderModel.products_modification.through
+    model = models.OrderModel.products.through
     extra = 0
 
 
