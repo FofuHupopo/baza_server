@@ -180,7 +180,8 @@ class ProductModificationModel(models.Model):
     )
     
     additional_description = models.TextField(
-        "Дополнительное описание", default=""
+        "Дополнительное описание", default="",
+        null=True, blank=True
     )
     color = models.ForeignKey(
         ProductColorModel, models.CASCADE,
