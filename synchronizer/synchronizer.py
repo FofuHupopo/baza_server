@@ -279,7 +279,7 @@ class MoySkaldSynchronizer:
                 session.add(modification_instance)
                 session.commit()
 
-                # self._add_standart_product_modification_image(product_instance.id, modification_instance)
+                self._add_standart_product_modification_image(product_instance.id, modification_instance)
         
     def _sync_product_modification_quantity(self, modification_id: str):
         response = MoySkaldSynchronizer.moysklad_request("MODIFICATION_QUANTITY", [modification_id])
