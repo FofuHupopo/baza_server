@@ -23,7 +23,7 @@ class ProductColorImagesInline(admin.StackedInline):
     extra = 0
     
     fields = [
-        "color", "images", "go_to_images"
+        "color", "additional_description","images", "go_to_images"
     ]
 
     readonly_fields = ["images", "go_to_images"]
@@ -56,7 +56,7 @@ class ProductModificationInline(admin.TabularInline):
     extra = 0
     
     fields = (
-        "color", "size", "quantity", "additional_description", "visible"
+        "color", "size", "quantity", "visible"
     )
 
     show_change_link = True
@@ -113,7 +113,7 @@ class ProductModificationAdmin(admin.ModelAdmin):
         "product", "color", "size", "quantity"
     ]
     fields = [
-        "pk", "color", "color_preview", "size", "additional_description", "quantity"
+        "pk", "color", "color_preview", "size", "quantity"
     ]
     
     readonly_fields = [

@@ -139,15 +139,20 @@ class ProductDetailView(APIView):
         ).distinct("color").values_list("slug", "color__name", "color__hex_code")
         
         current_color = modifications[0].color
+        
+        product_color = models.ProductColorImagesModel.objects.filter(
+            color=current_color,
+            product=product
+        ).first()
+        
         images = models.ColorImageModel.objects.filter(
-            product_color=models.ProductColorImagesModel.objects.filter(
-                color=current_color,
-                product=product
-            ).first()
+            product_color=product_color
         )
         
         serializer = serializers.ProductDetailSerializer(product, context={"request": request})
         
+        serializer.data["description"] += f"\n\n{product_color.additional_description}"
+
         return Response(
             {
                 **serializer.data,

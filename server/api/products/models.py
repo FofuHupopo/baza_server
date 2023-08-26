@@ -178,11 +178,7 @@ class ProductModificationModel(models.Model):
     modification_id = models.CharField(
         "МойСклад id", max_length=63
     )
-    
-    additional_description = models.TextField(
-        "Дополнительное описание", default="",
-        null=True, blank=True
-    )
+
     color = models.ForeignKey(
         ProductColorModel, models.CASCADE,
         verbose_name="Цвет товара",
@@ -245,7 +241,11 @@ class ProductColorImagesModel(models.Model):
         ProductColorModel, models.CASCADE,
         verbose_name="Цвет"
     )
-    
+    additional_description = models.TextField(
+        "Дополнительное описание к цвету", default="",
+        null=True, blank=True
+    )
+
     class Meta:
         db_table = "product__product_color_images"
         verbose_name = "Изображения товара по цвету"

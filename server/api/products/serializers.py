@@ -285,7 +285,7 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
         return obj.product.name
     
     def get_description(self, obj):
-        return f"{obj.product.description}\n\n{obj.additional_description}"
+        return f"{obj.product.description}"
     
     def get_price(self, obj):
         return obj.product.price
