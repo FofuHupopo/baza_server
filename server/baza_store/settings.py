@@ -87,10 +87,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'baza_store',
         'USER': 'baza',
-        'PASSWORD': 'Ot?y\CJN=Qh7uU',
+        'PASSWORD': 'Ot?y\CJN=Qh7uU',       # Это надо закомментировать
         'HOST': '92.53.97.102',
         'PORT': '5432'
-    }
+    },
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
     #     'NAME': 'baza_store',
@@ -98,6 +98,10 @@ DATABASES = {
     #     'PASSWORD': 'postgres',
     #     'HOST': 'iizhukov.site',
     #     'PORT': '5432'
+    # }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',  # Это надо раскомментировать и прописать 'python manage.py migrate'
+    #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
 }
 

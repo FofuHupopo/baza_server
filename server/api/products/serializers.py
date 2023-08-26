@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from . import models
+from api.authentication import models as auth_models
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -326,3 +327,16 @@ class ProductDetailSerializer(serializers.ModelSerializer):
                 "request": self.context["request"]
             }
         ).data
+
+
+class CartSerializer(serializers.ModelSerializer):
+    product = serializers.SerializerMethodField()
+
+    class Meta:
+        model = auth_models.BasketModel
+        fields = (
+            "product", "quantity"
+        )
+    
+    def get_product(self, obj):
+        return ListProductModificationSerializer(obj.product_modification_model).data

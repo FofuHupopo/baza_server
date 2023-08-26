@@ -83,13 +83,15 @@ class FavoritesView(APIView):
         return product
 
 
-class BasketView(APIView):
+class CartView(APIView):
     permission_classes = (IsAuthenticated, )
-    serializer_class = product_serializers.ListProductModificationSerializer
+    serializer_class = product_serializers.CartSerializer
     
-    def get(self, request: Request):
+    def get(self, request: Request):    
         serializer = self.serializer_class(
-            request.user.basket.all(),
+            auth_models.BasketModel.objects.filter(
+                user_model=request.user
+            ),
             many=True
         )
 
@@ -99,26 +101,29 @@ class BasketView(APIView):
         )
 
     def post(self, request: Request):
-        product_modification = self._get_product_modification_from_request(request)
-        
-        request.user.basket.add(
-            product_modification
+        modification = self._get_modification_from_request(request)
+        quantity = request.data.get("quantity", 1)
+
+        cart, _ = auth_models.BasketModel.objects.get_or_create(
+            user_model=request.user,
+            product_modification_model=modification
         )
+
+        cart.quantity = quantity
+        cart.save()
         
-        return Response(
-            {
-                "message": "ok"
-            },
-            status.HTTP_200_OK
-        )
-    
+        print("save")
+
+        return self.get(request)
+
     def delete(self, request: Request):
-        product_modification = self._get_product_modification_from_request(request)
+        modification = self._get_modification_from_request(request)
         
-        request.user.basket.remove(
-            product_modification
-        )
-        
+        auth_models.BasketModel.objects.filter(
+            user_model=request.user,
+            product_modification_model_id=modification
+        ).first().delete()
+
         return Response(
             {
                 "message": "ok"
@@ -126,30 +131,30 @@ class BasketView(APIView):
             status.HTTP_200_OK
         )
             
-    def _get_product_modification_from_request(self, request: Request):
-        product_modification_id = request.data.get("product_modification_id")
+    def _get_modification_from_request(self, request: Request):
+        modification_id = request.data.get("modification_id")
         
-        if not product_modification_id:
+        if not modification_id:
             return Response(
                 {
-                    "message": "No product_modification id."
+                    "message": "No modification_id."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
         
-        product_modification = product_models.ProductModificationModel.objects.filter(
-            pk=product_modification_id
+        modification = product_models.ProductModificationModel.objects.filter(
+            pk=modification_id
         ).first()
         
-        if not product_modification:
+        if not modification:
             return Response(
                 {
-                    "message": "No product_modification with this id."
+                    "message": "No modification with this id."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
         
-        return product_modification
+        return modification
 
 
 class InfoView(APIView):
