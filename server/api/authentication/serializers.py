@@ -64,7 +64,7 @@ class BasketSerializer(serializers.ModelSerializer):
 class UserDataSerialzier(serializers.ModelSerializer):
     email = serializers.EmailField(read_only=True)
     phone = serializers.CharField(read_only=True)
-    favorites = product_serializers.ListProductSerializer(many=True)
+    favorites = product_serializers.FavoritesSerializer(many=True)
     cart = serializers.SerializerMethodField()
     birthday_date = serializers.DateField(format="%d.%m.%Y", input_formats=['%d.%m.%Y', '%Y-%m-%d'])
 

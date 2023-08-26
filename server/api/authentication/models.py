@@ -131,17 +131,17 @@ class BasketModel(models.Model):
         unique_together = ('user_model', 'product_modification_model')
     
     def save(self, *args, **kwargs) -> None:
-        try: 
-            basket_instance = BasketModel.objects.get(
-                user_model=self.user_model,
-                product_modification_model=self.product_modification_model
-            )
+        # try: 
+        #     basket_instance = BasketModel.objects.get(
+        #         user_model=self.user_model,
+        #         product_modification_model=self.product_modification_model
+        #     )
             
-            basket_instance.quantity += 1
+        #     basket_instance.quantity += 1
             
-            basket_instance.save()
-        except BasketModel.DoesNotExist:
-            return super().save(*args, **kwargs)
+        #     basket_instance.save()
+        # except BasketModel.DoesNotExist:
+        return super().save(*args, **kwargs)
 
 
 def now_plus_5_minutes():

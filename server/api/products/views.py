@@ -136,7 +136,7 @@ class ProductDetailView(APIView):
         colors = models.ProductModificationModel.objects.filter(
             product=product,
             visible=True
-        ).distinct("color").values_list("slug", "color__name", "color__hex_code")
+        ).distinct("color").values_list("slug", "color__name", "color__eng_name", "color__hex_code")
         
         current_color = modifications[0].color
         
@@ -181,10 +181,10 @@ class ProductDetailView(APIView):
                     {
                         "slug": "-".join(slug.split("-")[:-1]),
                         "name": color_name,
-                        "eng_name": current_color.eng_name,
+                        "eng_name": color_eng_name,
                         "hex_code": color_hex
                     }
-                    for slug, color_name, color_hex in colors
+                    for slug, color_name, color_eng_name, color_hex in colors
                 ]
             },
             status.HTTP_200_OK

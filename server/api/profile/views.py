@@ -16,7 +16,7 @@ class FavoritesView(APIView):
     permission_classes = (IsAuthenticated, )
     
     def get(self, request: Request):
-        serializer = product_serializers.ListProductSerializer(
+        serializer = product_serializers.FavoritesSerializer(
             request.user.favorites.all(),
             many=True,
             context={
@@ -111,8 +111,6 @@ class CartView(APIView):
 
         cart.quantity = quantity
         cart.save()
-        
-        print("save")
 
         return self.get(request)
 

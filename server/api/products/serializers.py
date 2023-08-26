@@ -340,3 +340,41 @@ class CartSerializer(serializers.ModelSerializer):
     
     def get_product(self, obj):
         return ListProductModificationSerializer(obj.product_modification_model).data
+
+
+class FavoritesSerializer(serializers.ModelSerializer):
+    color_images = serializers.SerializerMethodField()
+    colors = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ProductModel
+        fields = (
+            "id", "name", "price", "old_price", "description", "color_images", "colors"
+        )
+        
+    def get_color_images(self, obj):
+        return ProductColorImagesSerializer(
+            models.ProductColorImagesModel.objects.filter(
+                product=obj
+            ),
+            many=True,
+            context={
+                "request": self.context["request"]
+            }
+        ).data
+    
+    def get_colors(self, obj):
+        colors = models.ProductModificationModel.objects.filter(
+            product=obj,
+            visible=True
+        ).distinct("color").values_list("slug", "color__name", "color__eng_name", "color__hex_code")
+        
+        return [
+            {
+                "slug": "-".join(slug.split("-")[:-1]),
+                "name": color_name,
+                "eng_name": color_eng_name,
+                "hex_code": color_hex
+            }
+            for slug, color_name, color_eng_name, color_hex in colors
+        ]
