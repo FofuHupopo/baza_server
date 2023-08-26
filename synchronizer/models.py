@@ -187,5 +187,5 @@ class BundleProductModificationsModel(Base):
 
 
 # engine = create_engine('postgresql://postgres:postgres@localhost:5432/baza_store')
-# engine = create_engine('sqlite:///db.sqlite3')
 engine = create_engine('postgresql://baza:Ot?y\CJN=Qh7uU@92.53.97.102:5432/baza_store')
+# engine = create_engine('sqlite:///../server/db.sqlite3')
