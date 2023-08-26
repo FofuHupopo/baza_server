@@ -85,6 +85,20 @@ class ProductAdmin(admin.ModelAdmin):
         return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
     
     image_preview.short_description = "Главное изображение"
+    
+    
+    def make_visible(modeladmin, request, queryset):
+        queryset.update(visible=True)
+    
+    make_visible.short_description = "Отобразить на сайте"
+    
+    
+    def make_not_visible(modeladmin, request, queryset):
+        queryset.update(visible=False)
+    
+    make_not_visible.short_description = "Cкрыть на сайте"
+    
+    actions = [make_visible, make_not_visible]
 
     inlines = [ProductColorImagesInline, ProductModificationInline]
 

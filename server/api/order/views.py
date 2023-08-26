@@ -20,7 +20,10 @@ class OrderView(APIView):
             models.OrderModel.objects.filter(
                 user=request.user
             ),
-            many=True
+            many=True,
+            context={
+                "request": request
+            }
         )
         
         return Response(
@@ -61,7 +64,10 @@ class OrderView(APIView):
         cart.delete()
         
         serializer = self.serializer_class(
-            order_instance
+            order_instance,
+            context={
+                "request": request
+            }
         )
         
         return Response(

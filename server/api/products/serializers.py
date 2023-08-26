@@ -291,7 +291,7 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
         return obj.product.price
     
     def get_category(self, obj):
-        return obj.product.category.category
+        return obj.product.category.name
     
     def get_path(self, obj):
         return AloneProductPathSerializer(obj.product).data

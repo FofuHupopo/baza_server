@@ -5,7 +5,7 @@ from api.products import serializers as products_serializers
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    products_modification = products_serializers.ListProductModificationSerializer(many=True)
+    products_modification = products_serializers.ListProductsSerializer(many=True)
 
     class Meta:
         model = models.OrderModel

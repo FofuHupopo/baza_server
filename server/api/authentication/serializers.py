@@ -46,15 +46,15 @@ class LoginSerializer(serializers.Serializer):
     
     
 class BasketSerializer(serializers.ModelSerializer):
-    product_modification = serializers.SerializerMethodField()
+    product = serializers.SerializerMethodField()
     
     class Meta:
         model = models.BasketModel
         fields = (
-            "product_modification", "quantity"
+            "product", "quantity"
         )
         
-    def get_product_modification(self, obj):
+    def get_product(self, obj):
         return product_serializers.ProductModificationSerializer(
             obj.product_modification_model,
             context=self.context
@@ -78,7 +78,7 @@ class UserDataSerialzier(serializers.ModelSerializer):
         )
 
     def get_cart(self, obj):
-        return BasketSerializer(
+        return product_serializers.ListProductsSerializer(
             models.BasketModel.objects.filter(
                 user_model=obj
             ),

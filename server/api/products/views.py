@@ -74,7 +74,7 @@ class ProductView(generics.RetrieveAPIView):
 class ListProductsView(generics.ListAPIView):
     permission_classes = (AllowAny, )
     queryset = models.ProductModificationModel.objects.filter(
-        product__visible=True,
+        product__visible=True
     ).distinct("color", "product").order_by("product__id")
     serializer_class = serializers.ListProductsSerializer
     # pagination_class = ListProductPagination
