@@ -117,7 +117,8 @@ class ProductDetailView(APIView):
 
     def get(self, request: Request, slug):
         modifications = models.ProductModificationModel.objects.filter(
-            slug__icontains=slug
+            slug__icontains=slug,
+            visible=True
         )
         
         if not modifications:
@@ -133,7 +134,8 @@ class ProductDetailView(APIView):
         sizes = modifications.values_list("size__name", "id")
 
         colors = models.ProductModificationModel.objects.filter(
-            product=product
+            product=product,
+            visible=True
         ).distinct("color").values_list("slug", "color__name", "color__hex_code")
         
         current_color = modifications[0].color
