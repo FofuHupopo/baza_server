@@ -56,7 +56,7 @@ class ProductModificationInline(admin.TabularInline):
     extra = 0
     
     fields = (
-        "color", "size", "quantity", "visible"
+        "color", "size", "quantity", "additional_description", "visible"
     )
 
     show_change_link = True
@@ -113,7 +113,7 @@ class ProductModificationAdmin(admin.ModelAdmin):
         "product", "color", "size", "quantity"
     ]
     fields = [
-        "pk", "color", "color_preview", "size", "quantity"
+        "pk", "color", "color_preview", "size", "additional_description", "quantity"
     ]
     
     readonly_fields = [

@@ -178,6 +178,10 @@ class ProductModificationModel(models.Model):
     modification_id = models.CharField(
         "МойСклад id", max_length=63
     )
+    
+    additional_description = models.TextField(
+        "Дополнительное описание", default=""
+    )
     color = models.ForeignKey(
         ProductColorModel, models.CASCADE,
         verbose_name="Цвет товара",
