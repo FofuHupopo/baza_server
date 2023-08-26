@@ -151,11 +151,15 @@ class ProductDetailView(APIView):
         
         serializer = serializers.ProductDetailSerializer(product, context={"request": request})
         
-        serializer.data["description"] += f"\n\n{product_color.additional_description}"
+        serializer = {
+            **serializer.data
+        }
 
+        serializer["description"] += f"\n\n{product_color.additional_description}"
+        
         return Response(
             {
-                **serializer.data,
+                **serializer,
                 "images": [
                     request.build_absolute_uri(image.image.url)
                     for image in images    
