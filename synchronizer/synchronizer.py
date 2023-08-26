@@ -161,6 +161,7 @@ class MoySkaldSynchronizer:
             
             if not product_instance:
                 product_instance = models.ProductModel()
+                product_instance.visible = False
                 session.add(product_instance)
             
             product_instance.product_id = product["id"]
@@ -275,11 +276,10 @@ class MoySkaldSynchronizer:
                 modification_instance.size_id = size_instance_id
                 modification_instance.slug = slugify(f"{product_instance.name} {product_instance.code} {color_instance.name} {size_instance.name}")
 
-
                 session.add(modification_instance)
                 session.commit()
 
-                self._add_standart_product_modification_image(product_instance.id, modification_instance)
+                # self._add_standart_product_modification_image(product_instance.id, modification_instance)
         
     def _sync_product_modification_quantity(self, modification_id: str):
         response = MoySkaldSynchronizer.moysklad_request("MODIFICATION_QUANTITY", [modification_id])
