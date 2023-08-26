@@ -92,7 +92,10 @@ class CartView(APIView):
             auth_models.BasketModel.objects.filter(
                 user_model=request.user
             ),
-            many=True
+            many=True,
+            context={
+                "request": request
+            }
         )
 
         return Response(

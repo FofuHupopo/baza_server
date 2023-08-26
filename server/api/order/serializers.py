@@ -22,5 +22,8 @@ class OrderSerializer(serializers.ModelSerializer):
             models.Order2ModificationModel.objects.filter(
                 order_model=obj
             ),
-            many=True
+            many=True,
+            context={
+                "request": self.context["request"]
+            }
         ).data

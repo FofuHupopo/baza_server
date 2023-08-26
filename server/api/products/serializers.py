@@ -273,11 +273,12 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
     slug_path = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
     color = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()
     
     class Meta:
         model = models.ProductModificationModel
         fields = (
-            "id", "name", "description", "price",
+            "id", "name", "description", "price", "images",
             "category", "path", "full_path", "slug_path", "size", "color"
         )
         depth = 2
@@ -308,6 +309,17 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
     
     def get_color(self, obj):
         return obj.color.name if obj.color else None
+    
+    def get_images(self, obj):
+        return ProductColorImagesSerializer(
+            models.ProductColorImagesModel.objects.filter(
+                product=obj.product,
+                color=obj.color
+            ).first(),
+            context={
+                "request": self.context["request"]
+            }
+        ).data  
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
@@ -331,7 +343,6 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
-    images = serializers.SerializerMethodField()
 
     class Meta:
         model = auth_models.BasketModel
@@ -340,7 +351,12 @@ class CartSerializer(serializers.ModelSerializer):
         )
     
     def get_product(self, obj):
-        return ListProductModificationSerializer(obj.product_modification_model).data
+        return ListProductModificationSerializer(
+            obj.product_modification_model,
+            context={
+                "request": self.context["request"]
+            }
+        ).data
 
 
 class FavoritesSerializer(serializers.ModelSerializer):
