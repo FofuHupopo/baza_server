@@ -54,6 +54,10 @@ class ProductColorImagesInline(admin.StackedInline):
 class ProductModificationInline(admin.TabularInline):
     model = models.ProductModificationModel
     extra = 0
+    
+    fields = (
+        "color", "size", "quantity", "visible"
+    )
 
     show_change_link = True
 

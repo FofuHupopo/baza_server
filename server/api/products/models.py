@@ -91,7 +91,7 @@ class ProductModel(models.Model):
     
     visible = models.BooleanField(
         "Отображается на сайте?",
-        default=True
+        default=False
     )
     
     image = models.ImageField(
@@ -190,6 +190,10 @@ class ProductModificationModel(models.Model):
     )
     quantity = models.IntegerField(
         "Количество", default=0
+    )
+
+    visible = models.BooleanField(
+        "Отображается на сайте?", default=False
     )
 
     class Meta:

@@ -268,7 +268,8 @@ class MoySkaldSynchronizer:
                 if not modification_instance:
                     modification_instance = models.ProductModificationModel(
                         product=product_instance,
-                        modification_id=modification["id"]
+                        modification_id=modification["id"],
+                        visible = False
                     )
 
                 modification_instance.quantity = self._sync_product_modification_quantity(modification_instance.modification_id)

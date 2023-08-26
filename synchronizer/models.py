@@ -44,7 +44,7 @@ class ProductModel(Base):
     code = Column(String(32), nullable=True)
     price = Column(Integer)
     old_price = Column(Integer, nullable=True)
-    visible = Column(Boolean, default=True)
+    visible = Column(Boolean, default=False)
     image = Column(String(511), default="product_images/Заглушка фото карточки товара.jpg")
     category_id = Column(Integer, ForeignKey('product__product_category.id'))
     path_id = Column(Integer, ForeignKey('product__path.id'))
@@ -88,6 +88,7 @@ class ProductModificationModel(Base):
     color_id = Column(Integer, ForeignKey('product__product_color.id'), nullable=True)
     size_id = Column(Integer, ForeignKey('product__product_size.id'), nullable=True)
     quantity = Column(Integer, default=0)
+    visible = Column(Boolean, default=False)
 
     product = relationship('ProductModel')
     color = relationship('ProductColorModel', backref='modifications', uselist=False)

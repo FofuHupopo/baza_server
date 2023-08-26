@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request, HttpRequest
 from rest_framework.permissions import AllowAny
 from django.conf import settings
+from django.db.models import Q
 
 from . import models
 from . import serializers
@@ -74,7 +75,8 @@ class ProductView(generics.RetrieveAPIView):
 class ListProductsView(generics.ListAPIView):
     permission_classes = (AllowAny, )
     queryset = models.ProductModificationModel.objects.filter(
-        product__visible=True
+        product__visible=True,
+        visible=True
     ).distinct("color", "product").order_by("product__id")
     serializer_class = serializers.ListProductsSerializer
     # pagination_class = ListProductPagination
@@ -123,7 +125,7 @@ class ProductDetailView(APIView):
                 {
                     "error": "Incorrect slug"
                 },
-                status.HTTP_400_BAD_REQUEST
+                status.HTTP_404_NOT_FOUND
             )
         
         product = modifications[0].product
