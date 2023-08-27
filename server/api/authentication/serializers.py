@@ -78,7 +78,7 @@ class UserDataSerialzier(serializers.ModelSerializer):
         )
 
     def get_cart(self, obj):
-        return product_serializers.ListProductsSerializer(
+        return product_serializers.CartSerializer(
             models.BasketModel.objects.filter(
                 user_model=obj
             ),
