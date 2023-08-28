@@ -9,7 +9,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 from .managers import UserManager
 
-from api.products.models import ProductModificationModel, ProductModel
+from api.products.models import ProductModificationModel
 
 
 class UserModel(AbstractBaseUser, PermissionsMixin):
@@ -35,10 +35,10 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     )
     
     favorites = models.ManyToManyField(
-        ProductModel, blank=True,
+        ProductModificationModel, blank=True,
         verbose_name="Избранное"
     )
-    
+
     city = models.CharField(
         "Город", max_length=128,
         blank=True, null=True,
