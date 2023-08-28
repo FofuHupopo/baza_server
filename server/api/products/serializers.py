@@ -339,6 +339,51 @@ class ProductDetailSerializer(serializers.ModelSerializer):
                 "request": self.context["request"]
             }
         ).data
+        
+        
+class CartProductSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
+    color = serializers.SerializerMethodField()
+    slug = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ProductModificationModel
+        fields = (
+            "id", "name", "image", "price",
+            "size", "color", "slug" 
+        )
+    
+    def get_name(self, obj):
+        return obj.product.name
+    
+    def get_image(self, obj):
+        product_colors = models.ProductColorImagesModel.objects.filter(
+            product=obj.product,
+            color=obj.color
+        )
+
+        image = models.ColorImageModel.objects.filter(
+            product_color__in=product_colors
+        ).first()
+        
+        request = self.context.get('request')
+
+        return request.build_absolute_uri(image.image.url)
+
+    def get_price(self, obj):
+        return obj.product.price
+    
+    def get_size(self, obj):
+        return obj.size.name
+
+    def get_color(self, obj):
+        return obj.color.name
+    
+    def get_slug(self, obj):
+        return "-".join(obj.slug.split("-")[:-1])
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -351,7 +396,7 @@ class CartSerializer(serializers.ModelSerializer):
         )
     
     def get_product(self, obj):
-        return ListProductModificationSerializer(
+        return CartProductSerializer(
             obj.product_modification_model,
             context={
                 "request": self.context["request"]
