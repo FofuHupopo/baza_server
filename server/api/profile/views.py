@@ -104,7 +104,7 @@ class CartView(APIView):
         )
 
     def post(self, request: Request):
-        modification = self._get_modification_from_request(request)
+        modification = CartView._get_modification_from_request(request)
         quantity = request.data.get("quantity", 1)
 
         cart, _ = auth_models.BasketModel.objects.get_or_create(
@@ -118,21 +118,17 @@ class CartView(APIView):
         return self.get(request)
 
     def delete(self, request: Request):
-        modification = self._get_modification_from_request(request)
-        
+        modification = CartView._get_modification_from_request(request)
+
         auth_models.BasketModel.objects.filter(
             user_model=request.user,
             product_modification_model_id=modification
         ).first().delete()
 
-        return Response(
-            {
-                "message": "ok"
-            },
-            status.HTTP_200_OK
-        )
-            
-    def _get_modification_from_request(self, request: Request):
+        return self.get(request)
+    
+    @staticmethod
+    def _get_modification_from_request(request: Request):
         modification_id = request.data.get("modification_id")
         
         if not modification_id:
@@ -156,6 +152,71 @@ class CartView(APIView):
             )
         
         return modification
+    
+
+class CartAddView(APIView):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = product_serializers.CartSerializer
+
+    def post(self, request: Request):
+        modification = CartView._get_modification_from_request(request)
+
+        cart, _ = auth_models.BasketModel.objects.get_or_create(
+            user_model=request.user,
+            product_modification_model=modification
+        )
+
+        cart.quantity += 1
+        cart.save()
+
+        serializer = self.serializer_class(
+            auth_models.BasketModel.objects.filter(
+                user_model=request.user
+            ),
+            many=True,
+            context={
+                "request": request
+            }
+        )
+        
+        return Response(
+            serializer.data,
+            status.HTTP_200_OK
+        )
+    
+    
+class CartRemoveView(APIView):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = product_serializers.CartSerializer
+
+    def post(self, request: Request):
+        modification = CartView._get_modification_from_request(request)
+
+        cart, _ = auth_models.BasketModel.objects.get_or_create(
+            user_model=request.user,
+            product_modification_model=modification
+        )
+
+        if cart.quantity <= 1:
+            cart.delete()
+        else:
+            cart.quantity -= 1
+            cart.save()
+
+        serializer = self.serializer_class(
+            auth_models.BasketModel.objects.filter(
+                user_model=request.user
+            ),
+            many=True,
+            context={
+                "request": request
+            }
+        )
+        
+        return Response(
+            serializer.data,
+            status.HTTP_200_OK
+        )
 
 
 class InfoView(APIView):

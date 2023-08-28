@@ -75,5 +75,12 @@ class SendMessage:
         return result.status_code == 200
         
 
-if __name__ == "__main__":
-    SendMessage.send("89619358651", "123321")
+class Delivery:
+    URLS = {
+        "calculate": "https://api.cdek.ru/v2/calculator/tarif",
+        "order": "https://api.cdek.ru/v2/order"
+    }
+    HEADERS = {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Accept": "application/json",
+    }
