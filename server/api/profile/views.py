@@ -33,7 +33,7 @@ class FavoritesView(APIView):
         modification = self._get_modification_from_request(request)
         
         request.user.favorites.add(
-            modification
+            *modification
         )
         
         return self.get(request)
@@ -42,25 +42,32 @@ class FavoritesView(APIView):
         modification = self._get_modification_from_request(request)
         
         request.user.favorites.remove(
-            modification
+            *modification
         )
         
         return self.get(request)
             
-    def _get_modification_from_request(self, request: Request):
+    def _get_modification_from_request(self, request: Request) -> list[product_models.ProductModificationModel]:
         modification_id = request.data.get("modification_id")
+        modifications = request.data.get("modifications")
         
-        if not modification_id:
+        if not modification_id and not modifications:
             return Response(
                 {
-                    "message": "No modification_id."
+                    "message": "No modification_id or modifications[]."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
         
-        modification = product_models.ProductModificationModel.objects.filter(
-            pk=modification_id
-        ).first()
+        if modification_id:
+            modification = [product_models.ProductModificationModel.objects.filter(
+                pk=modification_id
+            ).first()]
+        
+        if modifications:
+            modification = product_models.ProductModificationModel.objects.filter(
+                pk__in=modifications
+            )
         
         if not modification:
             return Response(
@@ -94,16 +101,26 @@ class CartView(APIView):
         )
 
     def post(self, request: Request):
-        modification = CartView._get_modification_from_request(request)
-        quantity = request.data.get("quantity", 1)
+        modifications = request.data.get("modifications")
+        quantities = request.data.get("quantities", [])
+        
+        quantities += [1 for _ in range(len(modifications) - len(quantities))]
 
-        cart, _ = auth_models.CartModel.objects.get_or_create(
-            user_model=request.user,
-            product_modification_model=modification
-        )
+        if len(modifications) != len(quantities):
+            return Response(
+                {
+                    "message": "length of modification not equal the length of quantities"
+                }
+            )
+        
+        for modification, quantity in zip(modifications, quantities):
+            cart, _ = auth_models.CartModel.objects.get_or_create(
+                user_model=request.user,
+                product_modification_model_id=modification
+            )
 
-        cart.quantity = quantity
-        cart.save()
+            cart.quantity = quantity
+            cart.save()
 
         return self.get(request)
 
