@@ -64,8 +64,6 @@ class CartSerializer(serializers.ModelSerializer):
 class UserDataSerialzier(serializers.ModelSerializer):
     email = serializers.EmailField(read_only=True)
     phone = serializers.CharField(read_only=True)
-    favorites = product_serializers.ShortModificationSerializer(many=True)
-    cart = serializers.SerializerMethodField()
     birthday_date = serializers.DateField(format="%d.%m.%Y", input_formats=['%d.%m.%Y', '%Y-%m-%d'])
 
     class Meta:
@@ -73,18 +71,8 @@ class UserDataSerialzier(serializers.ModelSerializer):
         fields = (
             "id", "email", "phone",
             "name", "surname", "birthday_date",
-            "city", "street", "house", "frame", "apartment",
-            "favorites", "cart"
+            "city", "street", "house", "frame", "apartment"
         )
-
-    def get_cart(self, obj):
-        return product_serializers.CartSerializer(
-            models.CartModel.objects.filter(
-                user_model=obj
-            ),
-            many=True,
-            context=self.context
-        ).data
 
 
 class UpdateUserInfoSerializer(serializers.ModelSerializer):
