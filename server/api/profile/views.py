@@ -58,7 +58,7 @@ class FavoritesView(APIView):
                 status.HTTP_400_BAD_REQUEST
             )
         
-        modification = product_models.ProductModel.objects.filter(
+        modification = product_models.ProductModificationModel.objects.filter(
             pk=modification_id
         ).first()
         
