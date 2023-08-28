@@ -16,7 +16,7 @@ class FavoritesView(APIView):
     permission_classes = (IsAuthenticated, )
     
     def get(self, request: Request):
-        serializer = product_serializers.FavoritesSerializer(
+        serializer = product_serializers.ShortModificationSerializer(
             request.user.favorites.all(),
             many=True,
             context={
@@ -30,57 +30,47 @@ class FavoritesView(APIView):
         )
 
     def post(self, request: Request):
-        product = self._get_product_from_request(request)
+        modification = self._get_modification_from_request(request)
         
         request.user.favorites.add(
-            product
+            modification
         )
         
-        return Response(
-            {
-                "message": "ok"
-            },
-            status.HTTP_200_OK
-        )
+        return self.get(request)
     
     def delete(self, request: Request):
-        product = self._get_product_from_request(request)
+        modification = self._get_modification_from_request(request)
         
         request.user.favorites.remove(
-            product
+            modification
         )
         
-        return Response(
-            {
-                "message": "ok"
-            },
-            status.HTTP_200_OK
-        )
+        return self.get(request)
             
-    def _get_product_from_request(self, request: Request):
-        product_id = request.data.get("product_id")
+    def _get_modification_from_request(self, request: Request):
+        modification_id = request.data.get("modification_id")
         
-        if not product_id:
+        if not modification_id:
             return Response(
                 {
-                    "message": "No product id."
+                    "message": "No modification_id."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
         
-        product = product_models.ProductModel.objects.filter(
-            pk=product_id
+        modification = product_models.ProductModel.objects.filter(
+            pk=modification_id
         ).first()
         
-        if not product:
+        if not modification:
             return Response(
                 {
-                    "message": "No product with this id."
+                    "message": "No modification with this id."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
         
-        return product
+        return modification
 
 
 class CartView(APIView):
