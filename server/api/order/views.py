@@ -32,7 +32,7 @@ class OrderView(APIView):
         )
     
     def post(self, request: Request):
-        cart = auth_models.BasketModel.objects.filter(
+        cart = auth_models.CartModel.objects.filter(
             user_model=request.user
         )
         

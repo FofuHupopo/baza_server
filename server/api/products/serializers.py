@@ -341,7 +341,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         ).data
         
         
-class CartProductSerializer(serializers.ModelSerializer):
+class ShortModificationSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
@@ -390,13 +390,13 @@ class CartSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
 
     class Meta:
-        model = auth_models.BasketModel
+        model = auth_models.CartModel
         fields = (
             "product", "quantity"
         )
     
     def get_product(self, obj):
-        return CartProductSerializer(
+        return ShortModificationSerializer(
             obj.product_modification_model,
             context={
                 "request": self.context["request"]

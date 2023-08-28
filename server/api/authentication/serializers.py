@@ -45,11 +45,11 @@ class LoginSerializer(serializers.Serializer):
         return phone
     
     
-class BasketSerializer(serializers.ModelSerializer):
+class CartSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
     
     class Meta:
-        model = models.BasketModel
+        model = models.CartModel
         fields = (
             "product", "quantity"
         )
@@ -79,7 +79,7 @@ class UserDataSerialzier(serializers.ModelSerializer):
 
     def get_cart(self, obj):
         return product_serializers.CartSerializer(
-            models.BasketModel.objects.filter(
+            models.CartModel.objects.filter(
                 user_model=obj
             ),
             many=True,

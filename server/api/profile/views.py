@@ -89,7 +89,7 @@ class CartView(APIView):
     
     def get(self, request: Request):    
         serializer = self.serializer_class(
-            auth_models.BasketModel.objects.filter(
+            auth_models.CartModel.objects.filter(
                 user_model=request.user
             ),
             many=True,
@@ -107,7 +107,7 @@ class CartView(APIView):
         modification = CartView._get_modification_from_request(request)
         quantity = request.data.get("quantity", 1)
 
-        cart, _ = auth_models.BasketModel.objects.get_or_create(
+        cart, _ = auth_models.CartModel.objects.get_or_create(
             user_model=request.user,
             product_modification_model=modification
         )
@@ -120,7 +120,7 @@ class CartView(APIView):
     def delete(self, request: Request):
         modification = CartView._get_modification_from_request(request)
 
-        auth_models.BasketModel.objects.filter(
+        auth_models.CartModel.objects.filter(
             user_model=request.user,
             product_modification_model_id=modification
         ).first().delete()
@@ -161,7 +161,7 @@ class CartAddView(APIView):
     def post(self, request: Request):
         modification = CartView._get_modification_from_request(request)
 
-        cart, _ = auth_models.BasketModel.objects.get_or_create(
+        cart, _ = auth_models.CartModel.objects.get_or_create(
             user_model=request.user,
             product_modification_model=modification
         )
@@ -170,7 +170,7 @@ class CartAddView(APIView):
         cart.save()
 
         serializer = self.serializer_class(
-            auth_models.BasketModel.objects.filter(
+            auth_models.CartModel.objects.filter(
                 user_model=request.user
             ),
             many=True,
@@ -192,19 +192,20 @@ class CartRemoveView(APIView):
     def post(self, request: Request):
         modification = CartView._get_modification_from_request(request)
 
-        cart, _ = auth_models.BasketModel.objects.get_or_create(
+        cart = auth_models.CartModel.objects.filter(
             user_model=request.user,
             product_modification_model=modification
-        )
+        ).first()
 
-        if cart.quantity <= 1:
-            cart.delete()
-        else:
-            cart.quantity -= 1
-            cart.save()
+        if cart:
+            if cart.quantity <= 1:
+                cart.delete()
+            else:
+                cart.quantity -= 1
+                cart.save()
 
         serializer = self.serializer_class(
-            auth_models.BasketModel.objects.filter(
+            auth_models.CartModel.objects.filter(
                 user_model=request.user
             ),
             many=True,

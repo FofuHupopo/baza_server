@@ -4,8 +4,8 @@ from django.contrib.auth.models import Group
 from . import models
 
 
-class BasketInlineAdmin(admin.StackedInline):
-    model = models.BasketModel
+class CartInlineAdmin(admin.StackedInline):
+    model = models.CartModel
     
     fields = [
         "product_modification_model", "quantity"
@@ -24,10 +24,10 @@ class UserAdmin(admin.ModelAdmin):
         "favorites", "is_active", "is_superuser", "date_joined"
     ]
     
-    inlines = [BasketInlineAdmin]
+    inlines = [CartInlineAdmin]
 
 
 admin.site.register(models.AuthCodeModel)
-admin.site.register(models.BasketModel)
+admin.site.register(models.CartModel)
 
 admin.site.unregister(Group)

@@ -111,7 +111,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         return f"+7 ({phone[0:3]}) {phone[3:6]} {phone[6:8]}-{phone[8:10]}"
     
 
-class BasketModel(models.Model):
+class CartModel(models.Model):
     user_model = models.ForeignKey(
         UserModel, verbose_name="Пользователь",
         on_delete=models.CASCADE
@@ -125,22 +125,22 @@ class BasketModel(models.Model):
     )
 
     class Meta:
-        db_table = "profile__basket"
+        db_table = "profile__cart"
         verbose_name = "Корзина"
         verbose_name_plural = "Корзины"
         unique_together = ('user_model', 'product_modification_model')
     
     def save(self, *args, **kwargs) -> None:
         # try: 
-        #     basket_instance = BasketModel.objects.get(
+        #     cart_instance = CartModel.objects.get(
         #         user_model=self.user_model,
         #         product_modification_model=self.product_modification_model
         #     )
             
-        #     basket_instance.quantity += 1
+        #     cart_instance.quantity += 1
             
-        #     basket_instance.save()
-        # except BasketModel.DoesNotExist:
+        #     cart_instance.save()
+        # except CartModel.DoesNotExist:
         return super().save(*args, **kwargs)
 
 
@@ -198,3 +198,7 @@ class AuthCodeModel(models.Model):
             return True
 
         return False
+
+
+class BasketModel:
+    ...
