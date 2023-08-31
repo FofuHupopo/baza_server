@@ -86,9 +86,7 @@ class CartView(APIView):
     
     def get(self, request: Request):    
         serializer = self.serializer_class(
-            auth_models.CartModel.objects.filter(
-                user_model=request.user
-            ),
+            request.user.cart,
             many=True,
             context={
                 "request": request
