@@ -76,6 +76,12 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(
         "Дата регистрации", default=timezone.now
     )
+    
+    @property
+    def cart(self):
+        return CartModel.objects.filter(
+            user_model=self
+        )
 
     USERNAME_FIELD = "phone"
     REQUIRED_FIELDS = []
@@ -94,6 +100,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         self.phone = self.clear_phone(self.phone)
 
         return super(UserModel, self).save(*args, **kwargs)
+    
     
     @staticmethod
     def clear_phone(phone: str) -> str:

@@ -266,3 +266,17 @@ class InfoView(APIView):
             serializer.errors,
             status.HTTP_400_BAD_REQUEST
         )
+
+
+class CartClearView(APIView):
+    permission_classes = (IsAuthenticated, )
+    
+    def get(self, request: Request):
+        request.user.cart.delete()
+        
+        return Response(
+            {
+                "message": "ok"
+            },
+            status.HTTP_200_OK
+        )
