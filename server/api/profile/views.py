@@ -50,7 +50,7 @@ class FavoritesView(APIView):
         return self.get(request)
             
     def _get_modification_from_request(self, request: Request) -> list[product_models.ProductModificationModel]:
-        slug = request.data.get("slug")
+        slug = request.data.get("slug") or request.query_params.getlist("slug")
 
         if not slug:
             return Response(

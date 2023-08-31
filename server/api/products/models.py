@@ -297,16 +297,14 @@ class BundleModel(models.Model):
         "Описание",
         null=True, blank=True
     )
-    product_modifications = models.ManyToManyField(
-        ProductModificationModel, 
-        verbose_name="Продукты комплекта",
-        blank=True
-    )
     visible = models.BooleanField(
         "Отображается на сайте?",
         default=True
     )
     price = models.IntegerField(
+        "Цена"
+    )
+    old_price = models.IntegerField(
         "Цена"
     )
 
