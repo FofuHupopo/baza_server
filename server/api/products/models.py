@@ -286,52 +286,83 @@ def bundle_image_upload_path(instance, filename):
     )
 
 
-class BundleModel(models.Model):
-    bundle_id = models.CharField(
-        "МойСклад id", max_length=63
-    )
-    name = models.CharField(
-        "Название", max_length=255
-    )
-    description = models.TextField(
-        "Описание",
-        null=True, blank=True
-    )
-    visible = models.BooleanField(
-        "Отображается на сайте?",
-        default=True
-    )
-    price = models.IntegerField(
-        "Цена"
-    )
-    old_price = models.IntegerField(
-        "Цена"
-    )
+# class ParentBundleModel(models.Model):
+#     bundle_id = models.CharField(
+#         "МойСклад id", max_length=63
+#     )
+#     name = models.CharField(
+#         "Название", max_length=255
+#     )
+#     description = models.TextField(
+#         "Описание",
+#         null=True, blank=True
+#     )
+#     visible = models.BooleanField(
+#         "Отображается на сайте?",
+#         default=True
+#     )
+#     price = models.IntegerField(
+#         "Цена"
+#     )
+#     old_price = models.IntegerField(
+#         "Цена"
+#     )
 
-    image = models.ImageField(
-        upload_to=bundle_image_upload_path,
-        max_length=511,
-        default="product_images/Заглушка фото карточки товара.jpg",
-        verbose_name="Выбрать главное изображение"
-    )
+#     image = models.ImageField(
+#         upload_to=bundle_image_upload_path,
+#         max_length=511,
+#         default="product_images/Заглушка фото карточки товара.jpg",
+#         verbose_name="Выбрать главное изображение"
+#     )
 
-    category = models.ForeignKey(
-        ProductCategoryModel, models.CASCADE,
-        verbose_name="Категория товара",
-        null=True, blank=True
-    )
-    path = models.ForeignKey(
-        ProductPathModel, models.CASCADE,
-        verbose_name="Путь к комплекту"
-    )
+#     category = models.ForeignKey(
+#         ProductCategoryModel, models.CASCADE,
+#         verbose_name="Категория товара",
+#         null=True, blank=True
+#     )
+#     path = models.ForeignKey(
+#         ProductPathModel, models.CASCADE,
+#         verbose_name="Путь к комплекту"
+#     )
 
-    class Meta:
-        db_table = "product__bundle"
-        verbose_name = "Комплект товаров"
-        verbose_name_plural = "Комплекты товаров"
+#     class Meta:
+#         db_table = "product__parent_bundle"
+#         verbose_name = "Родительский комплект"
+#         verbose_name_plural = "Родительские комплекты"
     
-    def __str__(self) -> str:
-        return f"{self.name}"
+#     def __str__(self) -> str:
+#         return f"{self.name}"
+
+
+# class BundleModel(models.Model):
+#     parent_bundle = models.ForeignKey(
+#         ParentBundleModel, models.CASCADE,
+#         verbose_name="Родительский комплект"
+#     )
+
+#     color = models.ForeignKey(
+#         ProductColorModel, models.CASCADE,
+#         verbose_name="Цвет товара",
+#         null=True, blank=True
+#     )
+#     size = models.ForeignKey(
+#         ProductSizeModel, models.CASCADE,
+#         verbose_name="Размер товара",
+#         null=True, blank=True
+#     )
+    
+#     products = models.ManyToManyField(
+#         ProductModificationModel,
+#         verbose_name="Продукты"
+#     )
+    
+#     class Meta:
+#         db_table = "product__bundle"
+#         verbose_name = "Комплект"
+#         verbose_name_plural = "Комплекты"
+        
+#     def __str__(self) -> str:
+#         return f"{self.parent_bundle.name} {self.color.name} {self.size.name}"
 
 
 def bundle_images_upload_path(instance, filename):
@@ -341,26 +372,26 @@ def bundle_images_upload_path(instance, filename):
     )
 
 
-class BundleImageModel(models.Model):
-    bundle = models.ForeignKey(
-        BundleModel, models.CASCADE,
-        related_name="images",
-        verbose_name="Комплект"
-    )
-    image = models.ImageField(
-        upload_to=bundle_images_upload_path,
-        max_length=511,
-        default="product_images/Заглушка фото карточки товара.jpg",
-        verbose_name="Выбрать изображение"
-    )
+# class BundleImageModel(models.Model):
+#     bundle = models.ForeignKey(
+#         BundleModel, models.CASCADE,
+#         related_name="images",
+#         verbose_name="Комплект"
+#     )
+#     image = models.ImageField(
+#         upload_to=bundle_images_upload_path,
+#         max_length=511,
+#         default="product_images/Заглушка фото карточки товара.jpg",
+#         verbose_name="Выбрать изображение"
+#     )
+
+#     class Meta:
+#         db_table = "product__bundle_image"
+#         verbose_name = "Изображение комплекта"
+#         verbose_name_plural = "Изображения комплекта"
     
-    class Meta:
-        db_table = "product__bundle_image"
-        verbose_name = "Изображение комплекта"
-        verbose_name_plural = "Изображения комплекта"
-    
-    def __str__(self) -> str:
-        return f"{self.bundle}"
+#     def __str__(self) -> str:
+#         return f"{self.bundle}"
 
 
 def product_modification_image_upload_path():

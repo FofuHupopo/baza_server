@@ -345,6 +345,7 @@ class ShortModificationSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
+    old_price = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
     color = serializers.SerializerMethodField()
     slug = serializers.SerializerMethodField()
@@ -352,7 +353,7 @@ class ShortModificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductModificationModel
         fields = (
-            "id", "name", "image", "price",
+            "id", "name", "image", "price", "old_price",
             "size", "color", "slug" 
         )
     
@@ -375,6 +376,9 @@ class ShortModificationSerializer(serializers.ModelSerializer):
 
     def get_price(self, obj):
         return obj.product.price
+    
+    def get_old_price(self, obj):
+        return obj.product.old_price
     
     def get_size(self, obj):
         return obj.size.name

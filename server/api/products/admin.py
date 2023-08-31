@@ -173,52 +173,52 @@ class ProductCategoryAdmin(admin.ModelAdmin):
     ]
 
 
-class BundleImageInline(admin.StackedInline):
-    model = models.BundleImageModel
-    extra = 1
+# class BundleImageInline(admin.StackedInline):
+#     model = models.BundleImageModel
+#     extra = 1
 
-    fields = [
-        "image_preview", "image"
-    ]
+#     fields = [
+#         "image_preview", "image"
+#     ]
 
-    readonly_fields = ["image_preview"]
+#     readonly_fields = ["image_preview"]
 
-    def image_preview(self, obj):
-        return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
+#     def image_preview(self, obj):
+#         return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
     
-    image_preview.short_description = "Изображение"
+#     image_preview.short_description = "Изображение"
 
 
-@admin.register(models.BundleModel)
-class BundleAdmin(admin.ModelAdmin):
-    list_display = [
-        "name", "price", "visible"
-    ]
-    fields = [
-        "name", "description",
-        "product_modifications", "price",
-        "image_preview", "image", "visible",
-        "category", "path"
-    ]
-    search_fields = [
-        "name", "description", "category"
-    ]
-    list_filter = [
-        "visible",
-        ("description", admin.EmptyFieldListFilter),
-        "category"
-    ]
+# @admin.register(models.BundleModel)
+# class BundleAdmin(admin.ModelAdmin):
+#     list_display = [
+#         "name", "price", "visible"
+#     ]
+#     fields = [
+#         "name", "description",
+#         "product_modifications", "price",
+#         "image_preview", "image", "visible",
+#         "category", "path"
+#     ]
+#     search_fields = [
+#         "name", "description", "category"
+#     ]
+#     list_filter = [
+#         "visible",
+#         ("description", admin.EmptyFieldListFilter),
+#         "category"
+#     ]
     
-    readonly_fields = [
-        "image_preview"
-    ]
+#     readonly_fields = [
+#         "image_preview"
+#     ]
 
-    def image_preview(self, obj):
-        return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
+#     def image_preview(self, obj):
+#         return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
     
-    image_preview.short_description = "Главное изображение"
+#     image_preview.short_description = "Главное изображение"
 
-    inlines = [BundleImageInline]
+#     inlines = [BundleImageInline]
 
 
 @admin.register(models.ProductColorImagesModel)
