@@ -222,6 +222,9 @@ class ProductModificationModel(models.Model):
         self.slug = slugify(f"{self.product.name} {self.product.code} {self.color.name} {self.size.name}")
 
         return super().save(*args, **kwargs)
+    
+    def get_product_slug(self):
+        return "-".join(self.slug.split("-")[:-1])
 
 
 def product_color_images_upload_path(instance, filename):

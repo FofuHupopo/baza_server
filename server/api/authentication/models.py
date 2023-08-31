@@ -129,19 +129,6 @@ class CartModel(models.Model):
         verbose_name = "Корзина"
         verbose_name_plural = "Корзины"
         unique_together = ('user_model', 'product_modification_model')
-    
-    def save(self, *args, **kwargs) -> None:
-        # try: 
-        #     cart_instance = CartModel.objects.get(
-        #         user_model=self.user_model,
-        #         product_modification_model=self.product_modification_model
-        #     )
-            
-        #     cart_instance.quantity += 1
-            
-        #     cart_instance.save()
-        # except CartModel.DoesNotExist:
-        return super().save(*args, **kwargs)
 
 
 def now_plus_5_minutes():
@@ -190,8 +177,6 @@ class AuthCodeModel(models.Model):
             phone=phone,
             code=code
         ).first()
-        
-        print(authcode)
         
         if authcode and authcode.lifetime > timezone.now():
             authcode.delete()

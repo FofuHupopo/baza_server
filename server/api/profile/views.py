@@ -1,9 +1,11 @@
-from rest_framework import status, generics
-from rest_framework.pagination import PageNumberPagination
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.request import Request, HttpRequest
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.request import Request
+from django.db.models import Q
+from functools import reduce
+from operator import or_
+from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 
 from api.products import models as product_models
@@ -16,7 +18,7 @@ class FavoritesView(APIView):
     permission_classes = (IsAuthenticated, )
     
     def get(self, request: Request):
-        serializer = product_serializers.ShortModificationSerializer(
+        serializer = product_serializers.FavoritesSerializer(
             request.user.favorites.all(),
             many=True,
             context={
@@ -31,11 +33,11 @@ class FavoritesView(APIView):
 
     def post(self, request: Request):
         modification = self._get_modification_from_request(request)
-        
+
         request.user.favorites.add(
             *modification
         )
-        
+
         return self.get(request)
     
     def delete(self, request: Request):
@@ -48,35 +50,33 @@ class FavoritesView(APIView):
         return self.get(request)
             
     def _get_modification_from_request(self, request: Request) -> list[product_models.ProductModificationModel]:
-        modification_id = request.data.get("modification_id")
-        modifications = request.data.get("modifications")
-        
-        if not modification_id and not modifications:
+        slug = request.data.get("slug")
+
+        if not slug:
             return Response(
                 {
                     "message": "No modification_id or modifications[]."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
-        
-        if modification_id:
+
+        if type(slug) is str:
             modification = [product_models.ProductModificationModel.objects.filter(
-                pk=modification_id
+                slug__icontains=slug
             ).first()]
-        
-        if modifications:
-            modification = product_models.ProductModificationModel.objects.filter(
-                pk__in=modifications
-            )
-        
+
+        if type(slug) is list:
+            q_object = reduce(or_, (Q(slug__icontains=slug_) for slug_ in slug))
+            modification = product_models.ProductModificationModel.objects.filter(q_object).distinct("product_id", "color")
+
         if not modification:
             return Response(
                 {
-                    "message": "No modification with this id."
+                    "message": "No modification with this slug."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
-        
+
         return modification
 
 
@@ -150,15 +150,7 @@ class CartView(APIView):
             pk=modification_id
         ).first()
         
-        if not modification:
-            return Response(
-                {
-                    "message": "No modification with this id."
-                },
-                status.HTTP_400_BAD_REQUEST
-            )
-        
-        return modification
+        return list(filter(lambda mod: mod, modification))
     
 
 class CartAddView(APIView):

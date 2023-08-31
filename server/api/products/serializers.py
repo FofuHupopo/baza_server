@@ -405,38 +405,36 @@ class CartSerializer(serializers.ModelSerializer):
 
 
 class FavoritesSerializer(serializers.ModelSerializer):
-    color_images = serializers.SerializerMethodField()
-    colors = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+    slug = serializers.SerializerMethodField()
 
     class Meta:
-        model = models.ProductModel
+        model = models.ProductModificationModel
         fields = (
-            "id", "name", "price", "old_price", "description", "color_images", "colors"
+            "name", "image", "price", "slug"
         )
-        
-    def get_color_images(self, obj):
-        return ProductColorImagesSerializer(
-            models.ProductColorImagesModel.objects.filter(
-                product=obj
-            ),
-            many=True,
-            context={
-                "request": self.context["request"]
-            }
-        ).data
+
+    def get_name(self, obj):
+        return obj.product.name
+
+    def get_price(self, obj):
+        return obj.product.price
     
-    def get_colors(self, obj):
-        colors = models.ProductModificationModel.objects.filter(
-            product=obj,
-            visible=True
-        ).distinct("color").values_list("slug", "color__name", "color__eng_name", "color__hex_code")
+    def get_slug(self, obj):
+        return obj.get_product_slug()
+    
+    def get_image(self, obj):
+        product_colors = models.ProductColorImagesModel.objects.filter(
+            product=obj.product,
+            color=obj.color
+        )
+
+        image = models.ColorImageModel.objects.filter(
+            product_color__in=product_colors
+        ).first()
         
-        return [
-            {
-                "slug": "-".join(slug.split("-")[:-1]),
-                "name": color_name,
-                "eng_name": color_eng_name,
-                "hex_code": color_hex
-            }
-            for slug, color_name, color_eng_name, color_hex in colors
-        ]
+        request = self.context.get('request')
+
+        return request.build_absolute_uri(image.image.url)
