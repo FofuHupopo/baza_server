@@ -74,3 +74,31 @@ class OrderView(APIView):
             serializer.data,
             status.HTTP_200_OK
         )
+
+
+class CalculatePriceView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request: Request):
+        cart = auth_models.CartModel.objects.filter(
+            user_model=request.user
+        )
+        
+        result = {
+            "price": 0,
+            "sale": 0
+        }
+        
+        for cart_instance in cart:
+            price = cart_instance.quantity * cart_instance.product_modification_model.product.price
+            sale = cart_instance.quantity * (
+                cart_instance.product_modification_model.product.old_price - cart_instance.product_modification_model.product.price
+            )
+            
+            result["price"] += price
+            result["sale"] += sale
+        
+        return Response(
+            result,
+            status.HTTP_200_OK
+        )
