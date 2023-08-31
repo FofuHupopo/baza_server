@@ -74,10 +74,10 @@ class FavoritesView(APIView):
                 {
                     "message": "No modification with this slug."
                 },
-                status.HTTP_400_BAD_REQUEST
+                status.HTTP_404_NOT_FOUND
             )
 
-        return modification
+        return list(filter(lambda mod: mod, modification))
 
 
 class CartView(APIView):
@@ -150,7 +150,15 @@ class CartView(APIView):
             pk=modification_id
         ).first()
         
-        return list(filter(lambda mod: mod, modification))
+        if not modification:
+            return Response(
+                {
+                    "message": "No modification with this slug."
+                },
+                status.HTTP_404_NOT_FOUND
+            )
+        
+        return modification
     
 
 class CartAddView(APIView):

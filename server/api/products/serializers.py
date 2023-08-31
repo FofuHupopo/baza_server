@@ -167,14 +167,13 @@ class ListProductsSerializer(serializers.ModelSerializer):
         return AloneProductPathSerializer(obj.product.path).data
     
     def get_colors_count(self, obj):
-        colors = models.ProductModificationModel.objects.filter(
-            product=obj.product
+        return models.ProductModificationModel.objects.filter(
+            product=obj.product,
+            visible=True
         ).values_list(
             'color__name',
             flat=True
-        ).distinct()
-        
-        return len(colors)
+        ).distinct().count()
 
     def get_images(self, obj):
         product_color = models.ProductColorImagesModel.objects.filter(
