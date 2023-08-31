@@ -91,9 +91,12 @@ class CalculatePriceView(APIView):
         
         for cart_instance in cart:
             price = cart_instance.quantity * cart_instance.product_modification_model.product.price
-            sale = cart_instance.quantity * (
-                cart_instance.product_modification_model.product.old_price - cart_instance.product_modification_model.product.price
-            )
+            sale = 0
+            
+            if cart_instance.product_modification_model.product.old_price > cart_instance.product_modification_model.product.price:
+                sale = cart_instance.quantity * (
+                    cart_instance.product_modification_model.product.old_price - cart_instance.product_modification_model.product.price
+                )
             
             result["price"] += price
             result["sale"] += sale
