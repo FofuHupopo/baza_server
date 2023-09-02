@@ -13,7 +13,7 @@ from . import serializers
 
 class OrderView(APIView):
     permission_classes = (IsAuthenticated, )
-    serializer_class = serializers.OrderSerializer
+    serializer_class = serializers.ViewOrderSerializer
     
     def get(self, request: Request):
         serializer = self.serializer_class(
@@ -42,7 +42,7 @@ class OrderView(APIView):
                 status.HTTP_400_BAD_REQUEST
             )
 
-        serializer = self.serializer_class(
+        serializer = serializers.CreateOrderSerializer(
             data=request.data
         )
         

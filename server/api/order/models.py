@@ -1,6 +1,8 @@
+from __future__ import annotations
 from typing import List
 
 from django.db import models
+from django.utils import timezone
 
 from api.authentication import models as auth_models
 from api.products import models as product_models
@@ -10,6 +12,14 @@ from .settings import get_config
 
 
 class OrderModel(models.Model):
+    class OrderStatusChoice(models.TextChoices):
+        CREATED = "created"
+        PAID = "paid"
+        IN_DELIVERY = "in_delivery"
+        DELIVERED = "delivered"
+        RECEIVED = "received"
+
+
     user = models.ForeignKey(
         auth_models.UserModel, models.CASCADE,
         verbose_name="Пользователь"
@@ -73,6 +83,9 @@ class OrderModel(models.Model):
     is_paid = models.BooleanField(
         "Оплачено?", default=False
     )
+    is_received = models.BooleanField(
+        "Получен?", default=False
+    )
     
     products = models.ManyToManyField(
         product_models.ProductModificationModel,
@@ -80,13 +93,49 @@ class OrderModel(models.Model):
         verbose_name="Модификации продуктов"
     )
     
+    order_date = models.DateTimeField(
+        "Дата заказа", default=timezone.now
+    )
+    
+    status = models.CharField(
+        "Статус", max_length=32,
+        choices=OrderStatusChoice.choices,
+        default=OrderStatusChoice.CREATED
+    )
+    receiving_date = models.DateTimeField(
+        "Дата получения",
+        null=True, blank=True
+    )
+    
+    baza_loyalty = models.IntegerField(
+        "Бонусная программа", default=0
+    )
+    loaylty_awarded = models.BooleanField(
+        "Баллы начислены?", default=False
+    )
+    
     class Meta:
         db_table = "order__order"
         verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
     
+    def save(self, *args, **kwargs) -> OrderModel:
+        if self.status == self.OrderStatusChoice.PAID and not self.loaylty_awarded:
+            # award_loaylty()
+            ...
+        
+        if self.status == self.OrderStatusChoice.IN_DELIVERY and not self.receiving_date:
+            self.receiving_date = timezone.now()
+            # self.receiving_date = get_delivery_date()
+            
+        if self.status == self.OrderStatusChoice.DELIVERED and not self.is_received:
+            self.is_received = True 
+
+        return super(OrderModel, self).save(*args, **kwargs)
+    
     def __str__(self) -> str:
         return f"{self.pk}: {self.name} {self.surname}"
+    
     
     
 class Order2ModificationModel(models.Model):
@@ -161,7 +210,7 @@ class Order2ModificationModel(models.Model):
 #         if hasattr(self, 'receipt'):
 #             return self
 
-#         Receipt.objects.create(payment=self, email=email, phone=phone, taxation=taxation)
+#         Receipt.objects.create(payment=self, email=email, phone=phone)
 
 #         return self
 
