@@ -5,24 +5,28 @@ from api.products import serializers as products_serializers
 
 
 class CreateOrderSerializer(serializers.ModelSerializer):
-    products = serializers.SerializerMethodField()
-
     class Meta:
         model = models.OrderModel
         fields = (
             "id", "name", "surname", "email", "phone",
             "receiving", "payment_type",
-            "city", "street", "house", "frame", "apartment",
-            "is_paid", "products"
+            "city", "street", "house", "frame", "apartment"
         )
         depth = 1
+        
 
-    def get_products(self, obj):
-        return products_serializers.CartSerializer(
-            models.Order2ModificationModel.objects.filter(
-                order_model=obj
-            ),
-            many=True,
+class OrderProductsSerializer(serializers.ModelSerializer):
+    product = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Order2ModificationModel
+        fields = (
+            "product", "quantity", "baza_loyalty"
+        )
+
+    def get_product(self, obj):
+        return products_serializers.ShortModificationSerializer(
+            obj.product_modification_model,
             context={
                 "request": self.context["request"]
             }
@@ -44,7 +48,7 @@ class ViewOrderSerializer(serializers.ModelSerializer):
         depth = 1
 
     def get_products(self, obj):
-        return products_serializers.CartSerializer(
+        return OrderProductsSerializer(
             models.Order2ModificationModel.objects.filter(
                 order_model=obj
             ),

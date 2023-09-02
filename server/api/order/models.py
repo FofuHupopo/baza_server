@@ -121,8 +121,8 @@ class OrderModel(models.Model):
     
     def save(self, *args, **kwargs) -> OrderModel:
         if self.status == self.OrderStatusChoice.PAID and not self.loaylty_awarded:
-            # award_loaylty()
-            ...
+            for product in self.products.all():
+                self.baza_loyalty += product.baza_loyalty
         
         if self.status == self.OrderStatusChoice.IN_DELIVERY and not self.receiving_date:
             self.receiving_date = timezone.now()
@@ -151,6 +151,9 @@ class Order2ModificationModel(models.Model):
     )
     quantity = models.PositiveIntegerField(
         "Количество", default=0
+    )
+    baza_loyalty = models.IntegerField(
+        "Бонусная программа", default=0
     )
 
     class Meta:
