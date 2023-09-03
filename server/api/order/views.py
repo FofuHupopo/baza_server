@@ -19,7 +19,7 @@ class OrderView(APIView):
         serializer = self.serializer_class(
             models.OrderModel.objects.filter(
                 user=request.user
-            ),
+            ).order_by("-id"),
             many=True,
             context={
                 "request": request
