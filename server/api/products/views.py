@@ -131,7 +131,7 @@ class ProductDetailView(APIView):
         
         product = modifications[0].product
         
-        sizes = modifications.values_list("size__name", "id")
+        sizes = modifications.values_list("id", "size__name", "quantity")
 
         colors = models.ProductModificationModel.objects.filter(
             product=product,
@@ -167,9 +167,10 @@ class ProductDetailView(APIView):
                 "sizes": [
                     {
                         "name": size_name,
-                        "mod_id": mod_id
+                        "mod_id": mod_id,
+                        "quantity": quantity
                     }
-                    for size_name, mod_id in sizes
+                    for mod_id, size_name, quantity in sizes
                 ],
                 "current_color": {
                     "slug": slug,

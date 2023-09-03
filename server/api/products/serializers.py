@@ -71,7 +71,7 @@ class ShortProductModificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductModificationModel
         fields = (
-            "id", "color", "size", "images"
+            "id", "color", "size", "images", "quantity"
         )
         
     def get_size(self, obj):
@@ -353,7 +353,7 @@ class ShortModificationSerializer(serializers.ModelSerializer):
         model = models.ProductModificationModel
         fields = (
             "id", "name", "image", "price", "old_price",
-            "size", "color", "slug" 
+            "size", "color", "slug", "quantity"
         )
     
     def get_name(self, obj):
