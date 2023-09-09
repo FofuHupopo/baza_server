@@ -286,7 +286,14 @@ class SearchAddressView(APIView):
     def get(self, request: Request):
         address = request.query_params.get("q", "")
         field = request.query_params.get("type", "")
-        limit = int(request.query_params.get("limit", 5))
+        limit = request.query_params.get("limit", 5)
+        
+        if not limit.isdecimal():
+            return Response({
+                "error": "Я предупреждал, готовь жопу. limit param number only."
+            }, status.HTTP_400_BAD_REQUEST)
+        
+        limit = int(limit)
         
         if field not in AddressSearch.VALID_SEARCH_FIELDS:
             return Response({
