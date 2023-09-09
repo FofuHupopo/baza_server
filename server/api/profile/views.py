@@ -107,7 +107,7 @@ class CartView(APIView):
         if len(modifications) != len(quantities):
             return Response(
                 {
-                    "message": "length of modification not equal the length of quantities"
+                    "message": "Слыш черт, нормальные списки отправь. length of modification not equal the length of quantities"
                 }
             )
         
@@ -151,7 +151,7 @@ class CartView(APIView):
         if not modification:
             return Response(
                 {
-                    "message": "No modification with this slug."
+                    "message": "Ну елки палки. No modification with this slug."
                 },
                 status.HTTP_404_NOT_FOUND
             )
@@ -290,14 +290,14 @@ class SearchAddressView(APIView):
         
         if not limit.isdecimal():
             return Response({
-                "error": "Я предупреждал, готовь жопу. limit param number only."
+                "message": "Я предупреждал, готовь жопу. limit param number only."
             }, status.HTTP_400_BAD_REQUEST)
         
         limit = int(limit)
         
         if field not in AddressSearch.VALID_SEARCH_FIELDS:
             return Response({
-                "error": f"\"type\" param not in {AddressSearch.VALID_SEARCH_FIELDS}"
+                "message": f"Ёперный театр, \"type\" param not in {AddressSearch.VALID_SEARCH_FIELDS}"
             }, status.HTTP_400_BAD_REQUEST)
         
         response = AddressSearch.search(address, field, limit)

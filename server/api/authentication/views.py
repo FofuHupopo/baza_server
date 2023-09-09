@@ -44,7 +44,7 @@ class SendCodeView(APIView):
         else:
             return Response(
                 {
-                    "error": "Не удалось отправить код, попробуйте снова"
+                    "error": "У нас чет не так полшо, сорян. Не удалось отправить код, попробуйте снова"
                 },
                 status.HTTP_400_BAD_REQUEST
             )
@@ -75,7 +75,7 @@ class LoginView(APIView):
             
             return Response(
                 {
-                    "error": "Неправильный код."
+                    "error": "Слыш, ты че мне отправил? Неправильный код."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
