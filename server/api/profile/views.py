@@ -5,9 +5,9 @@ from rest_framework.request import Request
 from django.db.models import Q
 from functools import reduce
 from operator import or_
-from rest_framework.permissions import IsAuthenticated
-from django.conf import settings
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
+from api.request import AddressSearch
 from api.products import models as product_models
 from api.products import serializers as product_serializers
 from api.authentication import serializers as auth_serializers
@@ -276,5 +276,26 @@ class CartClearView(APIView):
             {
                 "message": "ok"
             },
+            status.HTTP_200_OK
+        )
+
+
+class SearchAddressView(APIView):
+    permission_classes = (AllowAny, )
+
+    def get(self, request: Request):
+        address = request.query_params.get("q", "")
+        field = request.query_params.get("type", "")
+        limit = int(request.query_params.get("limit", 5))
+        
+        if field not in AddressSearch.VALID_SEARCH_FIELDS:
+            return Response({
+                "error": f"\"type\" param not in {AddressSearch.VALID_SEARCH_FIELDS}"
+            }, status.HTTP_400_BAD_REQUEST)
+        
+        response = AddressSearch.search(address, field, limit)
+        
+        return Response(
+            response,
             status.HTTP_200_OK
         )

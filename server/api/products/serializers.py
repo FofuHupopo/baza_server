@@ -41,6 +41,7 @@ class ProductColorSerializer(serializers.ModelSerializer):
             "name", "hex_code"
         )
 
+
 class ProductSizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductSizeModel
