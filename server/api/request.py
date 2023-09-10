@@ -3,7 +3,7 @@ import requests
 from dadata import Dadata
 from pprint import pprint
 
-from api.utils import sort_by_similarity
+from .utils import sort_by_similarity
 
 
 class AddressSearch:
@@ -61,10 +61,102 @@ class SendMessage:
 
 class Delivery:
     URLS = {
-        "calculate": "https://api.cdek.ru/v2/calculator/tarif",
-        "order": "https://api.cdek.ru/v2/order"
+        "calculate": "https://api.cdek.ru/v2/calculator/tarifflist",
+        "order": "https://api.cdek.ru/v2/order",
+        "auth": "https://api.cdek.ru/v2/oauth/token"
+    }
+    # URLS = {
+    #     "calculate": "https://api.cdek.ru/v2/calculator/tarifflist",
+    #     "order": "https://api.cdek.ru/v2/order"
+    # }
+    AUTH = {
+        "account": "gHMHkeStBTHiIlwgJdMEAPAUL6i7iKZC",
+        "secure": "rQcSMwlrUHXykRSdBZaE0fVxBMa2gKdO"
     }
     HEADERS = {
         "Content-Type": "application/json;charset=UTF-8",
         "Accept": "application/json",
     }
+    TOKEN = {
+        "Authorization": ""
+    }
+    TARIFF_CODES = {
+        "address": [482],
+        "stock": [483, 486]
+    }
+    
+    @classmethod
+    def get_header(cls):
+        cls.HEADERS.update(cls.TOKEN)
+        return cls.HEADERS
+
+    @classmethod
+    def request(cls, url: str, json: dict) -> dict:
+        r = requests.post(Delivery.URLS[url], headers=cls.get_header(), json=json)
+        
+        if r.status_code == 401:
+            r = requests.post(
+                Delivery.URLS["auth"],
+                headers=cls.get_header(),
+                params={
+                    "grant_type": "client_credentials",
+                    "client_id": Delivery.AUTH["account"],
+                    "client_secret": Delivery.AUTH["secure"]
+                }
+            )
+            
+            cls.TOKEN["Authorization"] = f'Bearer {r.json().get("access_token", "")}'
+            
+            r = requests.post(Delivery.URLS[url], headers=cls.get_header(), json=json)
+
+        return r.json()
+
+    @staticmethod
+    def calculate_address(address: str, weight: int):
+        return Delivery._calculate(
+            {
+                "address": address
+            },
+            "address", weight
+        )
+
+    @staticmethod
+    def calculate_stock(cdek_code: int, weight: int):
+        return Delivery._calculate(
+            {
+                "code": cdek_code
+            },
+            "stock", weight
+        )
+
+    @staticmethod
+    def _calculate(to_location: dict, tariff_filter: str, weight: int):
+        r = Delivery.request("calculate", json={
+            "from_location": {
+                "postal_code": 460053,
+            },
+            "to_location": to_location,
+            "packages": [
+                {
+                    "weight": weight,
+                    "height": 23,
+                    "length": 19,
+                    "width": 10,
+                }
+            ],
+        })
+
+        result = list(filter(
+            lambda tariff: tariff["tariff_code"] in Delivery.TARIFF_CODES[tariff_filter],
+            r["tariff_codes"]
+        ))[0]
+
+        return {
+            "price": result["delivery_sum"],
+            "period_min": result["period_min"],
+            "period_max": result["period_max"],
+        }
+
+
+if __name__ == "__main__":
+    pprint(Delivery.calculate_address("Москва, Севастопольский проспект, 43"))

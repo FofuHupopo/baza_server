@@ -42,7 +42,8 @@ class OrderModel(models.Model):
     receiving = models.CharField(
         "Способ получения",
         choices=[
-            ("delivery", "Доставка"),
+            ("delivery_address", "Доставка до двери"),
+            ("delivery_stock", "Доставка до склада"),
             ("pickup", "Самовывоз")
         ],
         max_length=32

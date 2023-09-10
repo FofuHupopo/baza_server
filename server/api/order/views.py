@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.conf import settings
 
 from . import models
+from api.request import Delivery
 from api.authentication import models as auth_models
 from . import serializers
 
@@ -80,6 +81,10 @@ class CalculatePriceView(APIView):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request: Request):
+        delivery_address = request.query_params.get("delivery_address")
+        delivery_stock = request.query_params.get("delivery_stock")
+        delivery = bool(delivery_stock or delivery_address)
+
         cart = auth_models.CartModel.objects.filter(
             user_model=request.user
         )
@@ -89,11 +94,15 @@ class CalculatePriceView(APIView):
             "sale": 0
         }
         
+        weight = 0
+        
         for cart_instance in cart:
             quantity = cart_instance.quantity
 
             price = cart_instance.product_modification_model.product.price
             old_price = cart_instance.product_modification_model.product.old_price
+            
+            weight += cart_instance.product_modification_model.weight or 500
             
             if old_price > price:
                 result["sale"] += quantity * (
@@ -101,6 +110,19 @@ class CalculatePriceView(APIView):
                 )
             
             result["price"] += quantity * price
+        
+        if delivery:
+            delivery_price = 0
+
+            if delivery_address:
+                delivery_price = Delivery.calculate_address(delivery_address, weight)
+            
+            if delivery_stock:
+                delivery_price = Delivery.calculate_stock(delivery_stock, weight)
+
+            result["delivery"] = delivery_price
+            result["price"] += delivery_price
+
 
         return Response(
             result,

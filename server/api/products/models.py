@@ -189,6 +189,9 @@ class ProductModificationModel(models.Model):
         verbose_name="Размер товара",
         null=True, blank=True
     )
+    weight = models.IntegerField(
+        "Вес (граммы)", default=0
+    )
     quantity = models.IntegerField(
         "Количество", default=0
     )
