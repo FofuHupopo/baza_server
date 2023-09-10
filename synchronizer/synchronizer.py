@@ -287,6 +287,8 @@ class MoySkaldSynchronizer:
         
     def _sync_product_modification_assortment(self, modification_id: str):
         response = MoySkaldSynchronizer.moysklad_request("ASSORTMENT", [modification_id])
+        print(response)
+        exit()
         return {
             "quantity": int(response["rows"][0].get("quantity", 0)),
             "weight": int(response["rows"][0].get("weight", 0)),
