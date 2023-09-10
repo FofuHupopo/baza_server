@@ -131,6 +131,13 @@ class OrderModel(models.Model):
             
         if self.status == self.OrderStatusChoice.DELIVERED and not self.is_received:
             self.is_received = True 
+            
+        if self.receiving == "pickup":
+            self.city = None
+            self.street = None
+            self.house = None
+            self.frame = None
+            self.apartment = None
 
         return super(OrderModel, self).save(*args, **kwargs)
     

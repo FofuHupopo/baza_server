@@ -65,10 +65,6 @@ class Delivery:
         "order": "https://api.cdek.ru/v2/order",
         "auth": "https://api.cdek.ru/v2/oauth/token"
     }
-    # URLS = {
-    #     "calculate": "https://api.cdek.ru/v2/calculator/tarifflist",
-    #     "order": "https://api.cdek.ru/v2/order"
-    # }
     AUTH = {
         "account": "gHMHkeStBTHiIlwgJdMEAPAUL6i7iKZC",
         "secure": "rQcSMwlrUHXykRSdBZaE0fVxBMa2gKdO"
