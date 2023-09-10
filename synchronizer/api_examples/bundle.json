@@ -46,7 +46,7 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-06-20 16:11:55.878",
+            "updated": "2023-07-22 09:40:53.953",
             "name": "T-shirt with elastic band + shorts (Серый)",
             "code": "00606",
             "externalCode": "7cXVB9yyitcC2W5Tf4vG73",
@@ -96,7 +96,7 @@
             },
             "salePrices": [
                 {
-                    "value": 450000.0,
+                    "value": 315000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -118,7 +118,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 450000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -199,7 +199,7 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-06-10 12:54:16.749",
+            "updated": "2023-07-22 09:43:31.956",
             "name": "Jacket denim + jeans-transformers BAZA (dark)",
             "code": "00570",
             "externalCode": "UENxhM8pjSh75OU1Dbf0n1",
@@ -249,7 +249,7 @@
             },
             "salePrices": [
                 {
-                    "value": 1200000.0,
+                    "value": 800000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -271,7 +271,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 1200000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -655,8 +655,8 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-05-07 14:57:51.499",
-            "name": "T-shirt + shorts WOMAN (розовый)",
+            "updated": "2023-07-22 12:44:00.201",
+            "name": "T-shirt + shorts  (розовый)",
             "code": "00458",
             "externalCode": "051iVeyygwW9WRA71KY1g3",
             "archived": false,
@@ -707,7 +707,7 @@
             },
             "salePrices": [
                 {
-                    "value": 450000.0,
+                    "value": 315000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -729,7 +729,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 450000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -1290,7 +1290,7 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-05-09 16:42:09.892",
+            "updated": "2023-07-22 09:37:04.535",
             "name": "T-shirt + shorts WOMAN (меланж)",
             "code": "00485",
             "externalCode": "pSXSbR9Di5rSE2VL-y9up1",
@@ -1340,7 +1340,7 @@
             },
             "salePrices": [
                 {
-                    "value": 450000.0,
+                    "value": 315000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -1362,7 +1362,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 450000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -1596,7 +1596,7 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-06-20 16:21:27.935",
+            "updated": "2023-07-22 09:34:25.003",
             "name": "Mini t-shirt + mini shorts (Бежевый)",
             "code": "00609",
             "externalCode": "yvGtS5T2j8GJD5B1e6BpT1",
@@ -1646,7 +1646,7 @@
             },
             "salePrices": [
                 {
-                    "value": 450000.0,
+                    "value": 315000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -1668,7 +1668,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 450000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -1749,7 +1749,7 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-05-09 16:05:40.517",
+            "updated": "2023-07-22 12:42:43.864",
             "name": "T-shirt + shorts MEN'S (светло-серый)",
             "code": "00447",
             "externalCode": "EmeGOrY5hKQp96xeewAoV3",
@@ -1801,7 +1801,7 @@
             },
             "salePrices": [
                 {
-                    "value": 450000.0,
+                    "value": 315000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -1823,7 +1823,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 450000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -2205,7 +2205,7 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-05-07 14:57:51.698",
+            "updated": "2023-07-22 09:36:00.131",
             "name": "T-shirt + shorts WOMAN (графит)",
             "code": "00455",
             "externalCode": "HkvbIRSrh4WdASjYgrPlS2",
@@ -2257,7 +2257,7 @@
             },
             "salePrices": [
                 {
-                    "value": 450000.0,
+                    "value": 315000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -2279,7 +2279,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 450000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -2508,8 +2508,8 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-06-10 12:52:34.153",
-            "name": "T-shirt + shorts MEN'S (темно-серый)",
+            "updated": "2023-07-28 10:34:28.790",
+            "name": "T-shirt + shorts  (темно-серый)",
             "code": "00478",
             "externalCode": "JSC56Q6IhXS8goQFneE4f1",
             "archived": false,
@@ -2558,7 +2558,7 @@
             },
             "salePrices": [
                 {
-                    "value": 450000.0,
+                    "value": 315000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -2580,7 +2580,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 450000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -2990,7 +2990,7 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-06-20 16:09:20.791",
+            "updated": "2023-07-22 09:39:20.190",
             "name": "T-shirt with elastic band + shorts (Милк)",
             "code": "00604",
             "externalCode": "HY0NnlmdiWJrfAsZnLubc1",
@@ -3040,7 +3040,7 @@
             },
             "salePrices": [
                 {
-                    "value": 450000.0,
+                    "value": 315000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -3062,7 +3062,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 450000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -3936,7 +3936,7 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-06-20 16:23:29.119",
+            "updated": "2023-07-22 09:35:13.005",
             "name": "Mini t-shirt + mini shorts (Графит)",
             "code": "00611",
             "externalCode": "NFWYfXdEjpP05MRCHjTsS2",
@@ -3986,7 +3986,7 @@
             },
             "salePrices": [
                 {
-                    "value": 450000.0,
+                    "value": 315000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -4008,7 +4008,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 450000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -4089,7 +4089,7 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-06-10 12:52:02.786",
+            "updated": "2023-07-22 12:38:44.447",
             "name": "T-shirt + shorts MEN'S (черный)",
             "code": "00566",
             "externalCode": "VE2hGw49hLyHObIMn69Rg3",
@@ -4139,7 +4139,7 @@
             },
             "salePrices": [
                 {
-                    "value": 450000.0,
+                    "value": 315000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -4161,7 +4161,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 450000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -4695,7 +4695,7 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-06-20 16:10:44.191",
+            "updated": "2023-07-22 09:40:18.906",
             "name": "T-shirt with elastic band + shorts (Розовый)",
             "code": "00605",
             "externalCode": "isvB6GaYg9rOH3HRH4ZfW0",
@@ -4745,7 +4745,7 @@
             },
             "salePrices": [
                 {
-                    "value": 450000.0,
+                    "value": 315000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -4767,7 +4767,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 450000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -5182,23 +5182,22 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-06-10 12:54:37.233",
-            "name": "Jacket denim + jeans-transformers BAZA (denim)",
+            "updated": "2023-08-26 19:52:59.615",
+            "name": "Jacket denim + jeans-transformers (denim)",
+            "description": "Костюм трансформер представлен из двух изделий: пиджак и джинсы трансформеры. Пиджак укороченный на хлопковом подкладе, длина изделия 36см . Джинсы трансформеры состоят из шорт и джинс на клепках, длина изделия 125см.\n\nСостав: 60% хлопок, 40% полиэстер.",
             "code": "00569",
             "externalCode": "999sjn-kjjRu-sZoscx-g3",
             "archived": false,
-            "pathName": "Женское/Костюмы/Jacket denim + jeans-transformers",
+            "pathName": "Сайт/WOMEN",
             "productFolder": {
                 "meta": {
-                    "href": "https://online.moysklad.ru/api/remap/1.2/entity/productfolder/7568cd53-0759-11ee-0a80-13d70028eb1f",
+                    "href": "https://online.moysklad.ru/api/remap/1.2/entity/productfolder/3cae7cea-3e76-11ee-0a80-105c001a265b",
                     "metadataHref": "https://online.moysklad.ru/api/remap/1.2/entity/productfolder/metadata",
                     "type": "productfolder",
                     "mediaType": "application/json",
-                    "uuidHref": "https://online.moysklad.ru/app/#good/edit?id=7568cd53-0759-11ee-0a80-13d70028eb1f"
+                    "uuidHref": "https://online.moysklad.ru/app/#good/edit?id=3cae7cea-3e76-11ee-0a80-105c001a265b"
                 }
             },
-            "effectiveVat": 0,
-            "effectiveVatEnabled": false,
             "useParentVat": true,
             "uom": {
                 "meta": {
@@ -5213,7 +5212,7 @@
                     "href": "https://online.moysklad.ru/api/remap/1.2/entity/bundle/d41711d8-0759-11ee-0a80-06f2002a4a18/images",
                     "type": "image",
                     "mediaType": "application/json",
-                    "size": 1,
+                    "size": 3,
                     "limit": 1000,
                     "offset": 0
                 }
@@ -5232,7 +5231,7 @@
             },
             "salePrices": [
                 {
-                    "value": 1200000.0,
+                    "value": 800000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -5254,7 +5253,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 1200000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -5667,7 +5666,7 @@
                     "mediaType": "application/json"
                 }
             },
-            "updated": "2023-05-09 16:38:08.193",
+            "updated": "2023-07-22 12:45:04.159",
             "name": "T-shirt + shorts WOMAN (светло-серый)",
             "code": "00457",
             "externalCode": "CSmCXFD0hRXRQcRxLi5oV1",
@@ -5719,7 +5718,7 @@
             },
             "salePrices": [
                 {
-                    "value": 450000.0,
+                    "value": 315000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",
@@ -5741,7 +5740,7 @@
                     }
                 },
                 {
-                    "value": 0.0,
+                    "value": 450000.0,
                     "currency": {
                         "meta": {
                             "href": "https://online.moysklad.ru/api/remap/1.2/entity/currency/c6141c23-b068-11ed-0a80-0fc9002c6cdb",

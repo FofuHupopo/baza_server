@@ -25,7 +25,7 @@ class MoySkaldSynchronizer:
         "MODIFICATIONS": "https://online.moysklad.ru/api/remap/1.2/entity/variant?filter=productid={}",
         "MODIFICATION_IMAGES": "https://online.moysklad.ru/api/remap/1.2/entity/variant/{}/images",
         "PRODUCT_IMAGES": "https://online.moysklad.ru/api/remap/1.2/entity/product/{}/images",
-        "MODIFICATION_QUANTITY": "https://online.moysklad.ru/api/remap/1.2/entity/assortment?filter=id={}",
+        "ASSORTMENT": "https://online.moysklad.ru/api/remap/1.2/entity/assortment?filter=id={}",
         "DOWNLOAD": "https://online.moysklad.ru/api/remap/1.2/download/{}",
         "BUNDLES": "https://online.moysklad.ru/api/remap/1.2/entity/bundle",
         "BUNDLE_DETAIL": "https://online.moysklad.ru/api/remap/1.2/entity/bundle/{}",
@@ -272,7 +272,10 @@ class MoySkaldSynchronizer:
                         visible = False
                     )
 
-                modification_instance.quantity = self._sync_product_modification_quantity(modification_instance.modification_id)
+                modification_assortment = self._sync_product_modification_assortment(modification_instance)
+                modification_instance.weight = modification_assortment["weight"]
+                modification_instance.quantity = modification_assortment["quantity"]
+
                 modification_instance.color_id = color_instance_id
                 modification_instance.size_id = size_instance_id
                 modification_instance.slug = slugify(f"{product_instance.name} {product_instance.code} {color_instance.name} {size_instance.name}")
@@ -282,9 +285,12 @@ class MoySkaldSynchronizer:
 
                 self._add_standart_product_modification_image(product_instance.id, modification_instance)
         
-    def _sync_product_modification_quantity(self, modification_id: str):
-        response = MoySkaldSynchronizer.moysklad_request("MODIFICATION_QUANTITY", [modification_id])
-        return int(response["rows"][0].get("quantity", 0))
+    def _sync_product_modification_assortment(self, modification_id: str):
+        response = MoySkaldSynchronizer.moysklad_request("ASSORTMENT", [modification_id])
+        return {
+            "quantity": int(response["rows"][0].get("quantity", 0)),
+            "weight": int(response["rows"][0].get("weight", 0)),
+        }
                 
     def _add_standart_product_modification_image(self, product_id: str, modification_instance: models.ProductModificationModel) -> None:
         # if self._sync_product_modification_images(product_id, modification_instance):
