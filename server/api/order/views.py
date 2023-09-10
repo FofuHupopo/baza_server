@@ -121,8 +121,7 @@ class CalculatePriceView(APIView):
                 delivery_price = Delivery.calculate_stock(delivery_stock, weight)
 
             result["delivery"] = delivery_price
-            result["price"] += delivery_price
-
+            result["price"] += delivery_price.get("price", 0)
 
         return Response(
             result,
