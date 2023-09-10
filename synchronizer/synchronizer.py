@@ -272,7 +272,7 @@ class MoySkaldSynchronizer:
                         visible = False
                     )
 
-                modification_assortment = self._sync_product_modification_assortment(modification_instance)
+                modification_assortment = self._sync_product_modification_assortment(modification_instance.modification_id)
                 modification_instance.weight = modification_assortment["weight"]
                 modification_instance.quantity = modification_assortment["quantity"]
 
