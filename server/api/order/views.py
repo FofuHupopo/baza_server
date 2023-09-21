@@ -110,7 +110,7 @@ class CalculatePriceView(APIView):
                     old_price - price
                 )
             
-            result["price"] += quantity * price
+            result["price"] += quantity * price / 100
         
         if delivery:
             delivery_price = 0
@@ -122,7 +122,6 @@ class CalculatePriceView(APIView):
                 delivery_price = Delivery.calculate_stock(delivery_stock, weight)
 
             result["delivery"] = delivery_price
-            result["price"] += delivery_price.get("price", 0)
 
         return Response(
             result,
@@ -130,11 +129,11 @@ class CalculatePriceView(APIView):
         )
 
 
-class TestOrderView(APIView):
+class PaymentView(APIView):
     serializer_class = serializers.PaymentSerializer
 
     def get(self, request: Request):
-        order_id = request.data.get("order_id")
+        order_id = request.query_params.get("order_id")
         
         try:
             order = models.OrderModel.objects.get(
