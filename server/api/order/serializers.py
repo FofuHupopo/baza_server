@@ -57,3 +57,8 @@ class ViewOrderSerializer(serializers.ModelSerializer):
                 "request": self.context["request"]
             }
         ).data
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Payment

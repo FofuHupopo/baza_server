@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.conf import settings
 
 from . import models
+from .services import MerchantAPI
 from api.request import Delivery
 from api.authentication import models as auth_models
 from . import serializers
@@ -125,5 +126,43 @@ class CalculatePriceView(APIView):
 
         return Response(
             result,
+            status.HTTP_200_OK
+        )
+
+
+class TestOrderView(APIView):
+    serializer_class = serializers.PaymentSerializer
+
+    def get(self, request: Request):
+        order_id = request.data.get("order_id")
+        
+        try:
+            order = models.OrderModel.objects.get(
+                pk=order_id
+            )
+        except models.OrderModel.DoesNotExist:
+            return Response(
+                {
+                    "status": "No order_id сучка"
+                },
+                status.HTTP_400_BAD_REQUEST
+            )
+
+        payment = models.Payment(
+            amount = order.amount,
+            order_id = order.pk,
+            description = "123"
+        )
+        merchant_api = MerchantAPI()
+        merchant_api.init(payment)
+        
+        print(payment)
+        
+        serializer = self.serializer_class(
+            payment
+        )
+        
+        return Response(
+            serializer.data,
             status.HTTP_200_OK
         )

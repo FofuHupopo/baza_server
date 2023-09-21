@@ -225,6 +225,10 @@ class ProductModificationModel(models.Model):
         self.slug = slugify(f"{self.product.name} {self.product.code} {self.color.name} {self.size.name}")
 
         return super().save(*args, **kwargs)
+
+    @property
+    def name(self):
+        return f"{self.product.name} ({self.color.name}, {self.size.name})"
     
     def get_product_slug(self):
         return "-".join(self.slug.split("-")[:-1])

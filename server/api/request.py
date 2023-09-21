@@ -1,5 +1,7 @@
 import requests
+import threading
 
+from pathlib import Path
 from dadata import Dadata
 from pprint import pprint
 
@@ -87,7 +89,7 @@ class Delivery:
         return cls.HEADERS
 
     @classmethod
-    def request(cls, url: str, json: dict) -> dict:
+    def _request(cls, url: str, json: dict) -> dict:
         r = requests.post(Delivery.URLS[url], headers=cls.get_header(), json=json)
         
         if r.status_code == 401:
@@ -127,7 +129,7 @@ class Delivery:
 
     @staticmethod
     def _calculate(to_location: dict, tariff_filter: str, weight: int):
-        r = Delivery.request("calculate", json={
+        r = Delivery._request("calculate", json={
             "from_location": {
                 "postal_code": 460053,
             },
@@ -154,5 +156,39 @@ class Delivery:
         }
 
 
+
+class Synchronizer:
+    BASE_URL = "http://127.0.0.1:5000/update/"
+    URLS = {
+        "quantity": BASE_URL + "quantity"
+    }
+    
+    @staticmethod
+    def _request(url: str, body: dict) -> None:
+        r = requests.post(
+            Synchronizer.URLS[url],
+            json=body
+        )
+    
+    @staticmethod
+    def _streaming_request(url: str, body: dict):
+        stream_request = threading.Thread(
+            target=Synchronizer._request,
+            args=(url, body)
+        )
+        stream_request.start()
+    
+    @staticmethod
+    def quantity_update(modification_id: str, quantity: int):
+        Synchronizer._streaming_request(
+            "quantity",
+            {
+                "quantity": quantity,
+                "modification_id": modification_id
+            }
+        )
+
+
 if __name__ == "__main__":
-    pprint(Delivery.calculate_address("Москва, Севастопольский проспект, 43"))
+    # pprint(Delivery.calculate_address("Москва, Севастопольский проспект, 43"))
+    Synchronizer.quantity_update("123", 10)
