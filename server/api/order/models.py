@@ -145,8 +145,10 @@ class OrderModel(models.Model):
         
         amount = 0
 
-        for product in self.products.all():
-            amount += product.product_modification_model.product.price * product.quantity
+        for relation in Order2ModificationModel.objects.filter(
+            order_model=self
+        ):
+            amount += relation.product_modification_model.product.price * relation.quantity
         
         self.amount = amount
 
