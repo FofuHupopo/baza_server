@@ -11,3 +11,6 @@ class ProductModificationInline(admin.StackedInline):
 @admin.register(models.OrderModel)
 class OrderAdmin(admin.ModelAdmin):
     inlines = [ProductModificationInline]
+
+
+admin.site.register(models.Payment)

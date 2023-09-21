@@ -5,12 +5,19 @@ from rest_framework.response import Response
 from rest_framework.request import Request, HttpRequest
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.conf import settings
+from django.db import IntegrityError
 
 from . import models
 from .services import MerchantAPI
 from api.request import Delivery
 from api.authentication import models as auth_models
 from . import serializers
+
+
+merchant_api = MerchantAPI(
+    terminal_key="1693394744755DEMO",
+    secret_key="cvr9aqrb3mq60a74"
+)
 
 
 class OrderView(APIView):
@@ -108,7 +115,7 @@ class CalculatePriceView(APIView):
             if old_price > price:
                 result["sale"] += quantity * (
                     old_price - price
-                )
+                ) / 100
             
             result["price"] += quantity * price / 100
         
@@ -147,19 +154,55 @@ class PaymentView(APIView):
                 status.HTTP_400_BAD_REQUEST
             )
 
-        payment = models.Payment(
-            amount = order.amount,
-            order_id = order.pk,
-            description = "123"
-        )
-        merchant_api = MerchantAPI()
+        try:
+            payment = models.Payment.objects.create(
+                amount=order.amount,
+                order_id=4,
+                description="123"
+            )
+        except IntegrityError:
+            payment = models.Payment.objects.get(
+                order_id=4
+            )
+
         merchant_api.init(payment)
         
-        print(payment)
+        payment.save()
         
         serializer = self.serializer_class(
             payment
         )
+        
+        return Response(
+            serializer.data,
+            status.HTTP_200_OK
+        )
+
+
+class PaymentStatusView(APIView):
+    serializer_class = serializers.PaymentSerializer
+    
+    def get(self, request: Request):
+        payment_id = request.query_params.get("payment_id")
+        
+        try:
+            payment = models.Payment.objects.get(
+                pk=payment_id
+            )
+        except models.OrderModel.DoesNotExist:
+            return Response(
+                {
+                    "status": "No payment_id блядота"
+                },
+                status.HTTP_400_BAD_REQUEST
+            )
+        
+        
+        merchant_api.status(payment)
+        
+        payment.save()
+        
+        serializer = self.serializer_class(payment)
         
         return Response(
             serializer.data,
