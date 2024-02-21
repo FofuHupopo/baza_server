@@ -6,5 +6,6 @@ from . import views
 urlpatterns = [
     path("send-code/", views.SendCodeView.as_view(), name="auth__send-code"),
     path("login/", views.LoginView.as_view(), name="auth__login"),
-    path("logout/", views.LogoutView.as_view(), name="auth__logout")
+    path("logout/", views.LogoutView.as_view(), name="auth__logout"),
+    path("phone-code/", views.CountryPhoneCodeView.as_view(), name="auth__phone_code")
 ]

@@ -1,0 +1,987 @@
+[
+    {
+        "name_ru": "Абхазия",
+        "country_code": "AB",
+        "phone_code": "+7840"
+    },
+    {
+        "name_ru": "Австралия",
+        "country_code": "AU",
+        "phone_code": "+61"
+    },
+    {
+        "name_ru": "Австрия",
+        "country_code": "AT",
+        "phone_code": "+43"
+    },
+    {
+        "name_ru": "Азербайджан",
+        "country_code": "AZ",
+        "phone_code": "+994"
+    },
+    {
+        "name_ru": "Албания",
+        "country_code": "AL",
+        "phone_code": "+355"
+    },
+    {
+        "name_ru": "Алжир",
+        "country_code": "DZ",
+        "phone_code": "+213"
+    },
+    {
+        "name_ru": "Ангола",
+        "country_code": "AO",
+        "phone_code": "+244"
+    },
+    {
+        "name_ru": "Андорра",
+        "country_code": "AD",
+        "phone_code": "+376"
+    },
+    {
+        "name_ru": "Антигуа и Барбуда",
+        "country_code": "AG",
+        "phone_code": "+1268"
+    },
+    {
+        "name_ru": "Аргентина",
+        "country_code": "AR",
+        "phone_code": "+54"
+    },
+    {
+        "name_ru": "Армения",
+        "country_code": "AM",
+        "phone_code": "+374"
+    },
+    {
+        "name_ru": "Афганистан",
+        "country_code": "AF",
+        "phone_code": "+93"
+    },
+    {
+        "name_ru": "Багамские Острова",
+        "country_code": "BS",
+        "phone_code": "+1242"
+    },
+    {
+        "name_ru": "Бангладеш",
+        "country_code": "BD",
+        "phone_code": "+880"
+    },
+    {
+        "name_ru": "Барбадос",
+        "country_code": "BB",
+        "phone_code": "+1246"
+    },
+    {
+        "name_ru": "Бахрейн",
+        "country_code": "BH",
+        "phone_code": "+973"
+    },
+    {
+        "name_ru": "Белиз",
+        "country_code": "BZ",
+        "phone_code": "+501"
+    },
+    {
+        "name_ru": "Белоруссия",
+        "country_code": "BY",
+        "phone_code": "+375"
+    },
+    {
+        "name_ru": "Бельгия",
+        "country_code": "BE",
+        "phone_code": "+32"
+    },
+    {
+        "name_ru": "Бенин",
+        "country_code": "BJ",
+        "phone_code": "+229"
+    },
+    {
+        "name_ru": "Болгария",
+        "country_code": "BG",
+        "phone_code": "+359"
+    },
+    {
+        "name_ru": "Боливия",
+        "country_code": "BO",
+        "phone_code": "+591"
+    },
+    {
+        "name_ru": "Босния и Герцеговина",
+        "country_code": "BA",
+        "phone_code": "+387"
+    },
+    {
+        "name_ru": "Ботсвана",
+        "country_code": "BW",
+        "phone_code": "+267"
+    },
+    {
+        "name_ru": "Бразилия",
+        "country_code": "BR",
+        "phone_code": "+55"
+    },
+    {
+        "name_ru": "Бруней",
+        "country_code": "BN",
+        "phone_code": "+673"
+    },
+    {
+        "name_ru": "Буркина-Фасо",
+        "country_code": "BF",
+        "phone_code": "+226"
+    },
+    {
+        "name_ru": "Бурунди",
+        "country_code": "BI",
+        "phone_code": "+257"
+    },
+    {
+        "name_ru": "Бутан",
+        "country_code": "BT",
+        "phone_code": "+975"
+    },
+    {
+        "name_ru": "Вануату",
+        "country_code": "VU",
+        "phone_code": "+678"
+    },
+    {
+        "name_ru": "Ватикан",
+        "country_code": "VA",
+        "phone_code": "+379"
+    },
+    {
+        "name_ru": "Великобритания",
+        "country_code": "GB",
+        "phone_code": "+44"
+    },
+    {
+        "name_ru": "Венгрия",
+        "country_code": "HU",
+        "phone_code": "+36"
+    },
+    {
+        "name_ru": "Венесуэла",
+        "country_code": "VE",
+        "phone_code": "+58"
+    },
+    {
+        "name_ru": "Восточный Тимор",
+        "country_code": "TL",
+        "phone_code": "+670"
+    },
+    {
+        "name_ru": "Вьетнам",
+        "country_code": "VN",
+        "phone_code": "+84"
+    },
+    {
+        "name_ru": "Габон",
+        "country_code": "GA",
+        "phone_code": "+241"
+    },
+    {
+        "name_ru": "Гаити",
+        "country_code": "HT",
+        "phone_code": "+509"
+    },
+    {
+        "name_ru": "Гайана",
+        "country_code": "GY",
+        "phone_code": "+592"
+    },
+    {
+        "name_ru": "Гамбия",
+        "country_code": "GM",
+        "phone_code": "+220"
+    },
+    {
+        "name_ru": "Гана",
+        "country_code": "GH",
+        "phone_code": "+233"
+    },
+    {
+        "name_ru": "Гватемала",
+        "country_code": "GT",
+        "phone_code": "+502"
+    },
+    {
+        "name_ru": "Гвинея",
+        "country_code": "GN",
+        "phone_code": "+224"
+    },
+    {
+        "name_ru": "Гвинея-Бисау",
+        "country_code": "GW",
+        "phone_code": "+245"
+    },
+    {
+        "name_ru": "Германия",
+        "country_code": "DE",
+        "phone_code": "+49"
+    },
+    {
+        "name_ru": "Гондурас",
+        "country_code": "HN",
+        "phone_code": "+504"
+    },
+    {
+        "name_ru": "Государство Палестина",
+        "country_code": "PS",
+        "phone_code": "+970"
+    },
+    {
+        "name_ru": "Гренада",
+        "country_code": "GD",
+        "phone_code": "+1473"
+    },
+    {
+        "name_ru": "Греция",
+        "country_code": "GR",
+        "phone_code": "+30"
+    },
+    {
+        "name_ru": "Грузия",
+        "country_code": "GE",
+        "phone_code": "+995"
+    },
+    {
+        "name_ru": "Дания",
+        "country_code": "DK",
+        "phone_code": "+45"
+    },
+    {
+        "name_ru": "Джибути",
+        "country_code": "DJ",
+        "phone_code": "+253"
+    },
+    {
+        "name_ru": "Доминика",
+        "country_code": "DM",
+        "phone_code": "+1767"
+    },
+    {
+        "name_ru": "Доминиканская Республика",
+        "country_code": "DO",
+        "phone_code": "+1809"
+    },
+    {
+        "name_ru": "ДР Конго",
+        "country_code": "CD",
+        "phone_code": "+243"
+    },
+    {
+        "name_ru": "Египет",
+        "country_code": "EG",
+        "phone_code": "+20"
+    },
+    {
+        "name_ru": "Замбия",
+        "country_code": "ZM",
+        "phone_code": "+260"
+    },
+    {
+        "name_ru": "Зимбабве",
+        "country_code": "ZW",
+        "phone_code": "+263"
+    },
+    {
+        "name_ru": "Израиль",
+        "country_code": "IL",
+        "phone_code": "+972"
+    },
+    {
+        "name_ru": "Индия",
+        "country_code": "IN",
+        "phone_code": "+91"
+    },
+    {
+        "name_ru": "Индонезия",
+        "country_code": "ID",
+        "phone_code": "+62"
+    },
+    {
+        "name_ru": "Иордания",
+        "country_code": "JO",
+        "phone_code": "+962"
+    },
+    {
+        "name_ru": "Ирак",
+        "country_code": "IQ",
+        "phone_code": "+964"
+    },
+    {
+        "name_ru": "Иран",
+        "country_code": "IR",
+        "phone_code": "+98"
+    },
+    {
+        "name_ru": "Ирландия",
+        "country_code": "IE",
+        "phone_code": "+353"
+    },
+    {
+        "name_ru": "Исландия",
+        "country_code": "IS",
+        "phone_code": "+354"
+    },
+    {
+        "name_ru": "Испания",
+        "country_code": "ES",
+        "phone_code": "+34"
+    },
+    {
+        "name_ru": "Италия",
+        "country_code": "IT",
+        "phone_code": "+39"
+    },
+    {
+        "name_ru": "Йемен",
+        "country_code": "YE",
+        "phone_code": "+967"
+    },
+    {
+        "name_ru": "Кабо-Верде",
+        "country_code": "CV",
+        "phone_code": "+238"
+    },
+    {
+        "name_ru": "Казахстан",
+        "country_code": "KZ",
+        "phone_code": "+7"
+    },
+    {
+        "name_ru": "Камбоджа",
+        "country_code": "KH",
+        "phone_code": "+855"
+    },
+    {
+        "name_ru": "Камерун",
+        "country_code": "CM",
+        "phone_code": "+237"
+    },
+    {
+        "name_ru": "Канада",
+        "country_code": "CA",
+        "phone_code": "+1"
+    },
+    {
+        "name_ru": "Катар",
+        "country_code": "QA",
+        "phone_code": "+974"
+    },
+    {
+        "name_ru": "Кения",
+        "country_code": "KE",
+        "phone_code": "+254"
+    },
+    {
+        "name_ru": "Кипр",
+        "country_code": "CY",
+        "phone_code": "+357"
+    },
+    {
+        "name_ru": "Киргизия",
+        "country_code": "KG",
+        "phone_code": "+996"
+    },
+    {
+        "name_ru": "Кирибати",
+        "country_code": "KI",
+        "phone_code": "+686"
+    },
+    {
+        "name_ru": "Китай",
+        "country_code": "CN",
+        "phone_code": "+86"
+    },
+    {
+        "name_ru": "КНДР",
+        "country_code": "KP",
+        "phone_code": "+850"
+    },
+    {
+        "name_ru": "Колумбия",
+        "country_code": "CO",
+        "phone_code": "+57"
+    },
+    {
+        "name_ru": "Коморские Острова",
+        "country_code": "KM",
+        "phone_code": "+269"
+    },
+    {
+        "name_ru": "Коста-Рика",
+        "country_code": "CR",
+        "phone_code": "+506"
+    },
+    {
+        "name_ru": "Кот-д'Ивуар",
+        "country_code": "CI",
+        "phone_code": "+225"
+    },
+    {
+        "name_ru": "Куба",
+        "country_code": "CU",
+        "phone_code": "+53"
+    },
+    {
+        "name_ru": "Кувейт",
+        "country_code": "KW",
+        "phone_code": "+965"
+    },
+    {
+        "name_ru": "Лаос",
+        "country_code": "LA",
+        "phone_code": "+856"
+    },
+    {
+        "name_ru": "Латвия",
+        "country_code": "LV",
+        "phone_code": "+371"
+    },
+    {
+        "name_ru": "Лесото",
+        "country_code": "LS",
+        "phone_code": "+266"
+    },
+    {
+        "name_ru": "Либерия",
+        "country_code": "LR",
+        "phone_code": "+231"
+    },
+    {
+        "name_ru": "Ливан",
+        "country_code": "LB",
+        "phone_code": "+961"
+    },
+    {
+        "name_ru": "Ливия",
+        "country_code": "LY",
+        "phone_code": "+218"
+    },
+    {
+        "name_ru": "Литва",
+        "country_code": "LT",
+        "phone_code": "+370"
+    },
+    {
+        "name_ru": "Лихтенштейн",
+        "country_code": "LI",
+        "phone_code": "+423"
+    },
+    {
+        "name_ru": "Люксембург",
+        "country_code": "LU",
+        "phone_code": "+352"
+    },
+    {
+        "name_ru": "Маврикий",
+        "country_code": "MU",
+        "phone_code": "+230"
+    },
+    {
+        "name_ru": "Мавритания",
+        "country_code": "MR",
+        "phone_code": "+222"
+    },
+    {
+        "name_ru": "Мадагаскар",
+        "country_code": "MG",
+        "phone_code": "+261"
+    },
+    {
+        "name_ru": "Малави",
+        "country_code": "MW",
+        "phone_code": "+265"
+    },
+    {
+        "name_ru": "Малайзия",
+        "country_code": "MY",
+        "phone_code": "+60"
+    },
+    {
+        "name_ru": "Мали",
+        "country_code": "ML",
+        "phone_code": "+223"
+    },
+    {
+        "name_ru": "Мальдивские Острова",
+        "country_code": "MV",
+        "phone_code": "+960"
+    },
+    {
+        "name_ru": "Мальта",
+        "country_code": "MT",
+        "phone_code": "+356"
+    },
+    {
+        "name_ru": "Марокко",
+        "country_code": "MA",
+        "phone_code": "+212"
+    },
+    {
+        "name_ru": "Маршалловы Острова",
+        "country_code": "MH",
+        "phone_code": "+692"
+    },
+    {
+        "name_ru": "Мексика",
+        "country_code": "MX",
+        "phone_code": "+52"
+    },
+    {
+        "name_ru": "Мозамбик",
+        "country_code": "MZ",
+        "phone_code": "+258"
+    },
+    {
+        "name_ru": "Молдавия",
+        "country_code": "MD",
+        "phone_code": "+373"
+    },
+    {
+        "name_ru": "Монако",
+        "country_code": "MC",
+        "phone_code": "+377"
+    },
+    {
+        "name_ru": "Монголия",
+        "country_code": "MN",
+        "phone_code": "+976"
+    },
+    {
+        "name_ru": "Мьянма",
+        "country_code": "MM",
+        "phone_code": "+95"
+    },
+    {
+        "name_ru": "Намибия",
+        "country_code": "NA",
+        "phone_code": "+264"
+    },
+    {
+        "name_ru": "Науру",
+        "country_code": "NR",
+        "phone_code": "+674"
+    },
+    {
+        "name_ru": "Непал",
+        "country_code": "NP",
+        "phone_code": "+977"
+    },
+    {
+        "name_ru": "Нигер",
+        "country_code": "NE",
+        "phone_code": "+227"
+    },
+    {
+        "name_ru": "Нигерия",
+        "country_code": "NG",
+        "phone_code": "+234"
+    },
+    {
+        "name_ru": "Нидерланды",
+        "country_code": "NL",
+        "phone_code": "+31"
+    },
+    {
+        "name_ru": "Никарагуа",
+        "country_code": "NI",
+        "phone_code": "+505"
+    },
+    {
+        "name_ru": "Новая Зеландия",
+        "country_code": "NZ",
+        "phone_code": "+64"
+    },
+    {
+        "name_ru": "Норвегия",
+        "country_code": "NO",
+        "phone_code": "+47"
+    },
+    {
+        "name_ru": "ОАЭ",
+        "country_code": "AE",
+        "phone_code": "+971"
+    },
+    {
+        "name_ru": "Оман",
+        "country_code": "OM",
+        "phone_code": "+968"
+    },
+    {
+        "name_ru": "Пакистан",
+        "country_code": "PK",
+        "phone_code": "+92"
+    },
+    {
+        "name_ru": "Палау",
+        "country_code": "PW",
+        "phone_code": "+680"
+    },
+    {
+        "name_ru": "Панама",
+        "country_code": "PA",
+        "phone_code": "+507"
+    },
+    {
+        "name_ru": "Папуа - Новая Гвинея",
+        "country_code": "PG",
+        "phone_code": "+675"
+    },
+    {
+        "name_ru": "Парагвай",
+        "country_code": "PY",
+        "phone_code": "+595"
+    },
+    {
+        "name_ru": "Перу",
+        "country_code": "PE",
+        "phone_code": "+51"
+    },
+    {
+        "name_ru": "Польша",
+        "country_code": "PL",
+        "phone_code": "+48"
+    },
+    {
+        "name_ru": "Португалия",
+        "country_code": "PT",
+        "phone_code": "+351"
+    },
+    {
+        "name_ru": "Республика Конго",
+        "country_code": "CG",
+        "phone_code": "+242"
+    },
+    {
+        "name_ru": "Республика Корея",
+        "country_code": "KR",
+        "phone_code": "+82"
+    },
+    {
+        "name_ru": "Россия",
+        "country_code": "RU",
+        "phone_code": "+7"
+    },
+    {
+        "name_ru": "Руанда",
+        "country_code": "RW",
+        "phone_code": "+250"
+    },
+    {
+        "name_ru": "Румыния",
+        "country_code": "RO",
+        "phone_code": "+40"
+    },
+    {
+        "name_ru": "Сальвадор",
+        "country_code": "SV",
+        "phone_code": "+503"
+    },
+    {
+        "name_ru": "Самоа",
+        "country_code": "WS",
+        "phone_code": "+685"
+    },
+    {
+        "name_ru": "Сан-Марино",
+        "country_code": "SM",
+        "phone_code": "+378"
+    },
+    {
+        "name_ru": "Сан-Томе и Принсипи",
+        "country_code": "ST",
+        "phone_code": "+239"
+    },
+    {
+        "name_ru": "Саудовская Аравия",
+        "country_code": "SA",
+        "phone_code": "+966"
+    },
+    {
+        "name_ru": "Северная Македония",
+        "country_code": "MK",
+        "phone_code": "+389"
+    },
+    {
+        "name_ru": "Сейшельские Острова",
+        "country_code": "SC",
+        "phone_code": "+248"
+    },
+    {
+        "name_ru": "Сенегал",
+        "country_code": "SN",
+        "phone_code": "+221"
+    },
+    {
+        "name_ru": "Сент-Винсент и Гренадины",
+        "country_code": "VC",
+        "phone_code": "+1784"
+    },
+    {
+        "name_ru": "Сент-Китс и Невис",
+        "country_code": "KN",
+        "phone_code": "+1869"
+    },
+    {
+        "name_ru": "Сент-Люсия",
+        "country_code": "LC",
+        "phone_code": "+1758"
+    },
+    {
+        "name_ru": "Сербия",
+        "country_code": "RS",
+        "phone_code": "+381"
+    },
+    {
+        "name_ru": "Сингапур",
+        "country_code": "SG",
+        "phone_code": "+65"
+    },
+    {
+        "name_ru": "Сирия",
+        "country_code": "SY",
+        "phone_code": "+963"
+    },
+    {
+        "name_ru": "Словакия",
+        "country_code": "SK",
+        "phone_code": "+421"
+    },
+    {
+        "name_ru": "Словения",
+        "country_code": "SI",
+        "phone_code": "+386"
+    },
+    {
+        "name_ru": "Соломоновы Острова",
+        "country_code": "SB",
+        "phone_code": "+677"
+    },
+    {
+        "name_ru": "Сомали",
+        "country_code": "SO",
+        "phone_code": "+252"
+    },
+    {
+        "name_ru": "Судан",
+        "country_code": "SD",
+        "phone_code": "+249"
+    },
+    {
+        "name_ru": "Суринам",
+        "country_code": "SR",
+        "phone_code": "+597"
+    },
+    {
+        "name_ru": "США",
+        "country_code": "US",
+        "phone_code": "+1"
+    },
+    {
+        "name_ru": "Сьерра-Леоне",
+        "country_code": "SL",
+        "phone_code": "+232"
+    },
+    {
+        "name_ru": "Таджикистан",
+        "country_code": "TJ",
+        "phone_code": "+992"
+    },
+    {
+        "name_ru": "Таиланд",
+        "country_code": "TH",
+        "phone_code": "+66"
+    },
+    {
+        "name_ru": "Танзания",
+        "country_code": "TZ",
+        "phone_code": "+255"
+    },
+    {
+        "name_ru": "Того",
+        "country_code": "TG",
+        "phone_code": "+228"
+    },
+    {
+        "name_ru": "Тонга",
+        "country_code": "TO",
+        "phone_code": "+676"
+    },
+    {
+        "name_ru": "Тринидад и Тобаго",
+        "country_code": "TT",
+        "phone_code": "+1868"
+    },
+    {
+        "name_ru": "Тувалу",
+        "country_code": "TV",
+        "phone_code": "+688"
+    },
+    {
+        "name_ru": "Тунис",
+        "country_code": "TN",
+        "phone_code": "+216"
+    },
+    {
+        "name_ru": "Туркмения",
+        "country_code": "TM",
+        "phone_code": "+993"
+    },
+    {
+        "name_ru": "Турция",
+        "country_code": "TR",
+        "phone_code": "+90"
+    },
+    {
+        "name_ru": "Уганда",
+        "country_code": "UG",
+        "phone_code": "+256"
+    },
+    {
+        "name_ru": "Узбекистан",
+        "country_code": "UZ",
+        "phone_code": "+998"
+    },
+    {
+        "name_ru": "Украина",
+        "country_code": "UA",
+        "phone_code": "+380"
+    },
+    {
+        "name_ru": "Уругвай",
+        "country_code": "UY",
+        "phone_code": "+598"
+    },
+    {
+        "name_ru": "Федеративные Штаты Микронезии",
+        "country_code": "FM",
+        "phone_code": "+691"
+    },
+    {
+        "name_ru": "Фиджи",
+        "country_code": "FJ",
+        "phone_code": "+679"
+    },
+    {
+        "name_ru": "Филиппины",
+        "country_code": "PH",
+        "phone_code": "+63"
+    },
+    {
+        "name_ru": "Финляндия",
+        "country_code": "FI",
+        "phone_code": "+358"
+    },
+    {
+        "name_ru": "Франция",
+        "country_code": "FR",
+        "phone_code": "+33"
+    },
+    {
+        "name_ru": "Хорватия",
+        "country_code": "HR",
+        "phone_code": "+385"
+    },
+    {
+        "name_ru": "ЦАР",
+        "country_code": "CF",
+        "phone_code": "+236"
+    },
+    {
+        "name_ru": "Чад",
+        "country_code": "TD",
+        "phone_code": "+235"
+    },
+    {
+        "name_ru": "Черногория",
+        "country_code": "ME",
+        "phone_code": "+382"
+    },
+    {
+        "name_ru": "Чехия",
+        "country_code": "CZ",
+        "phone_code": "+420"
+    },
+    {
+        "name_ru": "Чили",
+        "country_code": "CL",
+        "phone_code": "+56"
+    },
+    {
+        "name_ru": "Швейцария",
+        "country_code": "CH",
+        "phone_code": "+41"
+    },
+    {
+        "name_ru": "Швеция",
+        "country_code": "SE",
+        "phone_code": "+46"
+    },
+    {
+        "name_ru": "Шри-Ланка",
+        "country_code": "LK",
+        "phone_code": "+94"
+    },
+    {
+        "name_ru": "Эквадор",
+        "country_code": "EC",
+        "phone_code": "+593"
+    },
+    {
+        "name_ru": "Экваториальная Гвинея",
+        "country_code": "GQ",
+        "phone_code": "+240"
+    },
+    {
+        "name_ru": "Эритрея",
+        "country_code": "ER",
+        "phone_code": "+291"
+    },
+    {
+        "name_ru": "Эсватини",
+        "country_code": "SZ",
+        "phone_code": "+268"
+    },
+    {
+        "name_ru": "Эстония",
+        "country_code": "EE",
+        "phone_code": "+372"
+    },
+    {
+        "name_ru": "Эфиопия",
+        "country_code": "ET",
+        "phone_code": "+251"
+    },
+    {
+        "name_ru": "ЮАР",
+        "country_code": "ZA",
+        "phone_code": "+27"
+    },
+    {
+        "name_ru": "Южная Осетия",
+        "country_code": "OS",
+        "phone_code": "+7"
+    },
+    {
+        "name_ru": "Южный Судан",
+        "country_code": "SS",
+        "phone_code": "+211"
+    },
+    {
+        "name_ru": "Ямайка",
+        "country_code": "JM",
+        "phone_code": "+1876"
+    },
+    {
+        "name_ru": "Япония",
+        "country_code": "JP",
+        "phone_code": "+81"
+    }
+]

@@ -1,0 +1,22 @@
+[
+    {
+        "name_ru": "Россия",
+        "country_code": "RU",
+        "phone_code": "+7"
+    },
+    {
+        "name_ru": "Белоруссия",
+        "country_code": "BY",
+        "phone_code": "+375"
+    },
+    {
+        "name_ru": "Казахстан",
+        "country_code": "KZ",
+        "phone_code": "+7"
+    },
+    {
+        "name_ru": "Сербия",
+        "country_code": "RS",
+        "phone_code": "+381"
+    }
+]

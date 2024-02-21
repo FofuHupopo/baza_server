@@ -10,6 +10,7 @@ from django.conf import settings
 
 from .models import AuthCodeModel, UserModel
 from .serializers import PhoneNumberSerializer, LoginSerializer, UserDataSerialzier
+from api.utils import get_country_phone_code
 
 
 class SendCodeView(APIView):
@@ -121,3 +122,17 @@ class LogoutView(APIView):
             response.delete_cookie(settings.TOKEN_SETTINGS["COOKIE_NAME"])
 
         return response
+
+
+class CountryPhoneCodeView(APIView):
+    permission_classes = (AllowAny, )
+    
+    def get(self, request: Request):
+        query = request.query_params.get("q", "")
+        
+        countries = get_country_phone_code(query.strip())
+        
+        return Response(
+            countries,
+            status.HTTP_200_OK
+        )
