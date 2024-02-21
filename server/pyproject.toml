@@ -17,6 +17,7 @@ requests = "^2.31.0"
 dadata = "^21.10.1"
 text-unidecode = "^1.3"
 python-slugify = "^8.0.4"
+pillow = "^10.2.0"
 
 
 [build-system]
