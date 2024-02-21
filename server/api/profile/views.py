@@ -170,9 +170,10 @@ class CartAddView(APIView):
             user_model=request.user,
             product_modification_model=modification
         )
-
-        cart.quantity += 1
-        cart.save()
+        
+        if cart.quantity + 1 <= cart.product_modification_model.count:
+            cart.quantity += 1
+            cart.save()
 
         serializer = self.serializer_class(
             auth_models.CartModel.objects.filter(
@@ -263,6 +264,27 @@ class InfoView(APIView):
         return Response(
             serializer.errors,
             status.HTTP_400_BAD_REQUEST
+        )
+
+
+class CartMaximizationView(APIView):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = product_serializers.CartSerializer
+
+    def get(self, request: Request):
+        cart = auth_models.CartModel.objects.filter(
+            user_model=request.user
+        )
+        
+        for item in cart:
+            item.quantity = min(item.product_modification_model.count, item.quantity)
+            item.save()
+        
+        serializer = self.serializer_class(cart, many=True, context={"request": request})
+        
+        return Response(
+            serializer.data,
+            status.HTTP_200_OK
         )
 
 

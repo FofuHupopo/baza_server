@@ -6,47 +6,20 @@ from slugify import slugify
 
 import models
 from models import engine
+from moy_sklad import MoySklad
 
 
 class NoBundleComplectException(Exception):
     pass
 
 
-class MoySkaldSynchronizer:
-    MOYSKLAD_TOKEN = "9ad7b79af08525d5313361e63b77f8439cd185f7"
-    HEADERS = {
-        "Authorization": f"Bearer {MOYSKLAD_TOKEN}",
-        "Content-Type": "application/json",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15"
-    }
-    MOYSKLAD_URLS = {
-        "PRODUCTS": "https://online.moysklad.ru/api/remap/1.2/entity/product?filter=archived=false",
-        "PRODUCT_DETAIL": "https://online.moysklad.ru/api/remap/1.2/entity/product/{}",
-        "MODIFICATIONS": "https://online.moysklad.ru/api/remap/1.2/entity/variant?filter=productid={}",
-        "MODIFICATION_IMAGES": "https://online.moysklad.ru/api/remap/1.2/entity/variant/{}/images",
-        "PRODUCT_IMAGES": "https://online.moysklad.ru/api/remap/1.2/entity/product/{}/images",
-        "ASSORTMENT": "https://online.moysklad.ru/api/remap/1.2/entity/assortment?filter=id={}",
-        "DOWNLOAD": "https://online.moysklad.ru/api/remap/1.2/download/{}",
-        "BUNDLES": "https://online.moysklad.ru/api/remap/1.2/entity/bundle",
-        "BUNDLE_DETAIL": "https://online.moysklad.ru/api/remap/1.2/entity/bundle/{}",
-        "BUNDLE_IMAGES": "https://online.moysklad.ru/api/remap/1.2/entity/bundle/{}/images",
-        "COMPONENTS": "https://online.moysklad.ru/api/remap/1.2/entity/bundle/{}/components",
-    }
-
+class MoySkaldSynchronizer(MoySklad):
     def __init__(self, django_media_path: Path, product_media_path: Path, root_path: str, only_valid: bool=True) -> None:
         self.django_media_path = django_media_path
         self.product_media_path = product_media_path
         self.root_path = root_path
         self.default_product_image = "product_images/Заглушка фото карточки товара.jpg"
         self.only_valid = only_valid
-
-    @staticmethod
-    def moysklad_request(url_name: str="PRODUCTS", url_params: list=[]) -> dict:
-        response = requests.get(
-            MoySkaldSynchronizer.MOYSKLAD_URLS[url_name].format(*url_params),
-            headers=MoySkaldSynchronizer.HEADERS
-        )
-        return response.json()
     
     def sync_all(self):
         self.sync_products()
@@ -326,7 +299,7 @@ class MoySkaldSynchronizer:
                 session.add(image)
                 session.commit()
 
-    def _sync_product_modification_images(self, product_id: str, modification_instance: models.ProductModificationModel) -> None:
+    def _sync_product_modification_images(self, product_id: str, modification_instance: models.ProductModificationModel) -> bool:
         with Session(engine) as session:
             response = MoySkaldSynchronizer.moysklad_request("MODIFICATION_IMAGES", [modification_instance.modification_id])
             
@@ -527,7 +500,7 @@ class MoySkaldSynchronizer:
                 image_filename = image["filename"]
 
                 image_folder_path = self.django_media_path / self.product_media_path / bundle_id
-            
+         
                 if not image_folder_path.exists():
                     os.makedirs(image_folder_path)
             

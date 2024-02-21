@@ -50,6 +50,15 @@ class OrderView(APIView):
                 {"error": "no products in cart"},
                 status.HTTP_400_BAD_REQUEST
             )
+            
+        for item in cart:
+            if item.quantity > item.product_modification_model.count:
+                return Response(
+                    {
+                        "status": "Количество товара в корзине превышает количество товара на складе"
+                    },
+                    status.HTTP_400_BAD_REQUEST
+                )
 
         serializer = serializers.CreateOrderSerializer(
             data=request.data
@@ -184,7 +193,15 @@ class PaymentStatusView(APIView):
     
     def get(self, request: Request):
         payment_id = request.query_params.get("payment_id")
+        order_id = request.query_params.get("order_id")
         
+        if not (order_id or payment_id):
+            return Response(
+                {
+                    "status": "No order_id or payment_id in "
+                }
+            )
+
         try:
             payment = models.Payment.objects.get(
                 pk=payment_id
@@ -197,14 +214,13 @@ class PaymentStatusView(APIView):
                 status.HTTP_400_BAD_REQUEST
             )
         
-        
         merchant_api.status(payment)
-        
         payment.save()
-        
+
         serializer = self.serializer_class(payment)
         
         return Response(
             serializer.data,
             status.HTTP_200_OK
         )
+ 

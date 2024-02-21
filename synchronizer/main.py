@@ -2,6 +2,7 @@ import os
 import uvicorn
 import time
 import shutil
+import json
 
 from pathlib import Path
 from fastapi import FastAPI, Request
@@ -28,17 +29,6 @@ sync = MoySkaldSynchronizer(
     root_path=ROOT_PATH,
     only_valid=True
 )
-
-
-# @app.on_event("startup")
-# def start_scheduler():
-#     # scheduler.add_job(sync_products, "interval", seconds=10)
-#     scheduler.start()
-
-
-# @app.on_event("shutdown")
-# def shutdown_scheduler():
-#     scheduler.shutdown()
 
 
 @app.post("/synchronizer/webhook")
@@ -84,9 +74,15 @@ def sync_bundle_by_id(bundle_id: str):
     return {"message": f"Synchronization for bundle {bundle_id} completed successfully."}
 
 
-if __name__ == "__main__":
-    # uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)
+@app.post("/update/quantity")
+async def update_quantity(request: Request):
+    body = json.loads(await request.body())
+    return {"status": "ok"}
 
-    sync.sync_products()
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=5000, reload=True)
+
+    # sync.sync_products()
     # sync.sync_bundles()
     # sync.sync_product_by_id("fe485046-edb1-11ed-0a80-034d00a3f03a")

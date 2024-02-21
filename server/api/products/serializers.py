@@ -53,6 +53,7 @@ class ProductSizeSerializer(serializers.ModelSerializer):
 class ProductModificationSerializer(serializers.ModelSerializer):
     color = ProductColorSerializer()
     size = serializers.SerializerMethodField()
+    quantity = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ProductModificationModel
@@ -63,17 +64,24 @@ class ProductModificationSerializer(serializers.ModelSerializer):
     def get_size(self, obj):
         return obj.size.name if obj.size else None
     
+    def get_quantity(self, obj):
+        return obj.count
+    
     
 class ShortProductModificationSerializer(serializers.ModelSerializer):
     color = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
+    quantity = serializers.SerializerMethodField()
     
     class Meta:
         model = models.ProductModificationModel
         fields = (
             "id", "color", "size", "images", "quantity"
         )
+        
+    def get_quantity(self, obj):
+        return obj.count
         
     def get_size(self, obj):
         return obj.size.name if obj.size else None
@@ -349,6 +357,7 @@ class ShortModificationSerializer(serializers.ModelSerializer):
     size = serializers.SerializerMethodField()
     color = serializers.SerializerMethodField()
     slug = serializers.SerializerMethodField()
+    quantity = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ProductModificationModel
@@ -373,6 +382,9 @@ class ShortModificationSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
 
         return request.build_absolute_uri(image.image.url)
+    
+    def get_quantity(self, obj):
+        return obj.count
 
     def get_price(self, obj):
         return obj.product.price
