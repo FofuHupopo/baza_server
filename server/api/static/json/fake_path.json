@@ -1,0 +1,88 @@
+[
+    {
+        "id": 487,
+        "name": "ЖЕНЩИНЫ",
+        "slug": "women",
+        "children": [
+            {
+                "id": 1,
+                "name": "Футболки",
+                "slug": "women",
+                "children": []
+            },
+            {
+                "id": 2,
+                "name": "Свитшоты",
+                "slug": "women",
+                "children": []
+            },
+            {
+                "id": 3,
+                "name": "Брюки",
+                "slug": "women",
+                "children": []
+            },
+            {
+                "id": 4,
+                "name": "Худи",
+                "slug": "women",
+                "children": []
+            },
+            {
+                "id": 5,
+                "name": "Обувь",
+                "slug": "women",
+                "children": []
+            },
+            {
+                "id": 6,
+                "name": "Верхняя одежда",
+                "slug": "women",
+                "children": []
+            }
+        ]
+    },
+    {
+        "id": 504,
+        "name": "МУЖЧИНЫ",
+        "slug": "men",
+        "children": [
+            {
+                "id": 7,
+                "name": "Футболки",
+                "slug": "women",
+                "children": []
+            },
+            {
+                "id": 8,
+                "name": "Свитшоты",
+                "slug": "women",
+                "children": []
+            },
+            {
+                "id": 9,
+                "name": "Брюки",
+                "slug": "women",
+                "children": []
+            },
+            {
+                "id": 10,
+                "name": "Худи",
+                "slug": "women",
+                "children": []
+            },
+            {
+                "id": 11,
+                "name": "Обувь",
+                "slug": "women",
+                "children": []
+            },
+            {
+                "id": 12,
+                "name": "Верхняя одежда",
+                "slug": "women",
+                "children": []
+            }
+        ]
+    }
+]

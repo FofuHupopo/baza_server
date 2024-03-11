@@ -6,6 +6,7 @@ from rest_framework.request import Request, HttpRequest
 from rest_framework.permissions import AllowAny
 from django.conf import settings
 from django.db.models import Q
+import json
 
 from . import models
 from . import serializers
@@ -15,7 +16,18 @@ class ProductPathView(generics.ListAPIView):
     permission_classes = (AllowAny, )
     queryset = models.ProductPathModel.objects.filter(parent=None)
     serializer_class = serializers.ProductPathSerializer
+
+
+class ProductFakePathView(APIView):
+    permission_classes = (AllowAny, )
     
+    def get(self, request: Request):
+        path = settings.BASE_DIR / "api/static/json/fake_path.json"
+        
+        return Response(
+            json.load(open(path, "r", encoding="utf-8"))
+        )
+
 
 class ListProductPagination(PageNumberPagination):
     page_size = 10

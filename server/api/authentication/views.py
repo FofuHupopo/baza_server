@@ -129,8 +129,20 @@ class CountryPhoneCodeView(APIView):
     
     def get(self, request: Request):
         query = request.query_params.get("q", "")
+        limit = request.query_params.get("limit", "5")
         
-        countries = get_country_phone_code(query.strip())
+        if not limit.isnumeric():
+            return Response(
+                {
+                    "error": "limit query parametr wanna de a numeric"
+                },
+                status.HTTP_400_BAD_REQUEST
+            )
+        
+        countries = get_country_phone_code(
+            query=query.strip(),
+            limit=int(limit)
+        )
         
         return Response(
             countries,
