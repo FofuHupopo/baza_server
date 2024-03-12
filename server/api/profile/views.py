@@ -55,7 +55,7 @@ class FavoritesView(APIView):
         if not slug:
             return Response(
                 {
-                    "message": "No modification_id or modifications[]."
+                    "message": "Не были переданы параметры modification_id или modifications[]."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
@@ -72,7 +72,7 @@ class FavoritesView(APIView):
         if not modification:
             return Response(
                 {
-                    "message": "No modification with this slug."
+                    "message": "Модификации с данным slug не найдены."
                 },
                 status.HTTP_404_NOT_FOUND
             )
@@ -107,7 +107,7 @@ class CartView(APIView):
         if len(modifications) != len(quantities):
             return Response(
                 {
-                    "message": "Слыш черт, нормальные списки отправь. length of modification not equal the length of quantities"
+                    "message": "Размер массива modification не совпадает с размером массива quantities."
                 }
             )
         
@@ -151,7 +151,7 @@ class CartView(APIView):
         if not modification:
             return Response(
                 {
-                    "message": "Ну елки палки. No modification with this slug."
+                    "message": "Модификация с данным slug не найдена."
                 },
                 status.HTTP_404_NOT_FOUND
             )
@@ -312,14 +312,14 @@ class SearchAddressView(APIView):
         
         if not limit.isdecimal():
             return Response({
-                "message": "Я предупреждал, готовь жопу. limit param number only."
+                "message": "'limit' параметр должен быть числом."
             }, status.HTTP_400_BAD_REQUEST)
         
         limit = int(limit)
         
         if field not in AddressSearch.VALID_SEARCH_FIELDS:
             return Response({
-                "message": f"Ёперный театр, \"type\" param not in {AddressSearch.VALID_SEARCH_FIELDS}"
+                "message": f"Параметр 'type' не соответствует {AddressSearch.VALID_SEARCH_FIELDS}"
             }, status.HTTP_400_BAD_REQUEST)
         
         response = AddressSearch.search(address, field, limit)

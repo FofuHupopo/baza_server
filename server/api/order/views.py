@@ -47,7 +47,7 @@ class OrderView(APIView):
         
         if not cart:
             return Response(
-                {"error": "no products in cart"},
+                {"error": "Корзина пуста."},
                 status.HTTP_400_BAD_REQUEST
             )
             
@@ -55,7 +55,7 @@ class OrderView(APIView):
             if item.quantity > item.product_modification_model.count:
                 return Response(
                     {
-                        "status": "Количество товара в корзине превышает количество товара на складе"
+                        "status": "Количество товара в корзине превышает количество товара на складе."
                     },
                     status.HTTP_400_BAD_REQUEST
                 )
@@ -158,7 +158,7 @@ class PaymentView(APIView):
         except models.OrderModel.DoesNotExist:
             return Response(
                 {
-                    "status": "No order_id сучка"
+                    "status": "Не был передан параметр order_id."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
@@ -198,7 +198,7 @@ class PaymentStatusView(APIView):
         if not (order_id or payment_id):
             return Response(
                 {
-                    "status": "No order_id or payment_id in "
+                    "status": "Не были переданы параметры order_id или payment_id."
                 }
             )
 
@@ -209,7 +209,7 @@ class PaymentStatusView(APIView):
         except models.OrderModel.DoesNotExist:
             return Response(
                 {
-                    "status": "No payment_id блядота"
+                    "status": "Не был передан параметр payment_id."
                 },
                 status.HTTP_400_BAD_REQUEST
             )

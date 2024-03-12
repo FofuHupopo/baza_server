@@ -38,14 +38,14 @@ class SendCodeView(APIView):
         if message_status:
             return Response(
                 {
-                    "success": "Код был успешно отправлен."
+                    "success": "Код успешно отправлен."
                 },
                 status.HTTP_201_CREATED
             )
         else:
             return Response(
                 {
-                    "error": "У нас чет не так полшо, сорян. Не удалось отправить код, попробуйте снова"
+                    "error": "Не удалось отправить код, попробуйте снова через некоторое время."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
@@ -76,7 +76,7 @@ class LoginView(APIView):
             
             return Response(
                 {
-                    "error": "Слыш, ты че мне отправил? Неправильный код."
+                    "error": "Неправильный код."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
@@ -134,7 +134,7 @@ class CountryPhoneCodeView(APIView):
         if not limit.isnumeric():
             return Response(
                 {
-                    "error": "limit query parametr wanna de a numeric"
+                    "error": "'limit' параметр должен быть числом."
                 },
                 status.HTTP_400_BAD_REQUEST
             )

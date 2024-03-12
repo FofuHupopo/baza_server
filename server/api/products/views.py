@@ -136,7 +136,7 @@ class ProductDetailView(APIView):
         if not modifications:
             return Response(
                 {
-                    "message": "Какая-то чушня, а не слаг. Incorrect slug"
+                    "message": "Некорректный slug."
                 },
                 status.HTTP_404_NOT_FOUND
             )
