@@ -6,7 +6,7 @@ authors = ["iizhukov <iizhukov@icloud.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 fastapi = "^0.110.0"
 uvicorn = "^0.28.0"
 opencv-python = "^4.9.0.80"
