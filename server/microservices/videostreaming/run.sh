@@ -1,0 +1,1 @@
+poetry run uvicorn main:app --reload --port 6001 --host 0.0.0.0
