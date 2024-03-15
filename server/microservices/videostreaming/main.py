@@ -1,5 +1,6 @@
 import cv2
 import time
+from datetime import datetime, timedelta
 from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
@@ -38,9 +39,22 @@ def video():
     return StreamingResponse(gen_video(), media_type='multipart/x-mixed-replace; boundary=frame')
 
 
+blob_cache = {
+    "cached": None,
+    "time": timedelta(hours=6),
+    "last_time_cached": datetime.now()
+}
+
+
 @app.get("/blob")
 def video():
-    with open(VIDEO_URL, "rb") as video:
-        response = Response(content=video.read())
+    if not blob_cache["cached"] or blob_cache["last_time_cached"] + blob_cache["time"] < datetime.now():
+        with open(VIDEO_URL, "rb") as video:
+            video_bytes = video.read()
+
+        response = Response(content=video_bytes)
         response.headers["Content-Disposition"] = f"attachment; filename={VIDEO_NAME}"
-        return response
+        blob_cache["cached"] = response
+        blob_cache["last_time_cached"] = datetime.now()
+
+    return blob_cache["cached"]
