@@ -3,12 +3,13 @@ import time
 from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, Response
 
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
-VIDEO_URL = str(Path("./static/video.mp4"))
+VIDEO_NAME = "video.mp4"
+VIDEO_URL = str(Path(f"./static/{VIDEO_NAME}"))
 
 
 def gen_video():
@@ -35,3 +36,11 @@ def index(request: Request):
 @app.get("/video")
 def video():
     return StreamingResponse(gen_video(), media_type='multipart/x-mixed-replace; boundary=frame')
+
+
+@app.get("/blob")
+def video():
+    with open(VIDEO_URL, "rb") as video:
+        response = Response(content=video.read())
+        response.headers["Content-Disposition"] = f"attachment; filename={VIDEO_NAME}"
+        return response
