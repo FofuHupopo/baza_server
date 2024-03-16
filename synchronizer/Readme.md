@@ -1,0 +1,1 @@
+Synchronizer with MoySklad

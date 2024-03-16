@@ -30,17 +30,22 @@ class MoySkaldSynchronizer(MoySklad):
         
         products_count = len(response["rows"])
     
+        synchronized_counter = 0
+        
         for ind, product in enumerate(response["rows"], start=1):
             # try:
                 status = self._sync_product(product)
                 
                 if status:
                     print(f"{product['name']} synchronized ({ind}/{products_count})")
+                    synchronized_counter += 1
                 else:
                     print(f"{product['name']} not synchronized ({ind}/{products_count})")
             # except Exception as e:
             #     print(e)
             #     print(f"{product['name']} not synchronized ({ind}/{products_count})")
+            
+        print(f"Total syncronized: {synchronized_counter}")
     
     def sync_product_by_id(self, product_id: str):
         response = self.moysklad_request("PRODUCT_DETAIL", [product_id])
