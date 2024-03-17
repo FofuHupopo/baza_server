@@ -87,6 +87,7 @@ class ProductModificationModel(Base):
     slug = Column(String(255), nullable=True)
     color_id = Column(Integer, ForeignKey('product__product_color.id'), nullable=True)
     size_id = Column(Integer, ForeignKey('product__product_size.id'), nullable=True)
+    booked = Column(Integer, default=0)
     quantity = Column(Integer, default=0)
     weight = Column(Integer, default=0)
     visible = Column(Boolean, default=False)

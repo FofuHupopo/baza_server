@@ -6,7 +6,7 @@ authors = ["iizhukov <iizhukov@icloud.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 pillow = "^10.2.0"
 fastapi = "^0.110.0"
 sqlalchemy = "^2.0.27"
