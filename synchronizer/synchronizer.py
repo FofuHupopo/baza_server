@@ -80,10 +80,10 @@ class MoySkaldSynchronizer(MoySklad):
             full_path = full_path[1:]
             
             full_path[0] = {
-                    "ЖЕНЩИНЫ": "woman",
-                    "МУЖЧИНЫ": "man",
-                    "ДЕТИ": "children"                
-                }.get(path, path)
+                "ЖЕНЩИНЫ": "woman",
+                "МУЖЧИНЫ": "man",
+                "ДЕТИ": "children"                
+            }.get(full_path[0], full_path[0])
 
             last_path = None
             for ind, path in enumerate(full_path):
