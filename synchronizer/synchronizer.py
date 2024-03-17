@@ -33,12 +33,12 @@ class MoySkaldSynchronizer(MoySklad):
         synchronized_counter = 0
         
         for ind, product in enumerate(response["rows"], start=1):
-            status = self._sync_product(product)
-            
-            if status:
-                print(f"{product['name']} synchronized ({ind}/{products_count})")
-                synchronized_counter += 1
-                            
+                status = self._sync_product(product)
+                
+                if status:
+                    print(f"{product['name']} synchronized ({ind}/{products_count})")
+                    synchronized_counter += 1
+                                
         print(f"Total syncronized: {synchronized_counter}")
     
     def sync_product_by_id(self, product_id: str):
@@ -80,10 +80,10 @@ class MoySkaldSynchronizer(MoySklad):
             full_path = full_path[1:]
             
             full_path[0] = {
-                "ЖЕНЩИНЫ": "woman",
-                "МУЖЧИНЫ": "man",
-                "ДЕТИ": "children"                
-            }.get(full_path[0], full_path[0])
+                    "ЖЕНЩИНЫ": "woman",
+                    "МУЖЧИНЫ": "man",
+                    "ДЕТИ": "children"                
+                }.get(path, path)
 
             last_path = None
             for ind, path in enumerate(full_path):
