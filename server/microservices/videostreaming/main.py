@@ -9,6 +9,8 @@ from fastapi.responses import StreamingResponse, Response
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+
+CACHE_LIFETIME = timedelta(hours=6)
 VIDEO_NAME = "video.mp4"
 VIDEO_URL = str(Path(f"./static/{VIDEO_NAME}"))
 
@@ -41,7 +43,7 @@ def video():
 
 blob_cache = {
     "cached": None,
-    "time": timedelta(hours=6),
+    "time": CACHE_LIFETIME,
     "last_time_cached": datetime.now()
 }
 

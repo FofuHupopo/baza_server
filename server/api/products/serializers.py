@@ -4,6 +4,22 @@ from . import models
 from api.authentication import models as auth_models
 
 
+def get_breadcrumbs(path) -> list:
+    result = []
+
+    if path.parent is not None:
+        parent_path = models.ProductPathModel.objects.get(pk=path.parent_id)
+        
+        result = get_breadcrumbs(parent_path)
+    
+    result.append({
+        "slug": path.slug,
+        "name": path.name
+    })
+    
+    return result
+
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductCategoryModel
@@ -159,7 +175,7 @@ class ListProductsSerializer(serializers.ModelSerializer):
     
     def get_name(self, obj):
         return f"{obj.product.name} {obj.color.eng_name.title()}"
-    
+
     def get_price(self, obj):
         return obj.product.price
 
@@ -203,6 +219,20 @@ class ListProductsSerializer(serializers.ModelSerializer):
     
     def get_slug(self, obj):
         return "-".join(obj.slug.split("-")[:-1])
+
+
+class FilterProductModificationSerializer(serializers.Serializer):
+    products = serializers.SerializerMethodField()
+    breadcrumbs = serializers.SerializerMethodField()
+    
+    def get_products(self, obj):
+        products = self.initial_data.get("products")
+        return ListProductsSerializer(products, many=True, context=self.context).data
+
+    def get_breadcrumbs(self, obj):
+        path = get_breadcrumbs(self.initial_data.get("breadcrumbs"))
+        
+        return path
 
 
 class ProductColorImagesSerializer(serializers.ModelSerializer):

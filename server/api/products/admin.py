@@ -238,7 +238,7 @@ class ProductColorImagesAdmin(admin.ModelAdmin):
 
 # admin.site.register(models.ColorImageModel)
 # admin.site.register(models.ProductModel)
-# admin.site.register(models.ProductPathModel)
+admin.site.register(models.ProductPathModel)
 # admin.site.register(models.ProductCategoryModel)
 # admin.site.register(models.ProductModificationModel)
 # admin.site.register(models.ProductColorModel)

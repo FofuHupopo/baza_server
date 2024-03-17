@@ -124,6 +124,43 @@ class ListProductsView(generics.ListAPIView):
         return context
 
 
+class FilterProductModificationView(APIView):
+    serializer_class = serializers.FilterProductModificationSerializer
+    permission_classes = (AllowAny, )
+    
+    def get(self, request: Request):
+        slug = request.query_params.get("slug")
+        
+        path = models.ProductPathModel.objects.filter(
+            slug=slug
+        ).first()
+        
+        products = models.ProductModificationModel.objects.filter(
+            product__visible=True,
+            visible=True
+        ).distinct("color", "product").order_by("product__id").filter(
+            product__path=path
+        )
+        
+        serializer = self.serializer_class(data={
+            "products": products,
+            "breadcrumbs": path
+        }, context={
+            "request": request
+        })
+        
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status.HTTP_400_BAD_REQUEST
+            )
+            
+        return Response(
+            serializer.data,
+            status.HTTP_200_OK
+        )
+
+
 class ProductDetailView(APIView):
     permission_classes = (AllowAny, )
 
@@ -198,7 +235,8 @@ class ProductDetailView(APIView):
                         "hex_code": color_hex
                     }
                     for slug, color_name, color_eng_name, color_hex in colors
-                ]
+                ],
+                "breadcrumbs": serializers.get_breadcrumbs(product.path)
             },
             status.HTTP_200_OK
         )
