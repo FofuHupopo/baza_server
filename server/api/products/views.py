@@ -135,13 +135,22 @@ class FilterProductModificationView(APIView):
             slug=slug
         ).first()
         
-        products = models.ProductModificationModel.objects.filter(
-            product__visible=True,
-            visible=True
-        ).distinct("color", "product").order_by("product__id").filter(
-            product__path=path
+        child_path = models.ProductPathModel.objects.filter(
+            slug__icontains=slug
         )
         
+        if child_path is None:
+            return Response({
+                "products": [],
+                "breadcrumbs": []
+            }, status.HTTP_200_OK)
+        
+        products = models.ProductModificationModel.objects.filter(
+            product__visible=True,
+            visible=True,
+            product__path__in=child_path
+        ).distinct("color", "product").order_by("product__id")
+
         serializer = self.serializer_class(data={
             "products": products,
             "breadcrumbs": path
