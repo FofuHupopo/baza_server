@@ -87,6 +87,11 @@ class MoySkaldSynchronizer(MoySklad):
 
             last_path = None
             for ind, path in enumerate(full_path):
+                path = {
+                    "ЖЕНЩИНЫ": "woman",
+                    "МУЖЧИНЫ": "man"                    
+                }.get(path, path)
+
                 instances = session.query(
                     models.ProductPathModel
                 ).filter(models.ProductPathModel.name == path)
