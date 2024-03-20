@@ -92,10 +92,10 @@ class MoySkaldSynchronizer(MoySklad):
 
                 instances = session.query(
                     models.ProductPathModel
-                ).filter(or_(
-                    models.ProductPathModel.name == path,
-                    models.ProductPathModel.slug == slug
-                ))
+                ).filter(
+                    (models.ProductPathModel.name == path) |
+                    (models.ProductPathModel.slug == slug)
+                )
 
                 for inst in instances:
                     if inst.full_path().lower() == "/".join(full_path[:ind + 1]).lower():
