@@ -89,6 +89,7 @@ class MoySkaldSynchronizer(MoySklad):
             last_path = None
             for ind, path in enumerate(full_path):
                 slug = slugify(" ".join(full_path[:ind + 1]))
+                print(slug)
 
                 instances = session.query(
                     models.ProductPathModel
@@ -96,9 +97,12 @@ class MoySkaldSynchronizer(MoySklad):
                     (models.ProductPathModel.name == path) |
                     (models.ProductPathModel.slug == slug)
                 )
+                print(instances.all())
 
                 for inst in instances:
-                    if inst.full_path().lower() == "/".join(full_path[:ind + 1]).lower():
+                    inst_slug = inst.full_path().lower()
+                    
+                    if inst_slug in ("woman", "man", "children") or inst_slug == "/".join(full_path[:ind + 1]).lower():
                         instance = inst
                         break
                 else:
