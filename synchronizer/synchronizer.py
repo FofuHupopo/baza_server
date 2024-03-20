@@ -101,8 +101,8 @@ class MoySkaldSynchronizer(MoySklad):
 
                 for inst in instances:
                     inst_slug = inst.full_path().lower()
-                    
-                    if inst_slug in ("woman", "man", "children") or inst_slug == "/".join(full_path[:ind + 1]).lower():
+
+                    if inst_slug in ("женщины", "мужчины", "дети") or inst_slug == "/".join(full_path[:ind + 1]).lower():
                         instance = inst
                         break
                 else:
