@@ -1,6 +1,7 @@
 import os
 import requests
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from pathlib import Path
 from slugify import slugify
 
@@ -87,9 +88,14 @@ class MoySkaldSynchronizer(MoySklad):
 
             last_path = None
             for ind, path in enumerate(full_path):
+                slug = slugify(" ".join(full_path[:ind + 1]))
+
                 instances = session.query(
                     models.ProductPathModel
-                ).filter(models.ProductPathModel.name == path)
+                ).filter(or_(
+                    models.ProductPathModel.name == path,
+                    models.ProductPathModel.slug == slug
+                ))
 
                 for inst in instances:
                     if inst.full_path().lower() == "/".join(full_path[:ind + 1]).lower():
@@ -101,11 +107,21 @@ class MoySkaldSynchronizer(MoySklad):
                 if instance:
                     last_path = instance
                     continue
-
-                instance = models.ProductPathModel(
-                    name=path,
-                    slug=slugify(" ".join(full_path[:ind + 1]))
-                )
+                
+                if path in ("woman", "man", "children"):
+                    instance = models.ProductPathModel(
+                        name={
+                            "woman": "ЖЕНЩИНЫ",
+                            "man": "МУЖЧИНЫ",
+                            "children": "ДЕТИ"
+                        }.get(path),
+                        slug=slugify(" ".join(full_path[:ind + 1]))
+                    )
+                else:
+                    instance = models.ProductPathModel(
+                        name=path,
+                        slug=slugify(" ".join(full_path[:ind + 1]))
+                    )
 
                 if last_path:
                     instance.parent_id = last_path.id
