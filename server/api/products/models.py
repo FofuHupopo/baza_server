@@ -32,7 +32,9 @@ class ProductPathModel(models.Model):
         return (f"{self.parent.get_slug_path()}/" if self.parent else "") + f"{self.slug}"
     
     def save(self, *args, **kwargs) -> None:
-        self.slug = slugify(self.__str__().replace("/", " "))
+        if not (self.parent is None and self.slug is not None):
+            self.slug = (self.parent.slug if self.parent else "") + "--" + slugify(self.name)
+        # self.slug = slugify(self.__str__().replace("/", " "))
 
         return super().save(*args, **kwargs)
     
