@@ -1,6 +1,7 @@
 import os
 import requests
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy import or_
 from pathlib import Path
 from slugify import slugify
@@ -128,8 +129,17 @@ class MoySkaldSynchronizer(MoySklad):
                 if last_path:
                     instance.parent_id = last_path.id
 
-                session.add(instance)
-                session.commit()
+                try:
+                    session.add(instance)
+                    session.commit()
+                except IntegrityError as e:
+                    session.rollback()
+
+                    instance = session.query(
+                        models.ProductPathModel
+                    ).filter(
+                        models.ProductPathModel.slug == slugify(" ".join(full_path[:ind + 1]))
+                    ).first()
 
                 last_path = instance
 
