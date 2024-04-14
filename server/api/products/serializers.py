@@ -429,7 +429,7 @@ class ShortModificationSerializer(serializers.ModelSerializer):
         return obj.color.name
     
     def get_slug(self, obj):
-        return "-".join(obj.slug.split("-")[:-1])
+        return obj.slug
 
 
 class CartSerializer(serializers.ModelSerializer):

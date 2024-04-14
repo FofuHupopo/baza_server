@@ -134,7 +134,7 @@ class FilterProductModificationView(APIView):
         path = models.ProductPathModel.objects.filter(
             slug=slug
         ).first()
-        
+
         child_path = models.ProductPathModel.objects.filter(
             slug__icontains=slug
         )
@@ -174,6 +174,8 @@ class ProductDetailView(APIView):
     permission_classes = (AllowAny, )
 
     def get(self, request: Request, slug):
+        slug = "-".join(slug.split("-")[:-1])
+
         modifications = models.ProductModificationModel.objects.filter(
             slug__icontains=slug,
             visible=True
@@ -189,7 +191,7 @@ class ProductDetailView(APIView):
         
         product = modifications[0].product
         
-        sizes = modifications.values_list("id", "size__name", "quantity")
+        sizes = modifications.values_list("id", "size__name", "quantity", "slug")
 
         colors = models.ProductModificationModel.objects.filter(
             product=product,
@@ -226,9 +228,10 @@ class ProductDetailView(APIView):
                     {
                         "name": size_name,
                         "mod_id": mod_id,
-                        "quantity": quantity
+                        "quantity": quantity,
+                        "slug": slug
                     }
-                    for mod_id, size_name, quantity in sizes
+                    for mod_id, size_name, quantity, slug in sizes
                 ],
                 "current_color": {
                     "slug": slug,
