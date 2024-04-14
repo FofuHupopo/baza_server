@@ -120,7 +120,9 @@ class CartView(APIView):
             cart.quantity = quantity
             cart.save()
 
-        return self.get(request)
+        return Response({
+            "message": "Cart syncronized."
+        }, status.HTTP_200_OK)
 
     def delete(self, request: Request):
         modification = CartView._get_modification_from_request(request)
@@ -135,19 +137,25 @@ class CartView(APIView):
     @staticmethod
     def _get_modification_from_request(request: Request):
         modification_id = request.data.get("modification_id")
+        slug = request.data.get("slug")
         
-        if not modification_id:
+        if not modification_id and not slug:
             return Response(
                 {
-                    "message": "No modification_id."
+                    "message": "No modification_id or slug."
                 },
                 status.HTTP_400_BAD_REQUEST
             )
-        
-        modification = product_models.ProductModificationModel.objects.filter(
-            pk=modification_id
-        ).first()
-        
+            
+        if modification_id:
+            modification = product_models.ProductModificationModel.objects.filter(
+                pk=modification_id
+            ).first()
+        if slug:
+            modification = product_models.ProductModificationModel.objects.filter(
+                slug=slug
+            ).first()
+
         if not modification:
             return Response(
                 {
@@ -155,9 +163,9 @@ class CartView(APIView):
                 },
                 status.HTTP_404_NOT_FOUND
             )
-        
+
         return modification
-    
+
 
 class CartAddView(APIView):
     permission_classes = (IsAuthenticated, )
@@ -184,7 +192,7 @@ class CartAddView(APIView):
                 "request": request
             }
         )
-        
+
         return Response(
             serializer.data,
             status.HTTP_200_OK
