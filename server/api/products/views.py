@@ -174,7 +174,7 @@ class ProductDetailView(APIView):
     permission_classes = (AllowAny, )
 
     def get(self, request: Request, slug):
-        slug = "-".join(slug.split("-")[:-1])
+        # slug = "-".join(slug.split("-")[:-1])
 
         modifications = models.ProductModificationModel.objects.filter(
             slug__icontains=slug,
