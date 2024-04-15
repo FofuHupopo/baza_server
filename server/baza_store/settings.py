@@ -267,8 +267,8 @@ TINKOFF_PAYMENTS_CONFIG = {
     "TERMINAL_KEY": "1693394744755DEMO",
     "SECRET_KEY": "cvr9aqrb3mq60a74",
     
-    'SUCCESS_URL': f"{URL}/api/payment/response/success",
-    'FAIL_URL': f'{URL}/api/payment/response/fail'
+    'SUCCESS_URL': f"{URL}/api/orders/payment/response/success",
+    'FAIL_URL': f'{URL}/api/orders/payment/response/fail'
 }
 
 # LOGGING = {

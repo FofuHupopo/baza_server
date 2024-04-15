@@ -206,7 +206,7 @@ class PaymentView(APIView):
             )
 
             for order_to_modification in order_to_modifications:
-                payment_description += f"{order_to_modification.product_modification_model.product.name} ({order_to_modification.product_modification_model.color.name, {order_to_modification.product_modification_model.size.name}}), количество: {order_to_modification.quantity};"
+                payment_description += f"{order_to_modification.product_modification_model.product.name} ({order_to_modification.product_modification_model.color.name}, {order_to_modification.product_modification_model.size.name}), количество: {order_to_modification.quantity};"
 
             payment = models.Payment.create(
                 amount=order.amount,
