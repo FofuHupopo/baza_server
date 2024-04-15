@@ -13,7 +13,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             "city", "street", "house", "frame", "apartment"
         )
         depth = 1
-        
+
 
 class OrderProductsSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
@@ -40,7 +40,7 @@ class ViewOrderSerializer(serializers.ModelSerializer):
         model = models.OrderModel
         fields = (
             "id", "name", "surname", "email", "phone",
-            "receiving", "payment_type",
+            "receiving", "payment_type", "amount",
             "city", "street", "house", "frame", "apartment",
             "is_paid", "is_received", "products",
             "order_date", "status", "receiving_date", "baza_loyalty"

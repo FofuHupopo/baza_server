@@ -12,6 +12,8 @@ DEFAULT_CONFIG = {
     'ITEM_TAX': 'none',
     'TERMINAL_KEY': '',
     'SECRET_KEY': '',
+    'SUCCESS_URL': '',
+    'FAIL_URL': ''
 }
 
 

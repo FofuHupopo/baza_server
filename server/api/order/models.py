@@ -118,13 +118,15 @@ class OrderModel(models.Model):
     amount = models.IntegerField(
         "Стоимость", default=0
     )
-    
+
     class Meta:
         db_table = "order__order"
         verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
     
     def save(self, *args, **kwargs) -> OrderModel:
+        super(OrderModel, self).save(*args, **kwargs)
+
         if self.status == self.OrderStatusChoice.PAID and not self.loaylty_awarded:
             for product in self.products.all():
                 self.baza_loyalty += product.baza_loyalty
@@ -146,13 +148,14 @@ class OrderModel(models.Model):
         amount = 0
 
         for relation in Order2ModificationModel.objects.filter(
-            order_model=self
+            order_model_id=self.pk
         ):
             amount += relation.product_modification_model.product.price * relation.quantity
-        
-        self.amount = amount
 
-        return super(OrderModel, self).save(*args, **kwargs)
+        self.amount = amount
+        
+        super(OrderModel, self).save()
+
     
     def __str__(self) -> str:
         return f"{self.pk}: {self.name} {self.surname}"
@@ -198,7 +201,7 @@ class Payment(models.Model):
     }
 
     amount = models.IntegerField(verbose_name='Сумма в копейках', editable=False)
-    order_id = models.CharField(verbose_name='Номер заказа', max_length=100, unique=True, editable=False)
+    order_id = models.CharField(verbose_name='Номер заказа', max_length=100, editable=False)
     description = models.TextField(verbose_name='Описание', max_length=250, blank=True, default='', editable=False)
 
     success = models.BooleanField(verbose_name='Успешно проведен', default=False, editable=False)
@@ -212,6 +215,10 @@ class Payment(models.Model):
         max_length=100, blank=True, default='', editable=False)
     message = models.TextField(verbose_name='Краткое описание ошибки', blank=True, default='', editable=False)
     details = models.TextField(verbose_name='Подробное описание ошибки', blank=True, default='', editable=False)
+    
+    payment_fail = models.BooleanField(
+        "Ошибка платежа", default=False
+    )
 
     class Meta:
         verbose_name = 'Транзакция'
@@ -241,6 +248,34 @@ class Payment(models.Model):
         for item in items:
             ReceiptItem.objects.create(**item, receipt=self.receipt)
         return self
+    
+    @staticmethod
+    def create(**kwargs):
+        try:
+            payment = Payment.objects.get(
+                order_id=kwargs.get("order_id"),
+                payment_fail=False
+            )
+
+            return payment
+        except Payment.DoesNotExist:
+            return Payment.objects.create(**kwargs)
+
+    @staticmethod
+    def get(**kwargs):
+        try:
+            payment = Payment.objects.get(
+                order_id=kwargs.get("order_id"),
+                payment_fail=False
+            )
+
+            return payment
+        except Payment.DoesNotExist:
+            return Payment.objects.get(**kwargs)
+
+    def set_payment_fail(self):
+        self.payment_fail = True
+        self.save()
 
     def to_json(self) -> dict:
         data = {

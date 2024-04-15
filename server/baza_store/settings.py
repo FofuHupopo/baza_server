@@ -15,12 +15,14 @@ DADATA_TOKEN = "48ab36191d6ef5b11a3ae58d406b7d641a1fbd32"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+URL = "https://thebaza.ru"
+
 ALLOWED_HOSTS = [
     "*",
     "thebaza.ru"
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://thebaza.ru']
+CSRF_TRUSTED_ORIGINS = [URL]
 
 # Application definition
 
@@ -263,5 +265,30 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 20971520  # 20 MB
 
 TINKOFF_PAYMENTS_CONFIG = {
     "TERMINAL_KEY": "1693394744755DEMO",
-    "SECRET_KEY": "cvr9aqrb3mq60a74"
+    "SECRET_KEY": "cvr9aqrb3mq60a74",
+    
+    'SUCCESS_URL': f"{URL}/api/payment/response/success",
+    'FAIL_URL': f'{URL}/api/payment/response/fail'
 }
+
+# LOGGING = {
+#     'version': 1,
+#     'filters': {
+#         'require_debug_true': {
+#             '()': 'django.utils.log.RequireDebugTrue',
+#         }
+#     },
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'filters': ['require_debug_true'],
+#             'class': 'logging.StreamHandler',
+#         }
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         }
+#     }
+# }

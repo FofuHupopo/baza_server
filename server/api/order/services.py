@@ -16,6 +16,8 @@ class PaymentHTTPException(Exception):
 class MerchantAPI:
     _terminal_key = None
     _secret_key = None
+    _fail_url = None
+    _success_url = None
 
     def __init__(self, terminal_key: str = None, secret_key: str = None):
         self._terminal_key = terminal_key
@@ -32,6 +34,18 @@ class MerchantAPI:
         if not self._terminal_key:
             self._terminal_key = get_config()['TERMINAL_KEY']
         return self._terminal_key
+    
+    @property
+    def success_url(self):
+        if not self._success_url:
+            self._success_url = get_config()['SUCCESS_URL']
+        return self._success_url
+    
+    @property
+    def fail_url(self):
+        if not self._fail_url:
+            self._fail_url = get_config()['FAIL_URL']
+        return self._fail_url
 
     def _request(self, url: str, method: types.FunctionType, data: dict) -> requests.Response:
         url = get_config()['URLS'][url]
@@ -83,8 +97,11 @@ class MerchantAPI:
         return token == self._token(data)
 
     def init(self, p: Payment) -> Payment:
-        response = self._request('INIT', requests.post, p.to_json()).json()
-        print(response)
+        response = self._request('INIT', requests.post, {
+            **p.to_json(),
+            "SuccessURL": self._success_url,
+            "FailURL": self._fail_url,
+        }).json()
         return self.update_payment_from_response(p, response)
 
     def status(self, p: Payment) -> Payment:
