@@ -136,7 +136,7 @@ class FilterProductModificationView(APIView):
         ).first()
 
         child_path = models.ProductPathModel.objects.filter(
-            slug__icontains=slug
+            slug__startswith=slug
         )
         
         if child_path is None:
