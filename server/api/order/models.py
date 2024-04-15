@@ -144,18 +144,8 @@ class OrderModel(models.Model):
             self.house = None
             self.frame = None
             self.apartment = None
-        
-        amount = 0
-
-        for relation in Order2ModificationModel.objects.filter(
-            order_model_id=self.pk
-        ):
-            amount += relation.product_modification_model.product.price * relation.quantity
-
-        self.amount = amount
-        
+            
         super(OrderModel, self).save()
-
     
     def __str__(self) -> str:
         return f"{self.pk}: {self.name} {self.surname}"

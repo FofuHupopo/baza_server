@@ -101,12 +101,20 @@ class OrderView(APIView):
 
         order_instance: models.OrderModel = serializer.save(user=request.user)
 
+        amount = 0
+
         for item in cart:
             models.Order2ModificationModel.objects.create(
                 order_model_id=order_instance.pk,
                 product_modification_model_id=item.product_modification_model.pk,
                 quantity=item.quantity
             )
+            
+            amount += item.product_modification_model.product.price * item.quantity
+        
+        order_instance.amount = amount
+        
+        order_instance.save()
 
         cart.delete()
 

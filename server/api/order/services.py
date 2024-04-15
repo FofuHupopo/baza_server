@@ -16,8 +16,8 @@ class PaymentHTTPException(Exception):
 class MerchantAPI:
     _terminal_key = None
     _secret_key = None
-    _success_url = "https://thebaza/api/orders/payment/response/success"
-    _fail_url = "https://thebaza/api/orders/payment/response/fail"
+    _success_url = "https://thebaza.ru/api/orders/payment/response/success"
+    _fail_url = "https://thebaza.ru/api/orders/payment/response/fail"
 
     def __init__(self, terminal_key: str = None, secret_key: str = None):
         self._terminal_key = terminal_key
