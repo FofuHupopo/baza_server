@@ -4,6 +4,4 @@ from rest_framework.request import Request
 
 class TinkoffPermission(BasePermission):
     def has_permission(self, request: Request, view):
-        print(request.META)
-
-        return True
+        return request.META.get("HTTP_REFERER", "") == "https://securepayments.tinkoff.ru/"

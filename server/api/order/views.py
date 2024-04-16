@@ -258,7 +258,7 @@ class PaymentStatusView(APIView):
         merchant_api.status(payment)
         payment.save()
         
-        if payment.error_code != 0:
+        if payment.message != "OK":
             payment.set_payment_fail()
             
         if payment.is_paid():
@@ -267,6 +267,7 @@ class PaymentStatusView(APIView):
             )
             
             order.is_paid = payment.is_paid()
+            order.status = models.OrderModel.OrderStatusChoice.PAID
 
             order.save()
 
@@ -283,22 +284,29 @@ class PaymentResponseSuccessView(APIView):
     permission_classes = [TinkoffPermission]
 
     def get(self, request: Request, payment_id: int):
-        print("=" * 20)
-        print("PAYMENT SUCCESS (GET):")
-        print("BODY:", request.data)
-        print("QUERY:", request.query_params)
-        print("=" * 20)
-
-        return HttpResponseRedirect("https://thebaza.ru")
+        payment = models.Payment.objects.get(
+            pk=payment_id
+        )
         
-    def post(self, request: Request, payment_id: int):
-        print("=" * 20)
-        print("PAYMENT SUCCESS (POST):")
-        print("BODY:", request.data)
-        print("QUERY:", request.query_params)
-        print("=" * 20)
+        merchant_api.status(payment)
+        payment.save()
+        
+        if not payment.is_paid():
+            payment.payment_fail = True
+            payment.save()
+            
+            return HttpResponseRedirect("https://thebaza.ru") # Not payment
+        
+        order = models.OrderModel.objects.get(
+            pk=payment.order_id
+        )
+        
+        order.is_paid = True
+        order.status = models.OrderModel.OrderStatusChoice.PAID
 
-        return HttpResponseRedirect("https://thebaza.ru")
+        order.save()
+
+        return HttpResponseRedirect("https://thebaza.ru") # payment
 
 
 class PaymentResponseFailView(APIView):
@@ -306,19 +314,16 @@ class PaymentResponseFailView(APIView):
     permission_classes = [TinkoffPermission]
 
     def get(self, request: Request, payment_id: int):
-        print("=" * 20)
-        print("PAYMENT FAIL (GET):")
-        print("BODY:", request.data)
-        print("QUERY:", request.query_params)
-        print("=" * 20)
-
-        return HttpResponseRedirect("https://thebaza.ru")
+        payment = models.Payment.objects.get(
+            id=payment_id
+        )
         
-    def post(self, request: Request, payment_id: int):
-        print("=" * 20)
-        print("PAYMENT FAIL (POST):")
-        print("BODY:", request.data)
-        print("QUERY:", request.query_params)
-        print("=" * 20)
+        merchant_api.status(payment)
+        payment.save()
+        
+        if not payment.is_paid():
+            payment.payment_fail = True
 
-        return HttpResponseRedirect("https://thebaza.ru")
+        payment.save()
+        
+        return HttpResponseRedirect("https://thebaza.ru") # Not payment

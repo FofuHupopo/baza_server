@@ -112,6 +112,10 @@ class ProductModel(models.Model):
         verbose_name="Путь к товару"
     )
     
+    baza_loyalty = models.IntegerField(
+        "Баллы лояльности", default=0
+    )
+
     class Meta:
         db_table = "product__product"
         verbose_name = "Товар"

@@ -129,7 +129,7 @@ class OrderModel(models.Model):
 
         if self.status == self.OrderStatusChoice.PAID and not self.loaylty_awarded:
             for product in self.products.all():
-                self.baza_loyalty += product.baza_loyalty
+                self.baza_loyalty += product.product.baza_loyalty
         
         if self.status == self.OrderStatusChoice.IN_DELIVERY and not self.receiving_date:
             self.receiving_date = timezone.now()
