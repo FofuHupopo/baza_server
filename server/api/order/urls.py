@@ -10,6 +10,6 @@ urlpatterns = [
     path("payment/", views.PaymentView.as_view(), name="order__payment_init"),
     path("payment/status/", views.PaymentStatusView.as_view(), name="order__payment_status"),
     
-    path("payment/response/success", views.PaymentResponseSuccessView.as_view(), name="order__payment_response_success"),
-    path("payment/response/fail", views.PaymentResponseFailView.as_view(), name="order__payment_response_fail"),
+    path("payment/response/success/<int:payment_id>", views.PaymentResponseSuccessView.as_view(), name="order__payment_response_success"),
+    path("payment/response/fail/<int:payment_id>", views.PaymentResponseFailView.as_view(), name="order__payment_response_fail"),
 ]

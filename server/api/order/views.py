@@ -9,6 +9,7 @@ from django.http.response import HttpResponseRedirect
 from django.db import IntegrityError
 
 from . import models
+from api.permissions import TinkoffPermission
 from .services import MerchantAPI
 from api.request import Delivery
 from api.authentication import models as auth_models
@@ -279,8 +280,9 @@ class PaymentStatusView(APIView):
 
 class PaymentResponseSuccessView(APIView):
     serializer_class = serializers.PaymentSerializer
+    permission_classes = [TinkoffPermission]
 
-    def get(self, request: Request):
+    def get(self, request: Request, payment_id: int):
         print("=" * 20)
         print("PAYMENT SUCCESS (GET):")
         print("BODY:", request.data)
@@ -289,7 +291,7 @@ class PaymentResponseSuccessView(APIView):
 
         return HttpResponseRedirect("https://thebaza.ru")
         
-    def post(self, request: Request):
+    def post(self, request: Request, payment_id: int):
         print("=" * 20)
         print("PAYMENT SUCCESS (POST):")
         print("BODY:", request.data)
@@ -301,8 +303,9 @@ class PaymentResponseSuccessView(APIView):
 
 class PaymentResponseFailView(APIView):
     serializer_class = serializers.PaymentSerializer
+    permission_classes = [TinkoffPermission]
 
-    def get(self, request: Request):
+    def get(self, request: Request, payment_id: int):
         print("=" * 20)
         print("PAYMENT FAIL (GET):")
         print("BODY:", request.data)
@@ -311,7 +314,7 @@ class PaymentResponseFailView(APIView):
 
         return HttpResponseRedirect("https://thebaza.ru")
         
-    def post(self, request: Request):
+    def post(self, request: Request, payment_id: int):
         print("=" * 20)
         print("PAYMENT FAIL (POST):")
         print("BODY:", request.data)

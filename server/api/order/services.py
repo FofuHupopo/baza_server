@@ -99,8 +99,8 @@ class MerchantAPI:
     def init(self, p: Payment) -> Payment:
         response = self._request('INIT', requests.post, {
             **p.to_json(),
-            "SuccessURL": self._success_url,
-            "FailURL": self._fail_url,
+            "SuccessURL": self._success_url + f"/{p.pk}",
+            "FailURL": self._fail_url + f"/{p.pk}",
         }).json()
         return self.update_payment_from_response(p, response)
 
