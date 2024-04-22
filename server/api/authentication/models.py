@@ -39,28 +39,6 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         verbose_name="Избранное"
     )
 
-    city = models.CharField(
-        "Город", max_length=128,
-        blank=True, null=True,
-    )
-    street = models.CharField(
-        "Улица", max_length=128,
-        blank=True, null=True,
-    )
-    house = models.CharField(
-        "Дом", max_length=16,
-        blank=True, null=True,
-    )
-    
-    frame = models.CharField(
-        "Корпус", max_length=16,
-        null=True, blank=True
-    )
-    apartment = models.CharField(
-        "Квартира", max_length=16,
-        null=True, blank=True
-    )
-
     is_active = models.BooleanField(
         "Активный", default=True, help_text="Пользователь может авторизироваться"
     )
