@@ -20,7 +20,6 @@ class UserAdmin(admin.ModelAdmin):
     fields = [
         "name", "surname", "email", "phone",
         "birthday_date", "last_login",
-        "city", "street", "house", "frame", "apartment",
         "favorites", "is_active", "is_superuser", "date_joined"
     ]
     

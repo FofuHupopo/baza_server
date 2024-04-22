@@ -71,7 +71,6 @@ class UserDataSerialzier(serializers.ModelSerializer):
         fields = (
             "id", "email", "phone",
             "name", "surname", "birthday_date",
-            "city", "street", "house", "frame", "apartment"
         )
 
 
@@ -82,5 +81,4 @@ class UpdateUserInfoSerializer(serializers.ModelSerializer):
         model = models.UserModel
         fields = (
             "email", "name", "surname", "birthday_date",
-            "city", "street", "house", "frame", "apartment",
         )
