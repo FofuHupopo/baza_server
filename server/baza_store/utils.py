@@ -7,6 +7,6 @@ class MissingEnvironmentVariable(Exception):
 
 def getenv(key: str) -> str:
     try:
-        return os.environ[key]
+        return os.getenv(key)
     except KeyError:
         raise MissingEnvironmentVariable(f"{key} does not exist")

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
@@ -14,4 +14,6 @@ urlpatterns = [
     path("cart/maximization/", views.CartMaximizationView.as_view(), name="cart-maximization"),
     
     path("search-address/", views.SearchAddressView.as_view(), name="address__search"),
+    
+    path("loyalty/", include('api.profile.loyalty.urls')),
 ]

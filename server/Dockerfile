@@ -2,6 +2,8 @@ FROM python:3.11 as builder
 
 
 ENV PATH="/root/.local/bin:${PATH}"
+ENV PYTHONUNBUFFERED=1
+ENV IS_DOCKER="true"
 
 WORKDIR /app
 
