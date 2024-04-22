@@ -90,7 +90,10 @@ class LoginView(APIView):
         user_serializer = UserDataSerialzier(user, context={"request": request})
 
         response = Response(
-            user_serializer.data,
+            {
+                "user": user_serializer.data,
+                "access_token": token.key,
+            },
             status.HTTP_201_CREATED if created else status.HTTP_200_OK
         )
 
