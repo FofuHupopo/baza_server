@@ -10,10 +10,10 @@ def main():
     load_dotenv(DOTENV_PATH)
 
     port = os.getenv('PORT', 8000)
-    host = os.getenv('HOST', 'localhost')
+    host = os.getenv('HOST', '127.0.0.1')
 
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'universities.settings')
-    execute_from_command_line(['manage.py', 'migrate'])
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'baza_store.settings')
+    # execute_from_command_line(['manage.py', 'migrate'])
     execute_from_command_line(['manage.py', 'runserver', f'{host}:{port}'])
 
 

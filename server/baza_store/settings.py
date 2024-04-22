@@ -1,21 +1,21 @@
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from .utils import getenv
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR / '.env')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-sy^l3ace!nhpr-)uv=vevi&m3mb_!_7q4*89nim%5t-d!r2pc&'
-DADATA_TOKEN = "48ab36191d6ef5b11a3ae58d406b7d641a1fbd32"
+SECRET_KEY = getenv("SECRET_KEY")
+DADATA_TOKEN = getenv("DADATA_TOKEN")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-URL = "https://thebaza.ru"
+URL = getenv("URL")
 
 ALLOWED_HOSTS = [
     "*",
@@ -55,6 +55,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'api.middlewares.CookiesTokenMiddleware',
+    'api.middlewares.UpdateAccessTokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -89,24 +90,12 @@ WSGI_APPLICATION = 'baza_store.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'baza_store',
-        'USER': 'baza',
-        'PASSWORD': 'Ot?y\CJN=Qh7uU',
-        'HOST': '92.53.97.102',
-        'PORT': '5432'
+        'NAME': getenv('DB_NAME'),
+        'USER': getenv('DB_USER'),
+        'PASSWORD': getenv('DB_PASSWORD'),
+        'HOST': getenv('DB_HOST'),
+        'PORT': getenv('DB_PORT'),
     },
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'baza_store',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'postgres',
-    #     'HOST': 'iizhukov.site',
-    #     'PORT': '5432'
-    # }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
 }
 
 
@@ -145,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 TOKEN_SETTINGS = {
-    'COOKIE_NAME': 'token',
+    'COOKIE_NAME': 'access_token',
     'COOKIE_MAX_AGE': 60 * 60 * 24 * 30,
     'COOKIE_DOMAIN': None,
     'COOKIE_SECURE': True,
