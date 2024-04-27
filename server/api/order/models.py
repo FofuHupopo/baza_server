@@ -18,6 +18,7 @@ class OrderModel(models.Model):
         IN_DELIVERY = "in_delivery"
         DELIVERED = "delivered"
         RECEIVED = "received"
+        CANCELLED = "cancelled"
 
 
     user = models.ForeignKey(

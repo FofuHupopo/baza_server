@@ -1,13 +1,10 @@
 from pathlib import Path
 from datetime import timedelta
-from dotenv import load_dotenv
 
 from .utils import getenv
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = getenv("SECRET_KEY")
 DADATA_TOKEN = getenv("DADATA_TOKEN")
@@ -48,14 +45,15 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'api.middlewares.UpdateAccessTokenMiddleware',
+    'api.middlewares.CookiesTokenMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'api.middlewares.CookiesTokenMiddleware',
-    'api.middlewares.UpdateAccessTokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]

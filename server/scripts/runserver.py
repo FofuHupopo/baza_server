@@ -6,7 +6,6 @@ from pathlib import Path
 
 def main():
     DOTENV_PATH = Path(__file__).resolve().parent.parent / '.env'
-
     load_dotenv(DOTENV_PATH)
     
     if os.getenv("IS_DOCKER", "false") == "true":
