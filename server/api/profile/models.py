@@ -9,13 +9,13 @@ LOYALTY_LEVELS = {
         "next": "gold"
     },
     "gold": {
-        "min": 100000,
+        "min": 1000,
         "percent": 0.07,
         "next": "platinum",
         "pred": "black",
     },
     "platinum": {
-        "min": 1000000,
+        "min": 10000,
         "percent": 0.1,
         "next": None,
         "pred": "gold",
@@ -54,7 +54,8 @@ class LoyaltyModel(models.Model):
 
     remained = models.IntegerField(
         verbose_name="Остаталось до следущего уровня",
-        default=0
+        default=0,
+        blank=True, null=True
     )
     total_spent = models.IntegerField(
         verbose_name="Всего потрачено",
@@ -87,14 +88,14 @@ class LoyaltyModel(models.Model):
         if self.status not in LOYALTY_LEVELS:
             return super().save(*args, **kwargs)
     
-        current_level = LOYALTY_LEVELS.get(self.status)
+        current_level = LOYALTY_LEVELS.get(self.status)        
         next_level = LOYALTY_LEVELS.get(current_level.get("next"))
-        
+
         if not next_level:
-            self.remained = None
+            self.remained = 0
             return super().save(*args, **kwargs)
 
-        self.remained = next_level.get("min") - self.balance
+        self.remained = next_level.get("min") - self.total_spent
         
         if self.remained > 0:
             return super().save(*args, **kwargs)
@@ -110,8 +111,9 @@ class LoyaltyModel(models.Model):
                 min_next_balance = level_info.get("min")
                 min_next_level = level
         
-        if min_next_level in None:
+        if min_next_level is None:
             self.remained = None
+            self.status = "platinum"
             return super().save(*args, **kwargs)
         
         self.status = LOYALTY_LEVELS.get(min_next_level).get("pred")
