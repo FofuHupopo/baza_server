@@ -9,8 +9,6 @@ def main():
     load_dotenv(DOTENV_PATH)
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'baza_store.settings')
-    
-    print(os.getenv("DB_PASSWORD"))
 
     execute_from_command_line(['manage.py', 'makemigrations'])
     execute_from_command_line(['manage.py', 'migrate'])

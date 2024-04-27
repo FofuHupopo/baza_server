@@ -6,5 +6,5 @@ class LoyaltySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.LoyaltyModel
         fields = [
-            "user_id", "balance", "awaiting_balance", "status",
+            "user_id", "balance", "awaiting_balance", "status", "remained"
         ]

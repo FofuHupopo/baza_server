@@ -16,4 +16,5 @@ urlpatterns = [
     path("search-address/", views.SearchAddressView.as_view(), name="address__search"),
     
     path("loyalty/", include('api.profile.loyalty.urls')),
+    path("address/", include('api.profile.address.urls')),
 ]

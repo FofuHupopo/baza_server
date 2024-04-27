@@ -1,4 +1,26 @@
 from django.db import models
+from django.utils import timezone
+
+
+LOYALTY_LEVELS = {
+    "black": {
+        "min": 0,
+        "percent": 0.05,
+        "next": "gold"
+    },
+    "gold": {
+        "min": 100000,
+        "percent": 0.07,
+        "next": "platinum",
+        "pred": "black",
+    },
+    "platinum": {
+        "min": 1000000,
+        "percent": 0.1,
+        "next": None,
+        "pred": "gold",
+    },
+}
 
 
 class LoyaltyStatusModel(models.TextChoices):
@@ -29,6 +51,15 @@ class LoyaltyModel(models.Model):
         verbose_name="Ожидаемый баланс лояльности",
         default=0
     )
+
+    remained = models.IntegerField(
+        verbose_name="Остаталось до следущего уровня",
+        default=0
+    )
+    total_spent = models.IntegerField(
+        verbose_name="Всего потрачено",
+        default=0
+    )
     
     class Meta:
         db_table = "profile__loyalty"
@@ -38,7 +69,95 @@ class LoyaltyModel(models.Model):
     def __str__(self) -> str:
         return f"{self.user.name} {self.user.surname}: {self.status} {self.balance}"
     
+    def confirm_balance(self, amount: int) -> None:
+        awaiting_balance = min(self.awaiting_balance, amount)
+        
+        self.awaiting_balance -= awaiting_balance
+        self.balance += awaiting_balance
+        
+        self.save()
+        
+    def add_awaiting_balance(self, amount: int) -> None:
+        self.awaiting_balance += int(amount * LOYALTY_LEVELS.get(self.status).get("percent"))
+        self.total_spent += amount
+        
+        self.save()
     
+    def save(self, *args, **kwargs) -> None:
+        if self.status not in LOYALTY_LEVELS:
+            return super().save(*args, **kwargs)
+    
+        current_level = LOYALTY_LEVELS.get(self.status)
+        next_level = LOYALTY_LEVELS.get(current_level.get("next"))
+        
+        if not next_level:
+            self.remained = None
+            return super().save(*args, **kwargs)
+
+        self.remained = next_level.get("min") - self.balance
+        
+        if self.remained > 0:
+            return super().save(*args, **kwargs)
+        
+        min_next_level = None
+        min_next_balance = float("inf")
+        
+        for level, level_info in LOYALTY_LEVELS.items():
+            if level_info.get("min") < self.total_spent:
+                continue
+            
+            if level_info.get("min") < min_next_balance:
+                min_next_balance = level_info.get("min")
+                min_next_level = level
+        
+        if min_next_level in None:
+            self.remained = None
+            return super().save(*args, **kwargs)
+        
+        self.status = LOYALTY_LEVELS.get(min_next_level).get("pred")
+        self.remained = min_next_balance - self.total_spent
+        
+        return super().save(*args, **kwargs)
+    
+    
+class LoyaltyOperationModel(models.TextChoices):
+    """Операция лояльности"""
+    MARKETING = "marketing"
+    BRING_IN = "bring_in"
+
+
+class LoyaltyHistoryModel(models.Model):
+    user = models.ForeignKey(
+        "authentication.UserModel",
+        on_delete=models.CASCADE
+    )
+    datetime = models.DateTimeField(
+        verbose_name="Дата и время",
+        default=timezone.now
+    )
+    operation = models.CharField(
+        verbose_name="Баланс лояльности",
+        choices=LoyaltyOperationModel.choices,
+        default=LoyaltyOperationModel.MARKETING
+    )
+    value = models.IntegerField(
+        verbose_name="История",
+        default=0
+    )
+    total = models.IntegerField(
+        verbose_name="Итого",
+        default=0
+    )
+    
+    class Meta:
+        db_table = "profile__loyalty_history"
+        verbose_name = "История лояльности"
+        verbose_name_plural = "История лояльности"
+    
+    def __str__(self) -> str:
+        return f"{self.user.name} {self.user.surname}: {self.operation}"
+
+
 class AddressTypeChoices(models.TextChoices):
     """Тип адреса"""
     CDEK = "cdek"
@@ -73,7 +192,7 @@ class AddressModel(models.Model):
                 user_id=user_id,
                 type=type
             )
-    
+
         return AddressModel.objects.filter(
             user_id=user_id
         )
