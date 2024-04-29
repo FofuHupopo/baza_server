@@ -122,7 +122,16 @@ class LogoutView(APIView):
         )
         
         if request.COOKIES.get(settings.TOKEN_SETTINGS["COOKIE_NAME"]):
-            response.delete_cookie(settings.TOKEN_SETTINGS["COOKIE_NAME"])
+            response.set_cookie(
+                key=settings.TOKEN_SETTINGS["COOKIE_NAME"],
+                value="",
+                max_age=0,
+                secure=settings.TOKEN_SETTINGS['COOKIE_SECURE'],
+                httponly=settings.TOKEN_SETTINGS['COOKIE_HTTP_ONLY'],
+                samesite=settings.TOKEN_SETTINGS['COOKIE_SAMESITE'],
+                domain=settings.TOKEN_SETTINGS['COOKIE_DOMAIN']
+            )
+            # response.delete_cookie(settings.TOKEN_SETTINGS["COOKIE_NAME"], domain=settings.TOKEN_SETTINGS['COOKIE_DOMAIN'])
 
         return response
 

@@ -9,6 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = getenv("SECRET_KEY")
 DADATA_TOKEN = getenv("DADATA_TOKEN")
 
+COOKIE_DOMAIN = None
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -133,7 +135,7 @@ AUTH_PASSWORD_VALIDATORS = [
 TOKEN_SETTINGS = {
     'COOKIE_NAME': 'access_token',
     'COOKIE_MAX_AGE': 60 * 60 * 24 * 30,
-    'COOKIE_DOMAIN': None,
+    'COOKIE_DOMAIN': COOKIE_DOMAIN,
     'COOKIE_SECURE': True,
     'COOKIE_HTTP_ONLY': True,
     'COOKIE_PATH': '/',
@@ -174,7 +176,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=30),
 
     'AUTH_COOKIE': 'refresh_token',
-    'AUTH_COOKIE_DOMAIN': None,
+    'AUTH_COOKIE_DOMAIN': COOKIE_DOMAIN,
     'AUTH_COOKIE_SECURE': False,
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_PATH': '/',
