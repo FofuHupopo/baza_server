@@ -21,7 +21,10 @@ ALLOWED_HOSTS = [
     "thebaza.ru"
 ]
 
-CSRF_TRUSTED_ORIGINS = [URL]
+CSRF_TRUSTED_ORIGINS = [
+    URL,
+    "http://127.0.0.1:3000",
+]
 
 # Application definition
 
