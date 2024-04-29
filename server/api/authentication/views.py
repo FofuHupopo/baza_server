@@ -113,7 +113,7 @@ class LoginView(APIView):
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request: Request):
+    def post(self, request: Request):
         response = Response(
             {
                 "status": "logout"
