@@ -99,25 +99,31 @@ class CartView(APIView):
         )
 
     def post(self, request: Request):
-        modifications = request.data.get("modifications")
-        quantities = request.data.get("quantities", [])
+        cart = request.data
         
-        quantities += [1 for _ in range(len(modifications) - len(quantities))]
-
-        if len(modifications) != len(quantities):
-            return Response(
-                {
-                    "message": "Размер массива modification не совпадает с размером массива quantities."
-                }
-            )
-        
-        for modification, quantity in zip(modifications, quantities):
+        for ind, product in enumerate(cart):
+            slug = product.get("slug")
+            
+            try:    
+                modification = product_models.ProductModificationModel.objects.get(
+                    slug=slug
+                )
+            except product_models.ProductModificationModel.DoesNotExist:
+                return Response({
+                    "message": f"Modification with slug {slug} not found."
+                }, status.HTTP_400_BAD_REQUEST)
+            
+            cart[ind]["modification_id"] = modification.pk
+            cart[ind]["product_quantity"] = modification.quantity
+    
+        for product in cart:
             cart, _ = auth_models.CartModel.objects.get_or_create(
                 user_model=request.user,
-                product_modification_model_id=modification
+                product_modification_model_id=product["modification_id"],
             )
 
-            cart.quantity = quantity
+            cart.quantity += product["quantity"]
+            cart.quantity = min(cart.quantity, product["product_quantity"])
             cart.save()
 
         return Response({
