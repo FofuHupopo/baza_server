@@ -15,19 +15,16 @@ class AddressSearch:
         "city", "street", "house"
     ]
     
-    def search(raw: str, search_field: str, limit: int=None) -> list[str]:
-        if search_field.lower() not in AddressSearch.VALID_SEARCH_FIELDS:
-            return []            
-
+    def search(raw: str, limit: int=None) -> list[str]:
         result = AddressSearch.DADATA.suggest("address", raw)
 
         if not result:
             return []
-
+                
         response = list(filter(lambda x: "/" not in x, {
             value
             for res in result
-            if (value := res.get("data", {}).get(search_field, ""))
+            if (value := res.get("value", ""))
         }))
 
         response = sort_by_similarity(raw, response)
