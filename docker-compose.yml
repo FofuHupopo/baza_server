@@ -11,6 +11,7 @@ services:
       - backbone
     depends_on:
       - server
+      - cdek
     volumes:
       - media:/media/
       - static:/static/
@@ -33,6 +34,36 @@ services:
     volumes:
       - media:/app/media/
       - static:/app/static/
+
+  cdek:
+    container_name: cdek
+    hostname: cdek
+    restart: always
+    build:
+      context: ./cdek
+    ports:
+      - "8002:8002"
+    expose:
+      - 8002
+    env_file:
+      - ./cdek/.env
+    networks:
+      - backbone
+  
+  # videostreaming:
+  #   container_name: videostreaming
+  #   hostname: videostreaming
+  #   restart: always
+  #   build:
+  #     context: ./videostreaming
+  #   ports:
+  #     - "8003:8000"
+  #   expose:
+  #     - 8003
+  #   networks:
+  #     - backbone
+
+    # Database
 
   redis:
     image: redis:latest

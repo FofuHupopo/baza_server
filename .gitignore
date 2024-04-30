@@ -10,3 +10,5 @@ media/
 .Ds_Store
 
 client/
+
+poetry.lock

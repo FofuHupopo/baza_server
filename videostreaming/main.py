@@ -1,3 +1,4 @@
+import uvicorn
 import cv2
 import time
 from datetime import datetime, timedelta
@@ -60,3 +61,7 @@ def video():
         blob_cache["last_time_cached"] = datetime.now()
 
     return blob_cache["cached"]
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
