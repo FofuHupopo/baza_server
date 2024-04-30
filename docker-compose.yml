@@ -1,20 +1,19 @@
 services:
   # nginx
-  # nginx:
-  #   container_name: nginx
-  #   build:
-  #     context: ./nginx
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   networks:
-  #     - backbone
-  #   depends_on:
-  #     - server
-  #     - client
-  #   volumes:
-  #     - ./files:/tmp/files/
-  #     - ./frontend/dist:/root/mc/
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - backbone
+    depends_on:
+      - server
+    volumes:
+      - media:/media/
+      - static:/static/
 
   # Backend
   server:
@@ -32,40 +31,8 @@ services:
     networks:
       - backbone
     volumes:
-      - ./files:/app/media/
-
-  # loyalty:
-  #   container_name: loyalty
-  #   hostname: loyalty
-  #   restart: always
-  #   build:
-  #     context: ./loyalty
-  #   ports:
-  #     - "8004:8000"
-  #   expose:
-  #     - 8004
-  #   env_file:
-  #     - ./loyalty/.env-local
-  #   networks:
-  #     - backbone
-  
-  # databases  
-  # postgres:
-  #   container_name: postgres
-  #   hostname: postgres
-  #   build:
-  #     context: ./postgres 
-  #   restart: always
-  #   environment:
-  #     POSTGRES_USER: root
-  #     POSTGRES_PASSWORD: root
-  #     POSTGRES_DB: local
-  #   ports:
-  #     - 5432:5432
-  #   networks:
-  #     - backbone
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
+      - media:/app/media/
+      - static:/app/static/
 
   redis:
     image: redis:latest
@@ -83,4 +50,7 @@ services:
 networks:
   backbone:
     driver: bridge
-  
+
+volumes:
+  media:
+  static:
