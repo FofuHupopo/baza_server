@@ -13,7 +13,7 @@ urlpatterns = [
     path("cart/clear/", views.CartClearView.as_view(), name="cart-clear"),
     path("cart/maximization/", views.CartMaximizationView.as_view(), name="cart-maximization"),
     
-    path("search-address/", views.SearchAddressView.as_view(), name="address__search"),
+    path("address/search/", views.SearchAddressView.as_view(), name="address__search"),
     
     path("loyalty/", include('api.profile.loyalty.urls')),
     path("address/", include('api.profile.address.urls')),

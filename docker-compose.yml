@@ -1,0 +1,86 @@
+services:
+  # nginx
+  # nginx:
+  #   container_name: nginx
+  #   build:
+  #     context: ./nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   networks:
+  #     - backbone
+  #   depends_on:
+  #     - server
+  #     - client
+  #   volumes:
+  #     - ./files:/tmp/files/
+  #     - ./frontend/dist:/root/mc/
+
+  # Backend
+  server:
+    container_name: server
+    hostname: server
+    restart: always
+    build:
+      context: ./server
+    ports:
+      - "8000:8000"
+    expose:
+      - 8000
+    env_file:
+      - ./server/.env
+    networks:
+      - backbone
+    volumes:
+      - ./files:/app/media/
+
+  # loyalty:
+  #   container_name: loyalty
+  #   hostname: loyalty
+  #   restart: always
+  #   build:
+  #     context: ./loyalty
+  #   ports:
+  #     - "8004:8000"
+  #   expose:
+  #     - 8004
+  #   env_file:
+  #     - ./loyalty/.env-local
+  #   networks:
+  #     - backbone
+  
+  # databases  
+  # postgres:
+  #   container_name: postgres
+  #   hostname: postgres
+  #   build:
+  #     context: ./postgres 
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: root
+  #     POSTGRES_PASSWORD: root
+  #     POSTGRES_DB: local
+  #   ports:
+  #     - 5432:5432
+  #   networks:
+  #     - backbone
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    hostname: redis
+    container_name: redis
+    environment:
+      - REDIS_DATABASES=1
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - backbone
+
+
+networks:
+  backbone:
+    driver: bridge
+  

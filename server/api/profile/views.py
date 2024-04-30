@@ -322,7 +322,7 @@ class SearchAddressView(APIView):
     def get(self, request: Request):
         address = request.query_params.get("q", "")
         field = request.query_params.get("type", "")
-        limit = request.query_params.get("limit", 5)
+        limit = request.query_params.get("limit", "5")
         
         if not limit.isdecimal():
             return Response({

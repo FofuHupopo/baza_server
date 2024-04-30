@@ -1,4 +1,4 @@
-FROM python:3.11 as builder
+FROM python:3.10 as builder
 
 
 ENV PATH="/root/.local/bin:${PATH}"

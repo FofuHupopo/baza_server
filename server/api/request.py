@@ -29,7 +29,7 @@ class AddressSearch:
             for res in result
             if (value := res.get("data", {}).get(search_field, ""))
         }))
-                    
+
         response = sort_by_similarity(raw, response)
 
         if limit:

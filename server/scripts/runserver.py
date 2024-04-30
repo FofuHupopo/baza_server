@@ -5,6 +5,9 @@ from pathlib import Path
 
 
 def main():
+    if "DB_PASSWORD" in os.environ:
+        del os.environ["DB_PASSWORD"]
+    
     DOTENV_PATH = Path(__file__).resolve().parent.parent / '.env'
     load_dotenv(DOTENV_PATH)
     
