@@ -180,6 +180,19 @@ class AddressModel(models.Model):
         max_length=128
     )
     
+    apartment_number = models.IntegerField(
+        verbose_name="Номер квартиры", default=None,
+        null=True, blank=True
+    )
+    floor_number = models.IntegerField(
+        verbose_name="Номер этажа", default=None,
+        null=True, blank=True
+    )
+    intercom = models.IntegerField(
+        verbose_name="Домофон", default=None,
+        null=True, blank=True
+    )
+    
     class Meta:
         db_table = "profile__address"
         verbose_name = "Адрес"
