@@ -7,6 +7,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+from fastapi.openapi.docs import get_swagger_ui_html
+
 from utils import sort_by_similarity
 
 
@@ -129,6 +131,11 @@ async def cities_search(request: Request, city: str) -> list[DeliveryPointModel]
         "Content-Type": "application/json; charset=UTF-8"
     }
     return JSONResponse(content=response[:5], headers=headers)
+
+
+@app.get("/swagger", include_in_schema=False)
+async def get_documentation(request: Request):
+    return get_swagger_ui_html(openapi_url="/service/cdek/" + "/openapi.json", title="Swagger")
 
 
 # SCHEDULED TASK
