@@ -5,6 +5,7 @@ import asyncio
 import aiohttp
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from fastapi.openapi.docs import get_swagger_ui_html
@@ -102,6 +103,19 @@ class DeliveryPointModel(BaseModel):
 # FASTAPI
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https:thebaza.ru",
+        "http://127.0.0.1:3000",
+        "https://127.0.0.1",
+        "http://127.0.0.1",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/cities")
 async def cities(request: Request) -> list[str]:
