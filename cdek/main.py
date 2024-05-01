@@ -107,10 +107,11 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https:thebaza.ru",
+        "https://thebaza.ru",
         "http://127.0.0.1:3000",
+        "http://localhost:3000",
+        "https://localhost",
         "https://127.0.0.1",
-        "http://127.0.0.1",
     ],
     allow_credentials=True,
     allow_methods=["*"],
