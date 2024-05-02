@@ -27,7 +27,6 @@ class SendCodeView(APIView):
         
         code = AuthCodeModel.generate_code(phone)
         
-        
         print(code.phone, code.code)
         
         if settings.SEND_CODE:
@@ -58,31 +57,34 @@ class LoginView(APIView):
     def post(self, request: Request):
         serializer = self.serializer_class(data=request.data, context={"request": request})
     
-        if serializer.is_valid():
-            phone = serializer.validated_data['phone']
-            code = serializer.validated_data['code']
-            
-            if AuthCodeModel.check_code(phone, code):
-                user: UserModel = UserModel.objects.filter(
-                    phone=phone
-                ).first()
-                
-                if not user:
-                    user = UserModel.objects.create_user(
-                        phone=phone
-                    )
-        
-                return LoginView.generate_response(request, user)
-            
+        if not serializer.is_valid():
             return Response(
-                {
-                    "error": "Неправильный код."
-                },
+                serializer.errors,
                 status.HTTP_400_BAD_REQUEST
             )
-        else:
-            return Response(serializer.errors)
+
+        phone = serializer.validated_data['phone']
+        code = serializer.validated_data['code']
+        
+        if AuthCodeModel.check_code(phone, code):
+            user: UserModel = UserModel.objects.filter(
+                phone=phone
+            ).first()
+            
+            if not user:
+                user = UserModel.objects.create_user(
+                    phone=phone
+                )
     
+            return LoginView.generate_response(request, user)
+        
+        return Response(
+            {
+                "error": "Неправильный код."
+            },
+            status.HTTP_400_BAD_REQUEST
+        )
+
     @staticmethod
     def generate_response(request: Request, user: UserModel) -> Response:
         token, created = Token.objects.get_or_create(user=user)

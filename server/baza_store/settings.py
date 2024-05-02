@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
 
 from .utils import getenv
 
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'api.order',
     
     'drf_spectacular',
+    # 'storages',
 ]
 
 MIDDLEWARE = [
@@ -264,6 +266,16 @@ TINKOFF_PAYMENTS_CONFIG = {
     'SUCCESS_URL': f"{URL}/api/orders/payment/response/success",
     'FAIL_URL': f'{URL}/api/orders/payment/response/fail'
 }
+
+
+# DEFAULT_FILE_STORAGE = 'api.storages.MediaStorage'
+# STATICFILES_STORAGE = 'api.storages.StaticStorage'
+
+# AWS_S3_ENDPOINT_URL = 'https://storage.yandexcloud.net'
+# AWS_S3_ACCESS_KEY_ID = getenv('AWS_S3_ACCESS_KEY_ID')
+# AWS_S3_SECRET_ACCESS_KEY = getenv('AWS_S3_SECRET_ACCESS_KEY')
+# AWS_QUERYSTRING_AUTH = False
+
 
 # LOGGING = {
 #     'version': 1,

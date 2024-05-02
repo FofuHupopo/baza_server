@@ -179,7 +179,11 @@ class AddressModel(models.Model):
         verbose_name="Адрес",
         max_length=128
     )
-    
+    is_main = models.BooleanField(
+        verbose_name="Основной адрес",
+        default=False
+    )
+
     code = models.CharField(
         verbose_name="Код ПВЗ", default=None,
         null=True, blank=True
@@ -216,3 +220,16 @@ class AddressModel(models.Model):
         return AddressModel.objects.filter(
             user_id=user_id
         )
+        
+    def save(self, *args, **kwargs):
+        if self.is_main:
+            addresses = AddressModel.objects.filter(
+                user=self.user
+            )
+
+            if hasattr(self, "pk") and self.pk:
+                addresses = addresses.exclude(pk=self.pk)
+            
+            addresses.update(is_main=False)
+
+        return super().save(*args, **kwargs)
