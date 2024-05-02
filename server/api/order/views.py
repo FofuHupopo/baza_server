@@ -1,19 +1,19 @@
-from rest_framework import status, generics
-from rest_framework.pagination import PageNumberPagination
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.request import Request, HttpRequest
+from rest_framework.request import Request
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.conf import settings
 from django.http.response import HttpResponseRedirect
-from django.db import IntegrityError
+from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter, OpenApiResponse, OpenApiExample
 
 from . import models
 from api.permissions import TinkoffPermission
 from .services import MerchantAPI
 from api.request import Delivery
+from api.products import models as product_models
 from api.authentication import models as auth_models
 from . import serializers
+from . import docs
 
 
 merchant_api = MerchantAPI(
@@ -183,6 +183,86 @@ class CalculatePriceView(APIView):
             result,
             status.HTTP_200_OK
         )
+
+
+@extend_schema_view(
+    post=extend_schema(
+        summary="Предподсчет корзины",
+        description="ДОКУМЕНТАЦИЯ БЛЯТЬ",
+        responses={
+            status.HTTP_200_OK: serializers.PreCalculateSerializer(many=True)
+        },
+        request=docs.PostPreCalculateSerialzier()
+    )
+)
+class PreCalculatePriceView(APIView):
+    serialzier_class = serializers.PreCalculateSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request: Request):
+        products: list[dict] = request.data.get("products")
+        
+        response_objects = []
+        for product in products:
+            modification_slug = product.get("slug", "")
+            quantity = product.get("quantity", 0)
+
+            try:
+                modification_instance = product_models.ProductModificationModel.objects.get(
+                    slug=modification_slug
+                )
+            except product_models.ProductModificationModel.DoesNotExist:
+                return Response({
+                        "message": f"Товар со слагом {modification_slug} не найден"
+                }, status.HTTP_400_BAD_REQUEST)
+                
+            response_object = {
+                "name": modification_instance.product.name,
+                "size": modification_instance.size.name,
+                "color": modification_instance.color.name,
+                "price": modification_instance.product.price,
+            }
+            
+            response_objects.append(response_object)
+                
+            if modification_instance.quantity <= 0:
+                response_object.update({
+                    "quantity": 0,
+                    "message": "Товара нет в наличии.",
+                    "status": "bad"
+                })
+                continue
+
+            if quantity <= modification_instance.quantity:
+                response_object.update({
+                    "quantity": quantity,
+                    "message": "",
+                    "status": "ok"
+                })                
+                continue
+            
+            if modification_instance.quantity < quantity:
+                response_object.update({
+                    "quantity": modification_instance.quantity,
+                    "message": f"Недостаточно товара на складе. (В наличии {modification_instance.quantity})",
+                    "status": "bad"
+                })
+                continue
+            
+        serializer = serializers.PreCalculateSerializer(
+            data=response_objects, many=True
+        )
+        
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status.HTTP_400_BAD_REQUEST
+            )
+            
+        return Response(
+            serializer.data,
+            status.HTTP_200_OK
+        )   
 
 
 class PaymentView(APIView):

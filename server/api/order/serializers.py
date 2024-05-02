@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from . import models
 from api.products import serializers as products_serializers
+from api.products import models as product_models
 
 
 class CreateOrderSerializer(serializers.ModelSerializer):
@@ -63,3 +64,18 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Payment
         fields = "__all__"
+
+
+class PreCalculateSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    quantity = serializers.IntegerField()
+    price = serializers.IntegerField()
+    size = serializers.CharField()
+    color = serializers.CharField()
+    message = serializers.CharField(allow_blank=True)
+    status = serializers.CharField()
+
+    class Meta:
+        fields = (
+            "name", "quantity", "price", "size", "color", "message", "status"
+        )
