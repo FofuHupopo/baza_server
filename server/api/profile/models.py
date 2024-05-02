@@ -180,6 +180,11 @@ class AddressModel(models.Model):
         max_length=128
     )
     
+    code = models.CharField(
+        verbose_name="Код ПВЗ", default=None,
+        null=True, blank=True
+    )
+    
     apartment_number = models.IntegerField(
         verbose_name="Номер квартиры", default=None,
         null=True, blank=True
