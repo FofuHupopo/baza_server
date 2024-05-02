@@ -10,6 +10,6 @@ WORKDIR /app
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
 COPY . .
-RUN poetry install --no-dev
+RUN poetry install
 
 CMD ["poetry", "run", "runserver"]
