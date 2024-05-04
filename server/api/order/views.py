@@ -192,17 +192,14 @@ class OldCalculatePriceView(APIView):
         description="ДОКУМЕНТАЦИЯ БЛЯТЬ",
         responses={
             status.HTTP_200_OK: serializers.CalculateSerializer(many=True)
-        },
-        request=docs.PostCalculateSerialzier()
+        }
     )
 )
 class CalculatePriceView(APIView):
     serialzier_class = serializers.CalculateSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request: Request):
-        delivery_type = request.data.get("delivery_type", "pickup")
-
+    def get(self, request: Request):
         products_object = []
         cart = auth_models.CartModel.objects.filter(
             user_model=request.user
@@ -253,26 +250,12 @@ class CalculatePriceView(APIView):
 
         loyalty_instance = profile_models.LoyaltyModel.get_by_user_id(request.user.pk)
         available_loyalty = min(int(price * 0.15), loyalty_instance.balance)
-        
-        
-        delivery_price = 0
-        if delivery_type == "cdek":
-            delivery_price = 600
-            
-        if delivery_type == "personal":
-            delivery_price = 1200
-        
-        if delivery_type == "personal_express":
-            delivery_price = 1500
+    
 
-
-        price += delivery_price
-            
         calculate_object = {
             "products": products_object,
             "price": price,
             "available_loyalty": available_loyalty,
-            "delivery_price": delivery_price
         }
 
         serializer = serializers.CalculateSerializer(

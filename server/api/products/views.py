@@ -197,9 +197,9 @@ class ProductDetailView(APIView):
             product=product,
             visible=True
         ).distinct("color").values_list("slug", "color__name", "color__eng_name", "color__hex_code")
-        
+
         current_color = modifications[0].color
-        
+
         product_color = models.ProductColorImagesModel.objects.filter(
             color=current_color,
             product=product
