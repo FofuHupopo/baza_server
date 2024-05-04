@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'api.order',
     
     'drf_spectacular',
-    # 'storages',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -268,13 +268,13 @@ TINKOFF_PAYMENTS_CONFIG = {
 }
 
 
-# DEFAULT_FILE_STORAGE = 'api.storages.MediaStorage'
-# STATICFILES_STORAGE = 'api.storages.StaticStorage'
+DEFAULT_FILE_STORAGE = 'api.storages.MediaStorage'
+STATICFILES_STORAGE = 'api.storages.StaticStorage'
 
-# AWS_S3_ENDPOINT_URL = 'https://storage.yandexcloud.net'
-# AWS_S3_ACCESS_KEY_ID = getenv('AWS_S3_ACCESS_KEY_ID')
-# AWS_S3_SECRET_ACCESS_KEY = getenv('AWS_S3_SECRET_ACCESS_KEY')
-# AWS_QUERYSTRING_AUTH = False
+AWS_S3_ENDPOINT_URL = 'https://s3.timeweb.cloud'
+AWS_S3_ACCESS_KEY_ID = getenv('AWS_S3_ACCESS_KEY_ID')
+AWS_S3_SECRET_ACCESS_KEY = getenv('AWS_S3_SECRET_ACCESS_KEY')
+AWS_QUERYSTRING_AUTH = False
 
 
 # LOGGING = {
