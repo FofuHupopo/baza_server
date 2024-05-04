@@ -191,7 +191,7 @@ class OldCalculatePriceView(APIView):
         summary="Предподсчет корзины",
         description="ДОКУМЕНТАЦИЯ БЛЯТЬ",
         responses={
-            status.HTTP_200_OK: serializers.CalculateSerializer(many=True)
+            status.HTTP_200_OK: serializers.CalculateSerializer()
         }
     )
 )

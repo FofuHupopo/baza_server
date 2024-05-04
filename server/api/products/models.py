@@ -268,7 +268,7 @@ class ProductModificationModel(models.Model):
 def product_color_images_upload_path(instance, filename):
     return 'product_images/{}/{}/{}'.format(
         instance.product_color.product.product_id,
-        instance.product_color.color.name,
+        instance.product_color.color.pk,
         filename
     )
 
