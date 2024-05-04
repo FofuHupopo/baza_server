@@ -1,10 +1,6 @@
 from rest_framework import serializers
 
 
-class PreCalculateSerialzier(serializers.Serializer):
-    quantity = serializers.IntegerField()
-    slug = serializers.SlugField(default="dress-maxi-00676-belyi-os")
-
-
-class PostPreCalculateSerialzier(serializers.Serializer):
-    products = PreCalculateSerialzier(many=True)
+class PostCalculateSerialzier(serializers.Serializer):
+    delivery_type = serializers.CharField(default="pickup")
+    is_express = serializers.BooleanField(default=False)

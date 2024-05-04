@@ -168,7 +168,3 @@ class AuthCodeModel(models.Model):
             return True
 
         return False
-
-
-class BasketModel:
-    ...

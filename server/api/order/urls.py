@@ -5,9 +5,9 @@ from . import views
 
 urlpatterns = [
     path("orders/", views.OrderView.as_view(), name="order__orders"),
-    path("calculate/", views.CalculatePriceView.as_view(), name="order__calculate"),
+    # path("calculate/", views.CalculatePriceView.as_view(), name="order__calculate"),
     
-    path("pre-calculate/", views.PreCalculatePriceView.as_view(), name="order__pre_calculate"),
+    path("calculate/", views.CalculatePriceView.as_view(), name="order__pre_calculate"),
     
     path("payment/", views.PaymentView.as_view(), name="order__payment_init"),
     path("payment/status/", views.PaymentStatusView.as_view(), name="order__payment_status"),

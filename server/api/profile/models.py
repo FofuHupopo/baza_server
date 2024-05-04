@@ -84,6 +84,11 @@ class LoyaltyModel(models.Model):
         
         self.save()
     
+    @staticmethod
+    def get_by_user_id(user_id):
+        loyalty, _ = LoyaltyModel.objects.get_or_create(user_id=user_id)
+        return loyalty
+    
     def save(self, *args, **kwargs) -> None:
         if self.status not in LOYALTY_LEVELS:
             return super().save(*args, **kwargs)

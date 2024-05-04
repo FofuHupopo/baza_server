@@ -11,6 +11,7 @@ from api.permissions import TinkoffPermission
 from .services import MerchantAPI
 from api.request import Delivery
 from api.products import models as product_models
+from api.profile import models as profile_models
 from api.authentication import models as auth_models
 from . import serializers
 from . import docs
@@ -132,7 +133,7 @@ class OrderView(APIView):
         )
 
 
-class CalculatePriceView(APIView):
+class OldCalculatePriceView(APIView):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request: Request):
@@ -190,31 +191,27 @@ class CalculatePriceView(APIView):
         summary="Предподсчет корзины",
         description="ДОКУМЕНТАЦИЯ БЛЯТЬ",
         responses={
-            status.HTTP_200_OK: serializers.PreCalculateSerializer(many=True)
+            status.HTTP_200_OK: serializers.CalculateSerializer(many=True)
         },
-        request=docs.PostPreCalculateSerialzier()
+        request=docs.PostCalculateSerialzier()
     )
 )
-class PreCalculatePriceView(APIView):
-    serialzier_class = serializers.PreCalculateSerializer
-    permission_classes = [AllowAny]
+class CalculatePriceView(APIView):
+    serialzier_class = serializers.CalculateSerializer
+    permission_classes = [IsAuthenticated]
 
     def post(self, request: Request):
-        products: list[dict] = request.data.get("products")
-        
-        response_objects = []
-        for product in products:
-            modification_slug = product.get("slug", "")
-            quantity = product.get("quantity", 0)
+        delivery_type = request.data.get("delivery_type", "pickup")
+        is_express = request.data.get("is_express", False)
 
-            try:
-                modification_instance = product_models.ProductModificationModel.objects.get(
-                    slug=modification_slug
-                )
-            except product_models.ProductModificationModel.DoesNotExist:
-                return Response({
-                        "message": f"Товар со слагом {modification_slug} не найден"
-                }, status.HTTP_400_BAD_REQUEST)
+
+        products_object = []
+        cart = auth_models.CartModel.objects.filter(
+            user_model=request.user
+        )
+        for cart_instance in cart:
+            modification_instance = cart_instance.product_modification_model
+            quantity = cart_instance.quantity
                 
             response_object = {
                 "name": modification_instance.product.name,
@@ -222,8 +219,8 @@ class PreCalculatePriceView(APIView):
                 "color": modification_instance.color.name,
                 "price": modification_instance.product.price,
             }
-            
-            response_objects.append(response_object)
+
+            products_object.append(response_object)
                 
             if modification_instance.quantity <= 0:
                 response_object.update({
@@ -248,9 +245,41 @@ class PreCalculatePriceView(APIView):
                     "status": "bad"
                 })
                 continue
+
+
+        price = 0
+        for product in products_object:
+            price += product["price"] * product["quantity"]
+
+
+        loyalty_instance = profile_models.LoyaltyModel.get_by_user_id(request.user.pk)
+        available_loyalty = min(int(price * 0.15), loyalty_instance.balance)
+        
+        
+        delivery_price = 0
+        if delivery_type == "cdek":
+            if is_express:
+                delivery_price = 1000
+            else:
+                delivery_price = 800
+        
+        if delivery_type == "personal":
+            if is_express:
+                delivery_price = 1500
+            else:
+                delivery_price = 1200
+                
+        price += delivery_price
             
-        serializer = serializers.PreCalculateSerializer(
-            data=response_objects, many=True
+        calculate_object = {
+            "products": products_object,
+            "price": price,
+            "available_loyalty": available_loyalty,
+            "delivery_price": delivery_price
+        }
+
+        serializer = serializers.CalculateSerializer(
+            data=calculate_object
         )
         
         if not serializer.is_valid():

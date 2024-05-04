@@ -64,9 +64,9 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Payment
         fields = "__all__"
-
-
-class PreCalculateSerializer(serializers.Serializer):
+        
+        
+class ProductsCalculateSerializer(serializers.Serializer):
     name = serializers.CharField()
     quantity = serializers.IntegerField()
     price = serializers.IntegerField()
@@ -79,3 +79,14 @@ class PreCalculateSerializer(serializers.Serializer):
         fields = (
             "name", "quantity", "price", "size", "color", "message", "status"
         )
+
+class CalculateSerializer(serializers.Serializer):
+    products = ProductsCalculateSerializer(many=True)
+    available_loyalty = serializers.IntegerField()
+    delivery_price = serializers.IntegerField()
+    price = serializers.IntegerField()
+    
+    class Meta:
+        fields = [
+            "products", "available_loyalty", "delivery_price", "price"
+        ]
