@@ -91,7 +91,7 @@ class OrderModel(models.Model):
     is_received = models.BooleanField(
         "Получен?", default=False
     )
-    
+
     products = models.ManyToManyField(
         product_models.ProductModificationModel,
         through="Order2ModificationModel",

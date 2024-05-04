@@ -333,15 +333,17 @@ class PaymentView(APIView):
             merchant_api.init(payment)
 
             payment.save()
+            
+        return HttpResponseRedirect(payment.payment_url)
 
-        serializer = self.serializer_class(
-            payment
-        )
+        # serializer = self.serializer_class(
+        #     payment
+        # )
 
-        return Response(
-            serializer.data,
-            status.HTTP_200_OK
-        )
+        # return Response(
+        #     serializer.data,
+        #     status.HTTP_200_OK
+        # )
 
 
 class PaymentStatusView(APIView):
