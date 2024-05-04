@@ -74,6 +74,7 @@ class ProductsCalculateSerializer(serializers.Serializer):
     color = serializers.CharField()
     message = serializers.CharField(allow_blank=True)
     status = serializers.CharField()
+    image = serializers.CharField()
 
     class Meta:
         fields = (

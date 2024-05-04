@@ -260,7 +260,7 @@ class ProductModificationModel(models.Model):
         
         image = ColorImageModel.objects.filter(
             product_color=product_color
-        ).order_by("-id").first()
+        ).first()
         
         return image.image.url
 

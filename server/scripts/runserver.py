@@ -20,8 +20,8 @@ def main():
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'baza_store.settings')
 
-    execute_from_command_line(['manage.py', 'collectstatic', '--noinput'])
-    execute_from_command_line(['manage.py', 'migrate'])
+    # execute_from_command_line(['manage.py', 'collectstatic', '--noinput'])
+    # execute_from_command_line(['manage.py', 'migrate'])
     execute_from_command_line(['manage.py', 'runserver', f"{host}:{port}"])
 
 
