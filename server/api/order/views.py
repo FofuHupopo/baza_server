@@ -22,7 +22,21 @@ merchant_api = MerchantAPI(
     secret_key="cvr9aqrb3mq60a74"
 )
 
-
+@extend_schema_view(
+    get=extend_schema(
+        summary="Просмотр всех заказов",
+        responses={
+            status.HTTP_200_OK: serializers.ViewOrderSerializer(many=True)
+        }
+    ),
+    post=extend_schema(
+        summary="Создание заказа",
+        responses={
+            status.HTTP_201_CREATED: serializers.ViewOrderSerializer()
+        },
+        request=serializers.CreateOrderSerializer
+    )
+)
 class OrderView(APIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = serializers.ViewOrderSerializer
@@ -61,9 +75,6 @@ class OrderView(APIView):
         serializer = self.serializer_class(
             orders.order_by("-id"),
             many=True,
-            context={
-                "request": request
-            }
         )
 
         return Response(
@@ -82,14 +93,9 @@ class OrderView(APIView):
                 status.HTTP_400_BAD_REQUEST
             )
 
-        for item in cart:
-            if item.quantity > item.product_modification_model.count:
-                return Response(
-                    {
-                        "status": "Количество товара в корзине превышает количество товара на складе."
-                    },
-                    status.HTTP_400_BAD_REQUEST
-                )
+        for cart_instance in cart:
+            cart_instance.quantity = min(cart_instance.product_modification_model.quantity, cart_instance.quantity)
+            cart_instance.save()
 
         serializer = serializers.CreateOrderSerializer(
             data=request.data
@@ -121,10 +127,7 @@ class OrderView(APIView):
         cart.delete()
 
         serializer = self.serializer_class(
-            order_instance,
-            context={
-                "request": request
-            }
+            order_instance
         )
 
         return Response(
@@ -218,6 +221,9 @@ class CalculateView(APIView):
             products_object.append(response_object)
                 
             if modification_instance.quantity <= 0:
+                cart_instance.quantity = 0
+                cart_instance.save()
+
                 response_object.update({
                     "quantity": 0,
                     "message": "Товара нет в наличии.",
@@ -234,6 +240,9 @@ class CalculateView(APIView):
                 continue
             
             if modification_instance.quantity < quantity:
+                cart_instance.quantity = modification_instance.quantity
+                cart_instance.save()
+
                 response_object.update({
                     "quantity": modification_instance.quantity,
                     "message": f"Недостаточно товара на складе. (В наличии {modification_instance.quantity})",

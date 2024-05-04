@@ -11,7 +11,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         fields = (
             "id", "name", "surname", "email", "phone",
             "receiving", "payment_type",
-            "city", "street", "house", "frame", "apartment"
+            "address", "code", "apartment_number", "floor_number", "intercom",
         )
         depth = 1
 
@@ -22,15 +22,12 @@ class OrderProductsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Order2ModificationModel
         fields = (
-            "product", "quantity", "baza_loyalty"
+            "product", "quantity",
         )
 
     def get_product(self, obj):
         return products_serializers.ShortModificationSerializer(
-            obj.product_modification_model,
-            context={
-                "request": self.context["request"]
-            }
+            obj.product_modification_model
         ).data
 
 
@@ -42,9 +39,10 @@ class ViewOrderSerializer(serializers.ModelSerializer):
         fields = (
             "id", "name", "surname", "email", "phone",
             "receiving", "payment_type", "amount",
-            "city", "street", "house", "frame", "apartment",
+            "address", "code", "apartment_number", "floor_number", "intercom",
             "is_paid", "is_received", "products",
-            "order_date", "status", "receiving_date", "baza_loyalty"
+            "order_date", "status", "receiving_date",
+            "loyalty_received", "loaylty_awarded"
         )
         depth = 1
 
@@ -54,9 +52,6 @@ class ViewOrderSerializer(serializers.ModelSerializer):
                 order_model=obj
             ),
             many=True,
-            context={
-                "request": self.context["request"]
-            }
         ).data
 
 

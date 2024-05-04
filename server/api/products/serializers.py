@@ -411,7 +411,7 @@ class ShortModificationSerializer(serializers.ModelSerializer):
         
         request = self.context.get('request')
 
-        return request.build_absolute_uri(image.image.url)
+        return image.image.url
     
     def get_quantity(self, obj):
         return obj.count

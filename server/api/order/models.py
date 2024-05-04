@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from api.authentication import models as auth_models
 from api.products import models as product_models
+from api.profile import models as profile_models
 
 from .consts import TAXES, TAXATIONS
 from .settings import get_config
@@ -43,8 +44,8 @@ class OrderModel(models.Model):
     receiving = models.CharField(
         "Способ получения",
         choices=[
-            ("delivery_address", "Доставка до двери"),
-            ("delivery_stock", "Доставка до склада"),
+            ("courier", "Доставка"),
+            ("cdek", "Пункт СДЕК"),
             ("pickup", "Самовывоз")
         ],
         max_length=32
@@ -55,33 +56,35 @@ class OrderModel(models.Model):
         choices=[
             ("online", "Картой онлайн"),
             ("cash", "Наличными"),
-            ("fps", "СБП")
+            ("sbp", "СБП")
         ],
         max_length=32
     )
     
-    city = models.CharField(
-        "Город", max_length=128,
-        null=True, blank=True
-    )
-    street = models.CharField(
-        "Улица", max_length=128,
-        null=True, blank=True
-    )
-    house = models.CharField(
-        "Дом", max_length=16,
+    address = models.CharField(
+        verbose_name="Адрес", max_length=128,
         null=True, blank=True
     )
     
-    frame = models.CharField(
-        "Корпус", max_length=16,
-        null=True, blank=True
-    )
-    apartment = models.CharField(
-        "Квартира", max_length=16,
+    
+    code = models.CharField(
+        verbose_name="Код ПВЗ", default=None,
         null=True, blank=True
     )
     
+    apartment_number = models.IntegerField(
+        verbose_name="Номер квартиры", default=None,
+        null=True, blank=True
+    )
+    floor_number = models.IntegerField(
+        verbose_name="Номер этажа", default=None,
+        null=True, blank=True
+    )
+    intercom = models.IntegerField(
+        verbose_name="Домофон", default=None,
+        null=True, blank=True
+    )
+
     is_paid = models.BooleanField(
         "Оплачено?", default=False
     )
@@ -109,8 +112,8 @@ class OrderModel(models.Model):
         null=True, blank=True
     )
     
-    baza_loyalty = models.IntegerField(
-        "Бонусная программа", default=0
+    loyalty_received = models.IntegerField(
+        "Полученные баллы", default=0
     )
     loaylty_awarded = models.BooleanField(
         "Баллы начислены?", default=False
@@ -126,28 +129,31 @@ class OrderModel(models.Model):
         verbose_name_plural = "Заказы"
     
     def save(self, *args, **kwargs) -> OrderModel:
-        super(OrderModel, self).save(*args, **kwargs)
+        if self.status == self.OrderStatusChoice.CREATED:
+            loyalty, _ = profile_models.LoyaltyModel.objects.get_or_create(
+                user=self.user
+            )
+            loyalty_percent = profile_models.LOYALTY_LEVELS.get(loyalty.status, {}).get("percent", 0)
 
-        if self.status == self.OrderStatusChoice.PAID and not self.loaylty_awarded:
-            for product in self.products.all():
-                self.baza_loyalty += product.product.baza_loyalty
-        
+            self.loyalty_received = loyalty_percent * self.amount
+
         if self.status == self.OrderStatusChoice.IN_DELIVERY and not self.receiving_date:
             self.receiving_date = timezone.now()
-            # self.receiving_date = get_delivery_date()
             
         if self.status == self.OrderStatusChoice.DELIVERED and not self.is_received:
-            self.is_received = True 
-            
-        if self.receiving == "pickup":
-            self.city = None
-            self.street = None
-            self.house = None
-            self.frame = None
-            self.apartment = None
-            
-        super(OrderModel, self).save()
-    
+            self.is_received = True
+
+        if self.status == self.OrderStatusChoice.RECEIVED and not self.loaylty_awarded:
+            loyalty, _ = profile_models.LoyaltyModel.objects.get_or_create(
+                user=self.user
+            )
+            loyalty.balance += self.loyalty_received
+            loyalty.save()
+
+            self.loaylty_awarded = True
+
+        return super(OrderModel, self).save(*args, **kwargs)
+
     def __str__(self) -> str:
         return f"{self.pk}: {self.name} {self.surname}"
 
@@ -165,9 +171,6 @@ class Order2ModificationModel(models.Model):
     )
     quantity = models.PositiveIntegerField(
         "Количество", default=0
-    )
-    baza_loyalty = models.IntegerField(
-        "Бонусная программа", default=0
     )
 
     class Meta:

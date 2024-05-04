@@ -111,10 +111,6 @@ class ProductModel(models.Model):
         ProductPathModel, models.CASCADE,
         verbose_name="Путь к товару"
     )
-    
-    baza_loyalty = models.IntegerField(
-        "Баллы лояльности", default=0
-    )
 
     class Meta:
         db_table = "product__product"
