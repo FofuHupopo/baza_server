@@ -118,12 +118,12 @@ class OrderView(APIView):
             )
             
             amount += item.product_modification_model.product.price * item.quantity
+            
+        cart.delete()
         
         order_instance.amount = amount
         
         order_instance.save()
-
-        cart.delete()
 
         serializer = self.serializer_class(
             order_instance
