@@ -216,6 +216,7 @@ class CalculatePriceView(APIView):
                 "size": modification_instance.size.name,
                 "color": modification_instance.color.name,
                 "price": modification_instance.product.price,
+                "image": modification_instance.get_image_url(),
             }
 
             products_object.append(response_object)

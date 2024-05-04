@@ -251,6 +251,18 @@ class ProductModificationModel(models.Model):
     
     def get_product_slug(self):
         return "-".join(self.slug.split("-")[:-1])
+    
+    def get_image_url(self):
+        product_color = ProductColorImagesModel.objects.filter(
+            product=self.product,
+            color=self.color
+        ).first()
+        
+        image = ColorImageModel.objects.filter(
+            product_color=product_color
+        ).order_by("-id").first()
+        
+        return image.image.url
 
 
 def product_color_images_upload_path(instance, filename):

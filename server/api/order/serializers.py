@@ -77,7 +77,7 @@ class ProductsCalculateSerializer(serializers.Serializer):
 
     class Meta:
         fields = (
-            "name", "quantity", "price", "size", "color", "message", "status"
+            "name", "quantity", "price", "size", "image", "color", "message", "status"
         )
 
 class CalculateSerializer(serializers.Serializer):
