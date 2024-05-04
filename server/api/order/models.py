@@ -44,7 +44,7 @@ class OrderModel(models.Model):
     receiving = models.CharField(
         "Способ получения",
         choices=[
-            ("courier", "Доставка"),
+            ("personal", "Доставка"),
             ("cdek", "Пункт СДЕК"),
             ("pickup", "Самовывоз")
         ],

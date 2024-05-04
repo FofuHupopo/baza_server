@@ -4,13 +4,12 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.http.response import HttpResponseRedirect
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter, OpenApiResponse, OpenApiExample
+from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter, OpenApiTypes
 
 from . import models
 from api.permissions import TinkoffPermission
 from .services import MerchantAPI
 from api.request import Delivery
-from api.products import models as product_models
 from api.profile import models as profile_models
 from api.authentication import models as auth_models
 from . import serializers
@@ -282,6 +281,17 @@ class CalculateView(APIView):
         )   
 
 
+@extend_schema_view(
+    get=extend_schema(
+        summary="Предподсчет корзины",
+        responses={
+            status.HTTP_200_OK: serializers.PaymentSerializer
+        },
+        parameters=[
+            OpenApiParameter("order_id", OpenApiTypes.STR),
+        ]
+    )
+)
 class PaymentView(APIView):
     serializer_class = serializers.PaymentSerializer
 
@@ -392,7 +402,7 @@ class PaymentResponseSuccessView(APIView):
             payment.payment_fail = True
             payment.save()
             
-            return HttpResponseRedirect("https://thebaza.ru") # Not payment
+            return HttpResponseRedirect("https://thebaza.ru/order/failed") # Not payment
         
         order = models.OrderModel.objects.get(
             pk=payment.order_id
@@ -403,7 +413,7 @@ class PaymentResponseSuccessView(APIView):
 
         order.save()
 
-        return HttpResponseRedirect("https://thebaza.ru") # payment
+        return HttpResponseRedirect("https://thebaza.ru/order/successful") # payment
 
 
 class PaymentResponseFailView(APIView):
@@ -423,4 +433,4 @@ class PaymentResponseFailView(APIView):
 
         payment.save()
         
-        return HttpResponseRedirect("https://thebaza.ru") # Not payment
+        return HttpResponseRedirect("https://thebaza.ru/order/failed") # Not payment
