@@ -202,8 +202,6 @@ class CalculatePriceView(APIView):
 
     def post(self, request: Request):
         delivery_type = request.data.get("delivery_type", "pickup")
-        is_express = request.data.get("is_express", False)
-
 
         products_object = []
         cart = auth_models.CartModel.objects.filter(
@@ -258,17 +256,15 @@ class CalculatePriceView(APIView):
         
         delivery_price = 0
         if delivery_type == "cdek":
-            if is_express:
-                delivery_price = 1000
-            else:
-                delivery_price = 800
-        
+            delivery_price = 600
+            
         if delivery_type == "personal":
-            if is_express:
-                delivery_price = 1500
-            else:
-                delivery_price = 1200
-                
+            delivery_price = 1200
+        
+        if delivery_type == "personal_express":
+            delivery_price = 1500
+
+
         price += delivery_price
             
         calculate_object = {
