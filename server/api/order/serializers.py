@@ -85,7 +85,7 @@ class CalculateSerializer(serializers.Serializer):
     products = ProductsCalculateSerializer(many=True)
     available_loyalty = serializers.IntegerField()
     price = serializers.IntegerField()
-    
+
     class Meta:
         fields = [
             "products", "available_loyalty", "price"

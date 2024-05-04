@@ -187,15 +187,14 @@ class OldCalculatePriceView(APIView):
 
 
 @extend_schema_view(
-    post=extend_schema(
+    get=extend_schema(
         summary="Предподсчет корзины",
-        description="ДОКУМЕНТАЦИЯ БЛЯТЬ",
         responses={
-            status.HTTP_200_OK: serializers.CalculateSerializer()
+            status.HTTP_200_OK: serializers.CalculateSerializer
         }
     )
 )
-class CalculatePriceView(APIView):
+class CalculateView(APIView):
     serialzier_class = serializers.CalculateSerializer
     permission_classes = [IsAuthenticated]
 
