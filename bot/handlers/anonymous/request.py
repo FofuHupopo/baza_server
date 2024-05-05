@@ -21,6 +21,6 @@ async def request_handler(message: types.Message) -> None:
         await message.answer("Ваша заявка уже на рассмотрении.")
 
 
-@router.message(CommandStart, AnonymousFilter())
+@router.message(Command("start"), AnonymousFilter())
 async def start_handler(message: types.Message) -> None:    
     await message.answer("Чтобы подать заявку, нажмите /request.")
