@@ -161,6 +161,15 @@ class LoyaltyHistoryModel(models.Model):
         verbose_name = "История лояльности"
         verbose_name_plural = "История лояльности"
     
+    @staticmethod
+    def create(user, value, total, operation: LoyaltyOperationModel=LoyaltyOperationModel.MARKETING):
+        return LoyaltyHistoryModel.objects.create(
+            user=user,
+            value=value,
+            total=total,
+            operation=operation
+        )
+    
     def __str__(self) -> str:
         return f"{self.user.name} {self.user.surname}: {self.operation}"
 

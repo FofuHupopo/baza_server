@@ -123,6 +123,11 @@ class OrderView(APIView):
         
         order_instance.amount = amount
         
+        if order_instance.use_loyalty:
+            loyalty_instance = profile_models.LoyaltyModel.get_by_user_id(order_instance.user.pk)
+            order_instance.use_loyalty_balance = min(int(amount * 0.15), loyalty_instance.balance)
+            order_instance.amount -= order_instance.use_loyalty_balance
+
         order_instance.save()
 
         serializer = self.serializer_class(
@@ -257,7 +262,6 @@ class CalculateView(APIView):
 
         loyalty_instance = profile_models.LoyaltyModel.get_by_user_id(request.user.pk)
         available_loyalty = min(int(price * 0.15), loyalty_instance.balance)
-    
 
         calculate_object = {
             "products": products_object,

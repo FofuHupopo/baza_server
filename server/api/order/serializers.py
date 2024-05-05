@@ -10,7 +10,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         model = models.OrderModel
         fields = (
             "id", "name", "surname", "email", "phone",
-            "receiving", "payment_type",
+            "receiving", "payment_type", "use_loyalty",
             "address", "code", "apartment_number", "floor_number", "intercom",
         )
         depth = 1
@@ -42,7 +42,7 @@ class ViewOrderSerializer(serializers.ModelSerializer):
             "address", "code", "apartment_number", "floor_number", "intercom",
             "is_paid", "is_received", "products",
             "order_date", "status", "receiving_date",
-            "loyalty_received", "loaylty_awarded"
+            "loyalty_received", "loaylty_awarded", "use_loyalty_balance"
         )
         depth = 1
 

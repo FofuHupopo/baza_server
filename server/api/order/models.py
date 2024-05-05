@@ -112,13 +112,20 @@ class OrderModel(models.Model):
         null=True, blank=True
     )
     
+    use_loyalty = models.BooleanField(
+        "Использовать баллы?", default=False
+    )
+    use_loyalty_balance = models.IntegerField(
+        "Использованная сумма баллов", default=0
+    )
+    
     loyalty_received = models.IntegerField(
         "Полученные баллы", default=0
     )
     loaylty_awarded = models.BooleanField(
         "Баллы начислены?", default=False
     )
-    
+
     amount = models.IntegerField(
         "Стоимость", default=0
     )
@@ -129,12 +136,15 @@ class OrderModel(models.Model):
         verbose_name_plural = "Заказы"
     
     def save(self, *args, **kwargs) -> OrderModel:
-        if self.status == self.OrderStatusChoice.CREATED:
+        if self.status == self.OrderStatusChoice.CREATED and self.loyalty_received == 0:
             loyalty, _ = profile_models.LoyaltyModel.objects.get_or_create(
                 user=self.user
             )
             loyalty_percent = profile_models.LOYALTY_LEVELS.get(loyalty.status, {}).get("percent", 0)
 
+            loyalty.awaiting_balance += loyalty_percent * self.amount
+            loyalty.save()
+    
             self.loyalty_received = loyalty_percent * self.amount
 
         if self.status == self.OrderStatusChoice.IN_DELIVERY and not self.receiving_date:
@@ -148,7 +158,10 @@ class OrderModel(models.Model):
                 user=self.user
             )
             loyalty.balance += self.loyalty_received
+            loyalty.awaiting_balance -= self.loyalty_received
             loyalty.save()
+            
+            profile_models.LoyaltyHistoryModel.create(self.user, self.loyalty_received, loyalty.balance)
 
             self.loaylty_awarded = True
 
