@@ -53,7 +53,7 @@ class ProductCategoryModel(models.Model):
         default="product_images/Заглушка фото карточки товара.jpg",
         verbose_name="Выбрать изображение размеров для категории"
     )
-    
+
     class Meta:
         db_table = "product__product_category"
         verbose_name = "Категория товара"
@@ -77,6 +77,9 @@ class ProductModel(models.Model):
     description = models.TextField(
         "Описание",
         null=True, blank=True
+    )
+    composition_and_care = models.TextField(
+        "Состав и уход", default=""
     )
     code = models.CharField(
         "Код MoySklad", max_length=32,

@@ -68,7 +68,8 @@ class ProductAdmin(admin.ModelAdmin):
         "name", "category", "price", "visible"
     ]
     fields = [
-        "pk", "name", "description", "code", "price", "old_price",
+        "pk", "name", "description", "composition_and_care",
+        "code", "price", "old_price",
         "image_preview", "image", "visible",
         "category", "path"
     ]

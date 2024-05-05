@@ -271,7 +271,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductModel
         fields = (
-            "id", "name", "description", "price", "image", "color_images",
+            "id", "name", "description", "composition_and_care", "price", "image", "color_images",
             "category", "path", "modifications", "full_path", "slug_path"
         )
     
@@ -304,6 +304,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class ListProductModificationSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
+    composition_and_care = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
     path = serializers.SerializerMethodField()
@@ -316,7 +317,7 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductModificationModel
         fields = (
-            "id", "name", "description", "price", "images",
+            "id", "name", "description", "composition_and_care", "price", "images",
             "category", "path", "full_path", "slug_path", "size", "color"
         )
         depth = 2
@@ -326,6 +327,9 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
     
     def get_description(self, obj):
         return f"{obj.product.description}"
+    
+    def get_composition_and_care(self, obj):
+        return f"{obj.product.composition_and_care}"
     
     def get_price(self, obj):
         return obj.product.price
