@@ -53,16 +53,16 @@ services:
 
   # Bot
 
-  bot:
-    container_name: bot
-    restart: always
-    build:
-      context: ./bot
-      dockerfile: Bot.Dockerfile
-    env_file:
-      - ./bot/.env
-    networks:
-      - backbone
+  # bot:
+  #   container_name: bot
+  #   restart: always
+  #   build:
+  #     context: ./bot
+  #     dockerfile: Bot.Dockerfile
+  #   env_file:
+  #     - ./bot/.env
+  #   networks:
+  #     - backbone
 
   bot_server:
     container_name: bot_server
@@ -79,19 +79,6 @@ services:
       - ./bot/.env
     networks:
       - backbone
-  
-  # videostreaming:
-  #   container_name: videostreaming
-  #   hostname: videostreaming
-  #   restart: always
-  #   build:
-  #     context: ./videostreaming
-  #   ports:
-  #     - "8003:8000"
-  #   expose:
-  #     - 8003
-  #   networks:
-  #     - backbone
 
   # Database
 
@@ -106,7 +93,6 @@ services:
       - "6379:6379"
     networks:
       - backbone
-
 
 networks:
   backbone:
