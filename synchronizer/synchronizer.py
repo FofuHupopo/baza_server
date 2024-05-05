@@ -1,6 +1,6 @@
 import os
 import boto3
-from dotenv import load_dotenv
+import botocore
 import requests
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -11,9 +11,6 @@ from slugify import slugify
 import models
 from models import engine
 from moy_sklad import MoySklad
-
-
-load_dotenv()
 
 
 class NoBundleComplectException(Exception):
@@ -546,8 +543,6 @@ AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL")
 AWS_S3_ACCESS_KEY_ID = os.getenv('AWS_S3_ACCESS_KEY_ID')
 AWS_S3_SECRET_ACCESS_KEY = os.getenv('AWS_S3_SECRET_ACCESS_KEY')
 BUCKET_NAME = os.getenv("BUCKET_NAME")
-
-import botocore
 
 
 def upload_image_to_s3(image_data: bytes, image_path: str, image_name: str):    

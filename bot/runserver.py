@@ -12,7 +12,6 @@ from webhook.handlers import *
 
 def main():
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-    
 
     host = "127.0.0.1"
     if os.getenv("IS_DOCKER"):

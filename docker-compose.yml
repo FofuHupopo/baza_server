@@ -51,6 +51,21 @@ services:
     networks:
       - backbone
 
+  synchronizer:
+    container_name: synchronizer
+    hostname: synchronizer
+    restart: always
+    build:
+      context: ./synchronizer
+    ports:
+      - "8004:8004"
+    expose:
+      - 8004
+    env_file:
+      - ./synchronizer/.env
+    networks:
+      - backbone
+
   # Bot
 
   # bot:

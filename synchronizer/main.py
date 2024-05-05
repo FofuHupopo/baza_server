@@ -2,18 +2,17 @@ import os
 import uvicorn
 import time
 import shutil
+from dotenv import load_dotenv
 import json
 
+from fastapi.openapi.docs import get_swagger_ui_html
 from pathlib import Path
 from fastapi import FastAPI, Request
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from synchronizer import MoySkaldSynchronizer, upload_image_to_s3
+from synchronizer import MoySkaldSynchronizer
 
 
-# DJANGO_MEDIA_PATH = Path("/Users/ilyazhukov/projects/projects/baza_store/server/media")
-# DJANGO_MEDIA_PATH = Path("/home/ilya/baza/server/media")
-# DJANGO_MEDIA_PATH = Path("/root/baza/server/server/media")
 PRODUCT_MEDIA_PATH = Path("product_images")
 ROOT_PATH = "сайт"
 ROOT_DIRECTORY = Path(__file__).parent
@@ -29,7 +28,12 @@ sync = MoySkaldSynchronizer(
 )
 
 
-@app.post("/synchronizer/webhook")
+@app.get("/swagger", include_in_schema=False)
+async def get_documentation(request: Request):
+    return get_swagger_ui_html(openapi_url="/service/synchronizer/" + "/openapi.json", title="Swagger")
+
+
+@app.post("/sync/webhook")
 async def webhook(requestId: str, request: Request):
     body = await request.json()
 
@@ -54,19 +58,19 @@ async def webhook(requestId: str, request: Request):
     return {"status": "success"}, 200
 
 
-@app.get("/synchronizer/sync_all")
+@app.get("/sync/sync_all")
 def sync_all():
     sync.sync_all()
     return {"message": "Synchronization completed successfully."}
 
 
-@app.get("/synchronizer/sync_product/{product_id}")
+@app.get("/sync/sync_product/{product_id}")
 def sync_product_by_id(product_id: str):
     sync.sync_product_by_id(product_id)
     return {"message": f"Synchronization for product {product_id} completed successfully."}
 
 
-@app.get("/synchronizer/sync_bundle/{bundle_id}")
+@app.get("/sync/sync_bundle/{bundle_id}")
 def sync_bundle_by_id(bundle_id: str):
     sync.sync_bundle_by_id(bundle_id)
     return {"message": f"Synchronization for bundle {bundle_id} completed successfully."}
@@ -75,13 +79,18 @@ def sync_bundle_by_id(bundle_id: str):
 @app.post("/update/quantity")
 async def update_quantity(request: Request):
     body = json.loads(await request.body())
-    return {"status": "ok"}
+    return {"message": "not released"}
+
+
+def main():
+    load_dotenv()
+
+    host = "127.0.0.1"
+    if os.getenv("IS_DOCKER"):
+        host = "0.0.0.0"
+
+    uvicorn.run("main:app", host=host, port=8004, reload=True)
 
 
 if __name__ == "__main__":
-    # uvicorn.run("main:app", host="127.0.0.1", port=5000, reload=True)
-
-    sync.sync_products()
-
-    # sync.sync_bundles()
-    # sync.sync_product_by_id("fe485046-edb1-11ed-0a80-034d00a3f03a")
+    main()
