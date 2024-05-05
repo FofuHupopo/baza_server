@@ -110,16 +110,27 @@ class OrderView(APIView):
         order_instance: models.OrderModel = serializer.save(user=request.user)
         
         if order_instance.receiving != "pickup":
-            address = profile_models.AddressModel.objects.get_or_create(
-                user=request.user,
-                type=order_instance.receiving,
-                address=order_instance.address,
-                code=order_instance.code,
-                apartment_number=order_instance.apartment_number,
-                floor_number=order_instance.floor_number,
-                intercom=order_instance.intercom
-            )
-            
+            try:
+                address = profile_models.AddressModel.objects.get(
+                    user=request.user,
+                    type=order_instance.receiving,
+                    address=order_instance.address,
+                    code=order_instance.code,
+                    apartment_number=order_instance.apartment_number,
+                    floor_number=order_instance.floor_number,
+                    intercom=order_instance.intercom
+                )
+            except profile_models.AddressModel.DoesNotExist:
+                address = profile_models.AddressModel.objects.create(
+                    user=request.user,
+                    type=order_instance.receiving,
+                    address=order_instance.address,
+                    code=order_instance.code,
+                    apartment_number=order_instance.apartment_number,
+                    floor_number=order_instance.floor_number,
+                    intercom=order_instance.intercom
+                )
+
             address.is_main = True
             address.save()
 

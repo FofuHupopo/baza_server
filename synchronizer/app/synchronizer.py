@@ -8,9 +8,9 @@ from sqlalchemy import or_
 from pathlib import Path
 from slugify import slugify
 
-import models
-from models import engine
-from moy_sklad import MoySklad
+from . import models
+from .models import engine
+from .moy_sklad import MoySklad
 
 
 class NoBundleComplectException(Exception):
@@ -32,7 +32,7 @@ class MoySkaldSynchronizer(MoySklad):
         response = MoySkaldSynchronizer.moysklad_request()
         
         products_count = len(response["rows"])
-    
+
         synchronized_counter = 0
         
         for ind, product in enumerate(response["rows"], start=1):

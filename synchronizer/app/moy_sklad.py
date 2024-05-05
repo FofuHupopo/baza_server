@@ -1,9 +1,10 @@
+import os
 import requests
 import time
 
 
 class MoySklad:
-    MOYSKLAD_TOKEN = "9ad7b79af08525d5313361e63b77f8439cd185f7"
+    MOYSKLAD_TOKEN = os.getenv("MOYSKLAD_TOKEN")
     HEADERS = {
         "Authorization": f"Bearer {MOYSKLAD_TOKEN}",
         "Content-Type": "application/json",

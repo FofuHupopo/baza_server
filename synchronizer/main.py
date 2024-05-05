@@ -1,7 +1,5 @@
 import os
 import uvicorn
-import time
-import shutil
 from dotenv import load_dotenv
 import json
 
@@ -10,7 +8,7 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from synchronizer import MoySkaldSynchronizer
+from app.synchronizer import MoySkaldSynchronizer
 
 
 PRODUCT_MEDIA_PATH = Path("product_images")
