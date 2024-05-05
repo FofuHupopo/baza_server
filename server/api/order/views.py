@@ -185,6 +185,12 @@ class CancelOrderView(APIView):
             )
 
         order.set_order_cancel()
+        
+        for order2modification in models.Order2ModificationModel.objects.filter(
+            order_model_id=order_id
+        ):
+            order2modification.product_modification_model.reserved -= order2modification.quantity
+            order2modification.product_modification_model.save()
 
         return Response(
             {"status": "Заказ отменен."},
