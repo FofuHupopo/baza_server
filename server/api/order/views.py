@@ -229,7 +229,7 @@ class CalculateView(APIView):
         for cart_instance in cart:
             modification_instance = cart_instance.product_modification_model
             quantity = cart_instance.quantity
-                
+
             response_object = {
                 "name": modification_instance.product.name,
                 "size": modification_instance.size.name,
@@ -241,8 +241,8 @@ class CalculateView(APIView):
             products_object.append(response_object)
                 
             if modification_instance.quantity <= 0:
-                cart_instance.quantity = 0
-                cart_instance.save()
+                # cart_instance.quantity = 0
+                # cart_instance.save()
 
                 response_object.update({
                     "quantity": 0,
@@ -260,12 +260,12 @@ class CalculateView(APIView):
                 continue
             
             if modification_instance.count < quantity:
-                cart_instance.quantity = modification_instance.count
-                cart_instance.save()
+                # cart_instance.quantity = modification_instance.count
+                # cart_instance.save()
 
                 response_object.update({
-                    "quantity": cart_instance.quantity,
-                    "message": f"Недостаточно товара на складе. (В наличии {cart_instance.quantity})",
+                    "quantity": modification_instance.count,
+                    "message": f"Недостаточно товара на складе. (В наличии {modification_instance.count})",
                     "status": "bad"
                 })
                 continue

@@ -1,6 +1,10 @@
 import os
 import requests
 import time
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 class MoySklad:
@@ -23,6 +27,8 @@ class MoySklad:
         "BUNDLE_DETAIL": BASE_API_URL + "entity/bundle/{}",
         "BUNDLE_IMAGES": BASE_API_URL + "entity/bundle/{}/images",
         "COMPONENTS": BASE_API_URL + "entity/bundle/{}/components",
+        "WEBHOOK": BASE_API_URL + "entity/webhook",
+        "WEBHOOK_ID": BASE_API_URL + "entity/webhook/{}",
     }
     
     @staticmethod
@@ -33,6 +39,40 @@ class MoySklad:
                 headers=MoySklad.HEADERS
             )
             return response.json()
+
+        for _ in range(2):
+            try:
+                return _response()
+            except requests.exceptions.ConnectTimeout:
+                print("ConnectionTimeout, retry by 5 seconds...")
+                time.sleep(5)
+                
+    @staticmethod
+    def moysklad_post(url_name: str="PRODUCTS", url_params: list=[], query_params: dict={}, data_params: dict={}) -> dict:
+        def _response():
+            response = requests.post(
+                MoySklad.MOYSKLAD_URLS[url_name].format(*url_params),
+                headers=MoySklad.HEADERS,
+                params=query_params,
+                json=data_params
+            )
+            return response.json()
+
+        for _ in range(2):
+            try:
+                return _response()
+            except requests.exceptions.ConnectTimeout:
+                print("ConnectionTimeout, retry by 5 seconds...")
+                time.sleep(5)
+                
+    @staticmethod
+    def moysklad_delete(url_name: str="PRODUCTS", url_params: list=[]) -> dict:
+        def _response():
+            response = requests.delete(
+                MoySklad.MOYSKLAD_URLS[url_name].format(*url_params),
+                headers=MoySklad.HEADERS
+            )
+            return
 
         for _ in range(2):
             try:
