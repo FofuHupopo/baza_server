@@ -189,9 +189,9 @@ class Synchronizer:
 
 class BotServer:
     URLS = {
-        "new_order": "http://127.0.0.1/service/bot_server/new-order/"   
+        "new_order": "http://bot_server:8005/new-order/"   
     }
-    
+
     @staticmethod
     def _request(url: str, body: dict) -> None:
         r = requests.post(

@@ -141,6 +141,30 @@ class OrderView(APIView):
         )
 
 
+class CancelOrderView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request: Request):
+        order_id = request.query_params.get("order_id")
+
+        try:
+            order = models.OrderModel.objects.get(
+                pk=order_id
+            )
+        except models.OrderModel.DoesNotExist:
+            return Response(
+                {"error": "Заказ не найден."},
+                status.HTTP_400_BAD_REQUEST
+            )
+
+        order.set_order_cancel()
+
+        return Response(
+            {"status": "Заказ отменен."},
+            status.HTTP_200_OK
+        )
+
+
 class OldCalculatePriceView(APIView):
     permission_classes = (IsAuthenticated, )
 

@@ -8,6 +8,7 @@ urlpatterns = [
     # path("calculate/", views.CalculatePriceView.as_view(), name="order__calculate"),
     
     path("calculate/", views.CalculateView.as_view(), name="order__calculate"),
+    path("orders/cancel/", views.CancelOrderView.as_view(), name="order__cancel"),
     
     path("payment/", views.PaymentView.as_view(), name="order__payment_init"),
     path("payment/status/", views.PaymentStatusView.as_view(), name="order__payment_status"),
