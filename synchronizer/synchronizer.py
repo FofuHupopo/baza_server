@@ -280,7 +280,7 @@ class MoySkaldSynchronizer(MoySklad):
 
                 modification_assortment = self._sync_product_modification_assortment(modification_instance.modification_id)
                 modification_instance.weight = modification_assortment["weight"]
-                modification_instance.quantity = modification_assortment["quantity"]
+                modification_instance.quantity_store = modification_assortment["quantity"]
 
                 modification_instance.color_id = color_instance_id
                 modification_instance.size_id = size_instance_id
@@ -297,7 +297,7 @@ class MoySkaldSynchronizer(MoySklad):
             "quantity": int(response["rows"][0].get("quantity", 0)),
             "weight": int(response["rows"][0].get("weight", 0)),
         }
-                
+
     def _add_standart_product_modification_image(self, product_id: str, modification_instance: models.ProductModificationModel) -> None:
         # if self._sync_product_modification_images(product_id, modification_instance):
         #     return
