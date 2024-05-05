@@ -144,13 +144,13 @@ class OrderView(APIView):
             order_instance.amount -= order_instance.use_loyalty_balance
         
         if order_instance.receiving == "personal" and order_instance.is_express:
-            order_instance.amount += 1500
+            order_instance.amount += 150000
             
         if order_instance.receiving == "personal" and not order_instance.is_express:
-            order_instance.amount += 1200
+            order_instance.amount += 120000
             
         if order_instance.receiving == "cdek":
-            order_instance.amount += 600
+            order_instance.amount += 60000
 
         order_instance.save()
 

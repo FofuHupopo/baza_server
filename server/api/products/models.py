@@ -85,7 +85,7 @@ class ProductModel(models.Model):
         "Код MoySklad", max_length=32,
         null=True, blank=True
     )
-    
+
     old_price = models.IntegerField(
         "Старая цена",
         null=True, blank=True
@@ -201,9 +201,17 @@ class ProductModificationModel(models.Model):
     booked = models.IntegerField(
         "Забронировано", default=0
     )
-    quantity = models.IntegerField(
-        "Количество", default=0
+
+    quantity_store = models.IntegerField(
+        "Количество на складе", default=0
     )
+    quantity_reserve = models.IntegerField(
+        "Заразервированный товар", default=0
+    )
+
+    @property
+    def quantity(self):
+        return self.quantity_store - self.quantity_reserve
 
     visible = models.BooleanField(
         "Отображается на сайте?", default=False
