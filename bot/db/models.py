@@ -36,6 +36,7 @@ class OrderModel(Base):
     products = Column(String)
 
     receiving = Column(String(255))
+    is_express = Column(Boolean, default=False)
     address = Column(String(255), nullable=True)
     code = Column(String(255), nullable=True)
     apartment_number = Column(Integer, nullable=True)

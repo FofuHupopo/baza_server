@@ -12,6 +12,7 @@ async def new_order_handler(request: Request):
     order_id = body["order_id"]
     data = {
         "receiving": body["receiving"],
+        "is_express": body.get("is_express", False),
         "address": body.get("address", None),
         "code": body.get("code", None),
         "apartment_number": body.get("apartment_number", None),
@@ -41,10 +42,11 @@ async def new_order_handler(request: Request):
 
     if order.receiving == "personal":
         message += f"\tАдрес: {order.address}\n" \
+            f"\tЭкспресс доставка: {'да' if order.is_express else 'нет'}\n" \
             f"\tНомер этажа: {order.floor_number}\n" \
             f"\tНомер квартиры: {order.apartment_number}\n" \
             f"\tДомофон: {order.intercom}\n"
-            
+
     message += f"\tТовары:\n"
     for product in json.loads(order.products):
         message += f"\t\t{'=' * 40}\n" \
