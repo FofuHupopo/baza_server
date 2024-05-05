@@ -17,6 +17,7 @@ class OrderModel(models.Model):
         CREATED = "created"
         FAILED_PAYMENT = "failed_payment"
         PAID = "paid"
+        AWAITING_DELIVERY = "awaiting_delivery"
         IN_DELIVERY = "in_delivery"
         DELIVERED = "delivered"
         RECEIVED = "received"
@@ -63,7 +64,7 @@ class OrderModel(models.Model):
     )
     
     address = models.CharField(
-        verbose_name="Адрес", max_length=128,
+        verbose_name="Адрес",
         null=True, blank=True
     )
     
@@ -98,11 +99,11 @@ class OrderModel(models.Model):
         through="Order2ModificationModel",
         verbose_name="Модификации продуктов"
     )
-    
+
     order_date = models.DateTimeField(
         "Дата заказа", default=timezone.now
     )
-    
+
     status = models.CharField(
         "Статус", max_length=32,
         choices=OrderStatusChoice.choices,
@@ -112,7 +113,7 @@ class OrderModel(models.Model):
         "Дата получения",
         null=True, blank=True
     )
-    
+
     use_loyalty = models.BooleanField(
         "Использовать баллы?", default=False
     )
@@ -137,7 +138,7 @@ class OrderModel(models.Model):
         verbose_name_plural = "Заказы"
     
     def save(self, *args, **kwargs) -> OrderModel:
-        if self.status == self.OrderStatusChoice.CREATED and self.loyalty_received == 0:
+        if self.status == self.OrderStatusChoice.CREATED and not self.loyalty_received:
             loyalty, _ = profile_models.LoyaltyModel.objects.get_or_create(
                 user=self.user
             )
@@ -170,8 +171,16 @@ class OrderModel(models.Model):
 
     def __str__(self) -> str:
         return f"{self.pk}: {self.name} {self.surname}"
-
     
+    def set_order_cancel(self):
+        self.status = self.OrderStatusChoice.CANCELLED
+        
+        if self.is_paid:
+            print("Возврат платежа...")
+
+        self.save()
+
+
 class Order2ModificationModel(models.Model):
     order_model = models.ForeignKey(
         OrderModel,

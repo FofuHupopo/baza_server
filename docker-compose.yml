@@ -12,6 +12,7 @@ services:
     depends_on:
       - server
       - cdek
+      - bot
     volumes:
       - media:/media/
       - static:/static/
@@ -49,6 +50,35 @@ services:
       - ./cdek/.env
     networks:
       - backbone
+
+  # Bot
+
+  bot:
+    container_name: bot
+    restart: always
+    build:
+      context: ./bot
+      dockerfile: Bot.Dockerfile
+    env_file:
+      - ./bot/.env
+    networks:
+      - backbone
+
+  bot_server:
+    container_name: bot_server
+    hostname: bot_server
+    restart: always
+    build:
+      context: ./bot
+      dockerfile: Server.Dockerfile
+    ports:
+      - "8005:8005"
+    expose:
+      - 8005
+    env_file:
+      - ./bot/.env
+    networks:
+      - backbone
   
   # videostreaming:
   #   container_name: videostreaming
@@ -63,7 +93,7 @@ services:
   #   networks:
   #     - backbone
 
-    # Database
+  # Database
 
   redis:
     image: redis:latest

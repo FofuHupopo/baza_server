@@ -155,7 +155,8 @@ class Delivery:
 
 
 class Synchronizer:
-    BASE_URL = "http://127.0.0.1:5000/update/"
+    # BASE_URL = "http://127.0.0.1/update/"
+    BASE_URL = ""
     URLS = {
         "quantity": BASE_URL + "quantity"
     }
@@ -186,6 +187,27 @@ class Synchronizer:
         )
 
 
+class BotServer:
+    URLS = {
+        "new_order": "http://127.0.0.1/service/bot_server/new-order/"   
+    }
+    
+    @staticmethod
+    def _request(url: str, body: dict) -> None:
+        r = requests.post(
+            url,
+            json=body
+        )
+
+    @staticmethod
+    def new_order(order_data: dict):
+        BotServer._request(
+            BotServer.URLS["new_order"],
+            order_data
+        )
+
+
 if __name__ == "__main__":
     # pprint(Delivery.calculate_address("Москва, Севастопольский проспект, 43"))
-    Synchronizer.quantity_update("123", 10)
+    # Synchronizer.quantity_update("123", 10)
+    ...

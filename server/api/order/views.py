@@ -12,6 +12,7 @@ from .services import MerchantAPI
 from api.request import Delivery
 from api.profile import models as profile_models
 from api.authentication import models as auth_models
+from api.request import BotServer
 from . import serializers
 from . import docs
 
@@ -416,6 +417,29 @@ class PaymentResponseSuccessView(APIView):
         order.status = models.OrderModel.OrderStatusChoice.PAID
 
         order.save()
+        
+        products = models.Order2ModificationModel.objects.filter(
+            order_model_id=order.pk
+        )
+        
+        BotServer.new_order({
+            "order_id": order.pk,
+            "receiving": order.receiving,
+            "address": order.address,
+            "code": order.code,
+            "floor_number": order.floor_number,
+            "apartment_number": order.apartment_number,
+            "intercom": order.intercom,
+            "products": [
+                {
+                    "name": product.product_modification_model.product.name,
+                    "color": product.product_modification_model.color.name,
+                    "size": product.product_modification_model.size.name,
+                    "quantity": product.quantity
+                }
+                for product in products
+            ]
+        })
 
         return HttpResponseRedirect("https://thebaza.ru/order/successful") # payment
 
