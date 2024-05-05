@@ -330,7 +330,7 @@ class ListProductModificationSerializer(serializers.ModelSerializer):
     
     def get_composition_and_care(self, obj):
         return f"{obj.product.composition_and_care}"
-    
+
     def get_price(self, obj):
         return obj.product.price
     
@@ -371,7 +371,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductModel
         fields = (
-            "name", "description", "price", "old_price", "path", "category"
+            "name", "description", "composition_and_care", "price", "old_price", "path", "category"
         )
 
     def get_category(self, obj):

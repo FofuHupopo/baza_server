@@ -79,7 +79,8 @@ class ProductModel(models.Model):
         null=True, blank=True
     )
     composition_and_care = models.TextField(
-        "Состав и уход", default=""
+        "Состав и уход", default="",
+        null=True, blank=True
     )
     code = models.CharField(
         "Код MoySklad", max_length=32,
