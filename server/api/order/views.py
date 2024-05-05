@@ -137,9 +137,9 @@ class OrderView(APIView):
         cart.delete()
         
         for item in cart:
-            item.product_modification_model.quantity_reserve += item.quantity
+            item.product_modification_model.reserved += item.quantity
             item.product_modification_model.save()
-        
+
         order_instance.amount = amount
         
         if order_instance.use_loyalty:

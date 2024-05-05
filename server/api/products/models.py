@@ -197,21 +197,13 @@ class ProductModificationModel(models.Model):
     weight = models.IntegerField(
         "Вес (граммы)", default=0
     )
-    
-    booked = models.IntegerField(
+    reserved = models.IntegerField(
         "Забронировано", default=0
     )
-
-    quantity_store = models.IntegerField(
-        "Количество на складе", default=0
+    
+    quantity = models.IntegerField(
+        "Количество", default=0
     )
-    quantity_reserve = models.IntegerField(
-        "Заразервированный товар", default=0
-    )
-
-    @property
-    def quantity(self):
-        return self.quantity_store - self.quantity_reserve
 
     visible = models.BooleanField(
         "Отображается на сайте?", default=False
@@ -219,7 +211,7 @@ class ProductModificationModel(models.Model):
     
     @property
     def count(self):
-        count = self.quantity - self.booked
+        count = self.quantity - self.reserved
         
         if count >= 0:
             return count
