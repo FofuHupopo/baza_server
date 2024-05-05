@@ -15,6 +15,7 @@ from .settings import get_config
 class OrderModel(models.Model):
     class OrderStatusChoice(models.TextChoices):
         CREATED = "created"
+        FAILED_PAYMENT = "failed_payment"
         PAID = "paid"
         IN_DELIVERY = "in_delivery"
         DELIVERED = "delivered"

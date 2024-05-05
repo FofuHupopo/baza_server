@@ -437,4 +437,10 @@ class PaymentResponseFailView(APIView):
 
         payment.save()
         
+        order = models.OrderModel.objects.get(
+            pk=payment.order_id
+        )
+        order.status = models.OrderModel.OrderStatusChoice.FAILED_PAYMENT
+        order.save()
+
         return HttpResponseRedirect("https://thebaza.ru/order/failed") # Not payment
