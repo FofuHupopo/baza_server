@@ -82,7 +82,7 @@ class ProductModificationSerializer(serializers.ModelSerializer):
     
     def get_quantity(self, obj):
         return obj.count
-    
+
     
 class ShortProductModificationSerializer(serializers.ModelSerializer):
     color = serializers.SerializerMethodField()

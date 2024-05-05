@@ -197,12 +197,12 @@ class ProductModificationModel(models.Model):
     weight = models.IntegerField(
         "Вес (граммы)", default=0
     )
-    reserved = models.IntegerField(
-        "Забронировано", default=0
-    )
     
     quantity = models.IntegerField(
-        "Количество", default=0
+        "Количество на складе", default=0
+    )
+    reserved = models.IntegerField(
+        "Забронированый товар", default=0
     )
 
     visible = models.BooleanField(

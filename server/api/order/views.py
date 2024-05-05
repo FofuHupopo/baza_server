@@ -149,10 +149,10 @@ class OrderView(APIView):
         
         if order_instance.receiving == "personal" and order_instance.is_express:
             order_instance.amount += 150000
-            
+
         if order_instance.receiving == "personal" and not order_instance.is_express:
             order_instance.amount += 120000
-            
+
         if order_instance.receiving == "cdek":
             order_instance.amount += 60000
 
