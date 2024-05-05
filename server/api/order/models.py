@@ -86,6 +86,9 @@ class OrderModel(models.Model):
         verbose_name="Домофон", default=None,
         null=True, blank=True
     )
+    is_express = models.BooleanField(
+        "Экспресс доставка", default=False
+    )
 
     is_paid = models.BooleanField(
         "Оплачено?", default=False

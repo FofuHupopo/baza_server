@@ -108,6 +108,20 @@ class OrderView(APIView):
             )
 
         order_instance: models.OrderModel = serializer.save(user=request.user)
+        
+        if order_instance.receiving != "pickup":
+            address, created = profile_models.AddressModel.objects.get_or_create(
+                user=request.user,
+                type=order_instance.receiving,
+                address=order_instance.address,
+                code=order_instance.code,
+                apartment_number=order_instance.apartment_number,
+                floor_number=order_instance.floor_number,
+                intercom=order_instance.intercom
+            )
+            
+            address.is_main = True
+            address.save()
 
         amount = 0
 
@@ -128,6 +142,15 @@ class OrderView(APIView):
             loyalty_instance = profile_models.LoyaltyModel.get_by_user_id(order_instance.user.pk)
             order_instance.use_loyalty_balance = min(int(amount * 0.15), loyalty_instance.balance)
             order_instance.amount -= order_instance.use_loyalty_balance
+        
+        if order_instance.receiving == "personal" and order_instance.is_express:
+            order_instance.amount += 1500
+            
+        if order_instance.receiving == "personal" and not order_instance.is_express:
+            order_instance.amount += 1200
+            
+        if order_instance.receiving == "cdek":
+            order_instance.amount += 600
 
         order_instance.save()
 

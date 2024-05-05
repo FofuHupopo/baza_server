@@ -6,11 +6,13 @@ from api.products import models as product_models
 
 
 class CreateOrderSerializer(serializers.ModelSerializer):
+    is_express = serializers.BooleanField(default=False)
+
     class Meta:
         model = models.OrderModel
         fields = (
             "id", "name", "surname", "email", "phone",
-            "receiving", "payment_type", "use_loyalty",
+            "receiving", "payment_type", "use_loyalty", "is_express",
             "address", "code", "apartment_number", "floor_number", "intercom",
         )
         depth = 1
@@ -38,7 +40,7 @@ class ViewOrderSerializer(serializers.ModelSerializer):
         model = models.OrderModel
         fields = (
             "id", "name", "surname", "email", "phone",
-            "receiving", "payment_type", "amount",
+            "receiving", "payment_type", "amount", "is_express",
             "address", "code", "apartment_number", "floor_number", "intercom",
             "is_paid", "is_received", "products",
             "order_date", "status", "receiving_date",

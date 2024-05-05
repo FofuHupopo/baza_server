@@ -215,8 +215,9 @@ class ProductDetailView(APIView):
             **serializer.data
         }
 
-        serializer["description"] += f"\n\n{product_color.additional_description}"
-        
+        if product_color.additional_description:
+            serializer["description"] += f"\n\n{product_color.additional_description}"
+
         return Response(
             {
                 **serializer,
