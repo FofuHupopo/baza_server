@@ -8,13 +8,12 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from synchronizer import MoySkaldSynchronizer
+from synchronizer import MoySkaldSynchronizer, upload_image_to_s3
 
 
 # DJANGO_MEDIA_PATH = Path("/Users/ilyazhukov/projects/projects/baza_store/server/media")
 # DJANGO_MEDIA_PATH = Path("/home/ilya/baza/server/media")
 # DJANGO_MEDIA_PATH = Path("/root/baza/server/server/media")
-DJANGO_MEDIA_PATH = Path("/var/www/baza/server/server/media")
 PRODUCT_MEDIA_PATH = Path("product_images")
 ROOT_PATH = "сайт"
 ROOT_DIRECTORY = Path(__file__).parent
@@ -24,7 +23,6 @@ app = FastAPI()
 scheduler = BackgroundScheduler()
 
 sync = MoySkaldSynchronizer(
-    django_media_path=DJANGO_MEDIA_PATH,
     product_media_path=PRODUCT_MEDIA_PATH,
     root_path=ROOT_PATH,
     only_valid=True
@@ -84,5 +82,6 @@ if __name__ == "__main__":
     # uvicorn.run("main:app", host="127.0.0.1", port=5000, reload=True)
 
     sync.sync_products()
+
     # sync.sync_bundles()
     # sync.sync_product_by_id("fe485046-edb1-11ed-0a80-034d00a3f03a")

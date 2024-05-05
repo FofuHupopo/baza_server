@@ -1,4 +1,6 @@
 import os
+import boto3
+from dotenv import load_dotenv
 import requests
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -11,13 +13,15 @@ from models import engine
 from moy_sklad import MoySklad
 
 
+load_dotenv()
+
+
 class NoBundleComplectException(Exception):
     pass
 
 
 class MoySkaldSynchronizer(MoySklad):
-    def __init__(self, django_media_path: Path, product_media_path: Path, root_path: str, only_valid: bool=True) -> None:
-        self.django_media_path = django_media_path
+    def __init__(self, product_media_path: Path, root_path: str, only_valid: bool=True) -> None:
         self.product_media_path = product_media_path
         self.root_path = root_path
         self.default_product_image = "product_images/Заглушка фото карточки товара.jpg"
@@ -203,15 +207,10 @@ class MoySkaldSynchronizer(MoySklad):
         )
         image_filename = image_data["filename"]
 
-        image_folder_path = self.django_media_path / self.product_media_path / product_id
+        image_path = self.product_media_path / product_id
         
-        if not image_folder_path.exists():
-            os.makedirs(image_folder_path)
-        
-        image_path = image_folder_path / image_filename
-        
-        with open(image_path, "wb") as file:
-            file.write(image_response.content)
+
+        upload_image_to_s3(image_response.content, image_path, image_filename)
 
         return str(self.product_media_path / product_id / image_filename)
     
@@ -346,17 +345,11 @@ class MoySkaldSynchronizer(MoySklad):
                 )
                 image_filename = image["filename"]
 
-                image_folder_path = self.django_media_path / self.product_media_path / product_id / str(modification_instance.id)
+                image_path = self.product_media_path / product_id / str(modification_instance.id)
                 
-                if not image_folder_path.exists():
-                    os.makedirs(image_folder_path)
-                
-                image_path = image_folder_path / image_filename
-                
-                with open(image_path, "wb") as file:
-                    file.write(image_response.content)
-                    
-                django_image_path = str(self.product_media_path / product_id / str(modification_instance.id) / image_filename)
+                upload_image_to_s3(image_response.content, image_path, image_filename)
+
+                django_image_path = str(image_path / image_filename)
                 
                 image_instance = session.query(models.ProductModificationImageModel).filter(
                     models.ProductModificationImageModel.image == django_image_path
@@ -419,17 +412,12 @@ class MoySkaldSynchronizer(MoySklad):
         )
         image_filename = image_data["filename"]
 
-        image_folder_path = self.django_media_path / self.product_media_path / bundle_id
+        image_path = self.product_media_path / bundle_id
         
-        if not image_folder_path.exists():
-            os.makedirs(image_folder_path)
+        upload_image_to_s3(image_response.content, image_path, image_filename)
         
-        image_path = image_folder_path / image_filename
-        
-        with open(image_path, "wb") as file:
-            file.write(image_response.content)
 
-        return str(self.product_media_path / bundle_id / image_filename)
+        return str(image_path / image_filename)
 
     def _sync_bundle_detail(self, bundle: dict, bundle_path: models.ProductPathModel):
         with Session(engine) as session:
@@ -532,17 +520,11 @@ class MoySkaldSynchronizer(MoySklad):
 
                 image_filename = image["filename"]
 
-                image_folder_path = self.django_media_path / self.product_media_path / bundle_id
-         
-                if not image_folder_path.exists():
-                    os.makedirs(image_folder_path)
-            
-                image_path = image_folder_path / image_filename
-    
-                with open(image_path, "wb") as file:
-                    file.write(image_response.content)
+                image_path = self.product_media_path / bundle_id
 
-                django_image_path = str(self.product_media_path / bundle_id / image_filename)
+                upload_image_to_s3(image_response.content, image_path, image_filename)
+
+                django_image_path = str(image_path / image_filename)
                 
                 image_instance = session.query(models.BundleImageModel).filter(
                     models.BundleImageModel.image == django_image_path
@@ -558,6 +540,30 @@ class MoySkaldSynchronizer(MoySklad):
                 
                 session.add(image_instance)
                 session.commit()
+
+
+AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL")
+AWS_S3_ACCESS_KEY_ID = os.getenv('AWS_S3_ACCESS_KEY_ID')
+AWS_S3_SECRET_ACCESS_KEY = os.getenv('AWS_S3_SECRET_ACCESS_KEY')
+BUCKET_NAME = os.getenv("BUCKET_NAME")
+
+import botocore
+
+
+def upload_image_to_s3(image_data: bytes, image_path: str, image_name: str):    
+    s3 = boto3.client('s3', endpoint_url=AWS_S3_ENDPOINT_URL, aws_access_key_id=AWS_S3_ACCESS_KEY_ID, aws_secret_access_key=AWS_S3_SECRET_ACCESS_KEY)
+    
+    image_path = str(image_path).strip("/")
+
+    image_key = f"media/{image_path}/{image_name}"
+
+    try:
+        s3.head_object(Bucket=BUCKET_NAME, Key=image_key)
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == '404':
+            s3.put_object(Body=image_data, Bucket=BUCKET_NAME, Key=image_key)
+        else:
+            print('Произошла ошибка при проверке файла:', e)
 
 
 class BonusMoneySynchronizer:

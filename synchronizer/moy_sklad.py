@@ -40,7 +40,6 @@ class MoySklad:
                 print("ConnectionTimeout, retry by 5 seconds...")
                 time.sleep(5)
 
-
     @staticmethod
     def moysklad_patch(url_name: str, url_params: list=[], body_params: dict={}) -> dict:
         response = requests.get(

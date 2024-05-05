@@ -484,6 +484,7 @@ class PaymentResponseSuccessView(APIView):
             "receiving": order.receiving,
             "address": order.address,
             "code": order.code,
+            "is_express": order.is_express,
             "floor_number": order.floor_number,
             "apartment_number": order.apartment_number,
             "intercom": order.intercom,
