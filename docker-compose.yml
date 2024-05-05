@@ -12,7 +12,7 @@ services:
     depends_on:
       - server
       - cdek
-      - bot
+      - bot_server
     volumes:
       - media:/media/
       - static:/static/
