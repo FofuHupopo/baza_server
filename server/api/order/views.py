@@ -94,7 +94,7 @@ class OrderView(APIView):
             )
 
         for cart_instance in cart:
-            cart_instance.quantity = min(cart_instance.product_modification_model.quantity, cart_instance.quantity)
+            cart_instance.quantity = min(cart_instance.product_modification_model.count, cart_instance.quantity)
             cart_instance.save()
 
         serializer = serializers.CreateOrderSerializer(
@@ -110,7 +110,7 @@ class OrderView(APIView):
         order_instance: models.OrderModel = serializer.save(user=request.user)
         
         if order_instance.receiving != "pickup":
-            address, created = profile_models.AddressModel.objects.get_or_create(
+            address = profile_models.AddressModel.objects.get_or_create(
                 user=request.user,
                 type=order_instance.receiving,
                 address=order_instance.address,
@@ -133,12 +133,12 @@ class OrderView(APIView):
             )
             
             amount += item.product_modification_model.product.price * item.quantity
-            
-        cart.delete()
         
         for item in cart:
             item.product_modification_model.reserved += item.quantity
             item.product_modification_model.save()
+
+        cart.delete()
 
         order_instance.amount = amount
         
@@ -198,59 +198,6 @@ class CancelOrderView(APIView):
         )
 
 
-class OldCalculatePriceView(APIView):
-    permission_classes = (IsAuthenticated, )
-
-    def get(self, request: Request):
-        delivery_address = request.query_params.get("delivery_address")
-        delivery_stock = request.query_params.get("delivery_stock")
-        delivery = bool(delivery_stock or delivery_address)
-
-        cart = auth_models.CartModel.objects.filter(
-            user_model=request.user
-        )
-
-        result = {
-            "price": 0,
-            "sale": 0
-        }
-
-        weight = 0
-
-        for cart_instance in cart:
-            quantity = cart_instance.quantity
-
-            price = cart_instance.product_modification_model.product.price
-            old_price = cart_instance.product_modification_model.product.old_price
-
-            weight += cart_instance.product_modification_model.weight or 500
-
-            if old_price > price:
-                result["sale"] += quantity * (
-                    old_price - price
-                ) / 100
-
-            result["price"] += quantity * price / 100
-
-        if delivery:
-            delivery_price = 0
-
-            if delivery_address:
-                delivery_price = Delivery.calculate_address(
-                    delivery_address, weight)
-
-            if delivery_stock:
-                delivery_price = Delivery.calculate_stock(
-                    delivery_stock, weight)
-
-            result["delivery"] = delivery_price
-
-        return Response(
-            result,
-            status.HTTP_200_OK
-        )
-
-
 @extend_schema_view(
     get=extend_schema(
         summary="Предподсчет корзины",
@@ -293,7 +240,7 @@ class CalculateView(APIView):
                 })
                 continue
 
-            if quantity <= modification_instance.quantity:
+            if quantity <= modification_instance.count:
                 response_object.update({
                     "quantity": quantity,
                     "message": "",
@@ -301,13 +248,13 @@ class CalculateView(APIView):
                 })                
                 continue
             
-            if modification_instance.quantity < quantity:
-                cart_instance.quantity = modification_instance.quantity
+            if modification_instance.count < quantity:
+                cart_instance.quantity = modification_instance.count
                 cart_instance.save()
 
                 response_object.update({
-                    "quantity": modification_instance.quantity,
-                    "message": f"Недостаточно товара на складе. (В наличии {modification_instance.quantity})",
+                    "quantity": cart_instance.quantity,
+                    "message": f"Недостаточно товара на складе. (В наличии {cart_instance.quantity})",
                     "status": "bad"
                 })
                 continue
@@ -384,7 +331,9 @@ class PaymentView(APIView):
             )
 
             for order_to_modification in order_to_modifications:
-                payment_description += f"{order_to_modification.product_modification_model.product.name} ({order_to_modification.product_modification_model.color.name}, {order_to_modification.product_modification_model.size.name}), количество: {order_to_modification.quantity};"
+                payment_description += f"{order_to_modification.product_modification_model.product.name} " \
+                    f"({order_to_modification.product_modification_model.color.name}, {order_to_modification.product_modification_model.size.name}), " \
+                    f"количество: {order_to_modification.quantity};"
 
             payment = models.Payment.create(
                 amount=order.amount,

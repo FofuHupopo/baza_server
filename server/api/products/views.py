@@ -191,7 +191,7 @@ class ProductDetailView(APIView):
         
         product = modifications[0].product
         
-        sizes = modifications.values_list("id", "size__name", "quantity", "slug")
+        sizes = modifications.values_list("id", "size__name", "quantity", "reserved", "slug")
 
         colors = models.ProductModificationModel.objects.filter(
             product=product,
@@ -222,17 +222,17 @@ class ProductDetailView(APIView):
             {
                 **serializer,
                 "images": [
-                    request.build_absolute_uri(image.image.url)
+                    image.image.url
                     for image in images    
                 ],
                 "sizes": [
                     {
                         "name": size_name,
                         "mod_id": mod_id,
-                        "quantity": quantity,
+                        "quantity": quantity - reserved,
                         "slug": slug
                     }
-                    for mod_id, size_name, quantity, slug in sizes
+                    for mod_id, size_name, quantity, reserved, slug in sizes
                 ],
                 "current_color": {
                     "slug": slug,

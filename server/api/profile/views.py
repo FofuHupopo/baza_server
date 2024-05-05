@@ -114,7 +114,7 @@ class CartView(APIView):
                 }, status.HTTP_400_BAD_REQUEST)
             
             cart[ind]["modification_id"] = modification.pk
-            cart[ind]["product_quantity"] = modification.quantity
+            cart[ind]["product_quantity"] = modification.count
     
         for product in cart:
             cart, _ = auth_models.CartModel.objects.get_or_create(
