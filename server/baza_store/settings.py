@@ -1,6 +1,5 @@
 from pathlib import Path
 from datetime import timedelta
-from dotenv import load_dotenv
 
 from .utils import getenv
 
@@ -279,6 +278,27 @@ AWS_S3_ENDPOINT_URL = 'https://s3.timeweb.cloud'
 AWS_S3_ACCESS_KEY_ID = getenv('AWS_S3_ACCESS_KEY_ID')
 AWS_S3_SECRET_ACCESS_KEY = getenv('AWS_S3_SECRET_ACCESS_KEY')
 AWS_QUERYSTRING_AUTH = False
+
+
+REDIS_HOST = 'redis' if getenv('IS_DOKER') else '127.0.0.1'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+
+REST_FRAMEWORK_EXTENSIONS = {
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60
+}
 
 
 # LOGGING = {

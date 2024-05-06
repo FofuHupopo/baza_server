@@ -4,7 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import authentication
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework_extensions.cache.mixins import CacheResponseMixin
 from django.conf import settings
 from rest_framework import parsers
 import json
@@ -14,7 +15,7 @@ from . import models
 from . import serializers
 
 
-class ProductPathView(generics.ListAPIView):
+class ProductPathView(CacheResponseMixin, generics.ListAPIView):
     permission_classes = (AllowAny, )
     queryset = models.ProductPathModel.objects.filter(parent=None)
     serializer_class = serializers.ProductPathSerializer
@@ -86,7 +87,7 @@ class ProductView(generics.RetrieveAPIView):
         return context
 
 
-class ListProductsView(generics.ListAPIView):
+class ListProductsView(CacheResponseMixin, generics.ListAPIView):
     permission_classes = (AllowAny, )
     queryset = models.ProductModificationModel.objects.filter(
         product__visible=True,
@@ -118,7 +119,7 @@ class ListProductsView(generics.ListAPIView):
             )
 
         return queryset
-    
+
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['request'] = self.request

@@ -22,6 +22,9 @@ python-dotenv = "^1.0.1"
 psycopg2 = "^2.9.9"
 django-storages = "^1.14.2"
 boto3 = "^1.34.96"
+django-redis = "^5.4.0"
+drf-extensions = "^0.7.1"
+django-redis-cache = "^3.0.1"
 
 
 [build-system]

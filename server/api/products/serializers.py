@@ -38,7 +38,19 @@ class ProductPathSerializer(serializers.ModelSerializer):
     
     def get_children(self, obj):
         children = self.Meta.model.objects.filter(parent=obj.id)
-        serializer = self.__class__(children, many=True)
+        
+        queryset = []
+        
+        for children_path in children:
+            is_exist = models.ProductModel.objects.filter(
+                path=children_path
+            ).exists()
+
+            if is_exist:
+                queryset.append(children_path)
+    
+        
+        serializer = self.__class__(queryset, many=True)
         return serializer.data
     
 
