@@ -31,8 +31,7 @@
       .catch(error => alert(error));
     }
 
-    location.reload();
-    return false;
+    window.location.href = window.location.href;
   };
 
   function getCookie(name) {
