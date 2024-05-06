@@ -12,7 +12,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         model = models.OrderModel
         fields = (
             "id", "name", "surname", "email", "phone",
-            "receiving", "payment_type", "use_loyalty", "is_express",
+            "receiving", "payment_type", "use_loyalty", "is_express", "comment",
             "address", "code", "apartment_number", "floor_number", "intercom",
         )
         depth = 1
