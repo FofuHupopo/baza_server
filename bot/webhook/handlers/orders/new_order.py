@@ -18,6 +18,13 @@ async def new_order_handler(request: Request):
         "apartment_number": body.get("apartment_number", None),
         "floor_number": body.get("floor_number", None),
         "intercom": body.get("intercom", None),
+        
+        "user_id": body.get("user_id", None),
+        "user_name": body.get("user_name", None),
+        "user_surname": body.get("user_surname", None),
+        "user_phone": body.get("user_phone", None),
+        "user_email": body.get("user_email", None),
+        
         "products": json.dumps(body.get("products", [])),
     }
     
