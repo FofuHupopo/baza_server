@@ -1,5 +1,5 @@
 from pathlib import Path
-from app.synchronizer import MoySkaldSynchronizer
+from ..app.synchronizer import MoySkaldSynchronizer
 
 
 def main():
