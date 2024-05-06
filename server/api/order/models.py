@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import List
 
+import uuid
 from django.db import models
 from django.utils import timezone
 
@@ -23,6 +24,7 @@ class OrderModel(models.Model):
         RECEIVED = "received"
         CANCELLED = "cancelled"
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     user = models.ForeignKey(
         auth_models.UserModel, models.CASCADE,
@@ -219,6 +221,8 @@ class Payment(models.Model):
         'Message': 'message',
         'Details': 'details',
     }
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     amount = models.IntegerField(verbose_name='Сумма в копейках', editable=False)
     order_id = models.CharField(verbose_name='Номер заказа', max_length=100, editable=False)
