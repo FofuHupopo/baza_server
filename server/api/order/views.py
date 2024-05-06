@@ -448,9 +448,9 @@ class PaymentResponseSuccessView(APIView):
             "floor_number": order.floor_number,
             "apartment_number": order.apartment_number,
             "intercom": order.intercom,
+            "user_id": order.user.pk,
             "user_name": order.user.name,
             "user_surname": order.user.surname,
-            "user_id": order.user.pk,
             "user_phone": order.user.phone,
             "user_email": order.user.email,
             "products": [
@@ -460,7 +460,7 @@ class PaymentResponseSuccessView(APIView):
                     "size": product.product_modification_model.size.name,
                     "quantity": product.quantity,
                     "code": product.product_modification_model.product.code,
-                    "image": f"https://thebaza.ru/products/{product.product_modification_model.slug[:-1]}"
+                    "url": f"https://thebaza.ru/products/{product.product_modification_model.slug[:-1]}"
                 }
                 for product in products
             ]
