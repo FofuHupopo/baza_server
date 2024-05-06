@@ -416,7 +416,7 @@ class PaymentResponseSuccessView(APIView):
         payment = models.Payment.objects.get(
             pk=payment_id
         )
-        
+
         merchant_api.status(payment)
         payment.save()
         
