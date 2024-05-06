@@ -27,11 +27,10 @@
         if (data.detail) {
           alert(data.detail);
         }
+        window.location.href = window.location.href;
       })
       .catch(error => alert(error));
     }
-
-    window.location.href = window.location.href;
   };
 
   function getCookie(name) {
