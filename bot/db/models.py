@@ -34,6 +34,12 @@ class OrderModel(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     order_id = Column(Integer)
     products = Column(String)
+    
+    user_id = Column(Integer)
+    user_name = Column(String)
+    user_surname = Column(String)
+    user_phone = Column(String)
+    user_email = Column(String)
 
     receiving = Column(String(255))
     is_express = Column(Boolean, default=False)
