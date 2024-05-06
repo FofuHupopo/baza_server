@@ -386,7 +386,7 @@ class PaymentStatusView(APIView):
 
         merchant_api.status(payment)
         payment.save()
-        
+
         if payment.message != "OK":
             payment.set_payment_fail()
             
@@ -394,7 +394,7 @@ class PaymentStatusView(APIView):
             order = models.OrderModel.objects.get(
                 pk=payment.order_id
             )
-            
+
             order.is_paid = payment.is_paid()
             order.status = models.OrderModel.OrderStatusChoice.PAID
 
@@ -440,7 +440,7 @@ class PaymentResponseSuccessView(APIView):
         )
         
         BotServer.new_order({
-            "order_id": order.pk,
+            "order_id": str(order.id),
             "receiving": order.receiving,
             "address": order.address,
             "code": order.code,
@@ -448,12 +448,19 @@ class PaymentResponseSuccessView(APIView):
             "floor_number": order.floor_number,
             "apartment_number": order.apartment_number,
             "intercom": order.intercom,
+            "user_name": order.user.name,
+            "user_surname": order.user.surname,
+            "user_id": order.user.pk,
+            "user_phone": order.user.phone,
+            "user_email": order.user.email,
             "products": [
                 {
                     "name": product.product_modification_model.product.name,
                     "color": product.product_modification_model.color.name,
                     "size": product.product_modification_model.size.name,
-                    "quantity": product.quantity
+                    "quantity": product.quantity,
+                    "code": product.product_modification_model.product.code,
+                    "image": f"https://thebaza.ru/products/{product.product_modification_model.slug[:-1]}"
                 }
                 for product in products
             ]

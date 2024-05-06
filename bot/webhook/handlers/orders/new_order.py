@@ -34,6 +34,7 @@ async def new_order_handler(request: Request):
     
     message = "Основная информация:\n" \
         f"\tID: {order_id}\n" \
+        f"\t\tID заказчика: {order.user_id}\n" \
         f"\tСпособ получения: {receiving_ru}\n"
 
     if order.receiving == "cdek":
@@ -47,9 +48,17 @@ async def new_order_handler(request: Request):
             f"\tНомер квартиры: {order.apartment_number}\n" \
             f"\tДомофон: {order.intercom}\n"
 
+    message += f"\tИнформация о получателе:\n" \
+        f"\t\tИмя: {order.user_name}\n" \
+        f"\t\tФамилия: {order.user_surname}\n" \
+        f"\t\tТелефон: {order.user_phone}\n" \
+        f"\t\tПочта: {order.user_email}\n" \
+
     message += f"\tТовары:\n"
     for product in json.loads(order.products):
         message += f"\t\t{'=' * 40}\n" \
+            f"\t\tСсылка: {product.get('url', '')}\n" \
+            f"\t\tАртикул: {product.get('code', '')}\n" \
             f"\t\tНазвание: {product.get('name', '')}\n" \
             f"\t\tЦвет: {product.get('color', '')}\n" \
             f"\t\tРазмер: {product.get('size', '')}\n" \
