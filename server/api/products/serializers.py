@@ -488,3 +488,11 @@ class FavoritesSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
 
         return request.build_absolute_uri(image.image.url)
+
+
+class UploadImagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ColorImageModel
+        fields = (
+            "image", "product_color"
+        )

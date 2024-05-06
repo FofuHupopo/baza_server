@@ -1,6 +1,11 @@
 from django.contrib import admin
+from django.http import HttpRequest
+from django.http.response import HttpResponse
 from django.utils.safestring import mark_safe
+from django.http import HttpResponseRedirect
 from django.utils.html import escape
+from django.shortcuts import render, redirect
+from django.contrib import messages
 
 from . import models
 
@@ -23,20 +28,30 @@ class ProductColorImagesInline(admin.StackedInline):
     extra = 0
     
     fields = [
-        "color", "additional_description","images", "go_to_images"
+        "color", "additional_description","images", "go_to_images", "upload_multiple_images"
     ]
 
-    readonly_fields = ["images", "go_to_images"]
+    readonly_fields = ["images", "go_to_images", "upload_multiple_images"]
 
     def images(self, obj):
         images = models.ColorImageModel.objects.filter(
            product_color=obj 
         )
-
-        return mark_safe("".join([
-            f'<img src="{image.image.url}" style="max-height: 200px;">'
+        
+        image_ui_block = "".join([
+            '<div style="display: flex; flex-direction: column; margin-right: 20px;">'
+                f'<img src="{image.image.url}" style="max-height: 200px; margin-bottom: 5px;">'
+                f'<input type="button" value="Удалить" onclick="window.location.href = `/admin/products/colorimagemodel/{image.pk}/delete/?product_id={obj.product.pk}`"/>'
+            '</div>'
             for image in images
-        ]))
+        ])
+        
+        return mark_safe(
+            '<div style="display: flex;">' +
+            image_ui_block +
+            '</div>'
+            )
+
     
     images.short_description = "Изображения"
     images.allow_tags = True
@@ -47,7 +62,15 @@ class ProductColorImagesInline(admin.StackedInline):
         else:
             return mark_safe("<h3>Сначала выберите цвет и сохраните товар.</h3>")
 
-    go_to_images.short_description = "Добавить изображения"
+    go_to_images.short_description = "Загрузить одно изображение"
+    go_to_images.allow_tags = True
+    
+    
+    def upload_multiple_images(self, obj):
+        response = render(HttpRequest(), "upload-multiple-images.html", {"product_color_id": obj.pk})
+        return mark_safe(response.content.decode("utf-8"))
+
+    upload_multiple_images.short_description = "Загрузить несколько изображений"
     go_to_images.allow_tags = True
 
 
@@ -236,6 +259,30 @@ class ProductColorImagesAdmin(admin.ModelAdmin):
     go_product.allow_tags = True
 
     inlines = [ColorImageInline]
+
+
+@admin.register(models.ColorImageModel)
+class ColorImageAdmin(admin.ModelAdmin):
+    fields = [
+        "image_preview", "image"
+    ]
+
+    readonly_fields = ["image_preview"]
+
+    def image_preview(self, obj):
+        return mark_safe(f'<img src="{obj.image.url}" style="max-height: 200px;">')
+    
+    image_preview.short_description = "Изображение"
+    
+    def response_delete(self, request: HttpRequest, obj_display: str, obj_id: int) -> HttpResponse:
+        product_id = request.GET.get("product_id")
+
+        if product_id:
+            url = f"/admin/products/productmodel/{product_id}/change/"
+            return HttpResponseRedirect(url)
+        else:
+            return super().response_delete(request, obj_display, obj_id)
+
 
 # admin.site.register(models.ColorImageModel)
 # admin.site.register(models.ProductModel)

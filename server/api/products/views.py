@@ -2,12 +2,13 @@ from rest_framework import status, generics
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.request import Request, HttpRequest
+from rest_framework.request import Request
 from rest_framework.permissions import AllowAny
 from django.conf import settings
-from django.db.models import Q
+from rest_framework import parsers
 import json
 
+from api.permissions import IsSuperUser
 from . import models
 from . import serializers
 
@@ -253,3 +254,18 @@ class ProductDetailView(APIView):
             },
             status.HTTP_200_OK
         )
+
+
+class UploadImageViews(APIView):
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
+    permission_classes = [IsSuperUser]
+
+    def post(self, request: Request):
+        serializer = serializers.UploadImagesSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+        return Response(serializer.data, status.HTTP_201_CREATED)
