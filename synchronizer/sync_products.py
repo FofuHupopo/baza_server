@@ -1,8 +1,11 @@
 from pathlib import Path
-from ..app.synchronizer import MoySkaldSynchronizer
+from dotenv import load_dotenv
+from app.synchronizer import MoySkaldSynchronizer
 
 
 def main():
+    load_dotenv()
+
     PRODUCT_MEDIA_PATH = Path("product_images")
     ROOT_PATH = "сайт"
 
