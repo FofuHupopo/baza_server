@@ -1,5 +1,6 @@
-import difflib
 import json
+import difflib
+from uuid import UUID
 from django.conf import settings
 from functools import lru_cache
 
@@ -33,3 +34,10 @@ def get_country_phone_code(query: str, limit: int=5):
         list(filter(lambda country: country["phone_code"].startswith(query), COUNTRIES)),
         key=lambda country: (len(country["phone_code"]) - len(query), country["name_ru"])
     )[:limit]
+
+
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            return obj.hex
+        return json.JSONEncoder.default(self, obj)
