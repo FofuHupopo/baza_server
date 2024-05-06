@@ -43,7 +43,8 @@ class ProductPathSerializer(serializers.ModelSerializer):
         
         for children_path in children:
             is_exist = models.ProductModel.objects.filter(
-                path=children_path
+                path=children_path,
+                visible=True
             ).exists()
 
             if is_exist:
