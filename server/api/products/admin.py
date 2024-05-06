@@ -39,7 +39,7 @@ class ProductColorImagesInline(admin.StackedInline):
         )
 
         image_ui_block = "".join([
-            '<div style="display: flex; flex-direction: column; flex-wrap: wrap; margin-right: 20px;">'
+            '<div style="display: flex; flex-direction: column; margin-right: 20px;">'
                 f'<img src="{image.image.url}" style="max-height: 200px; margin-bottom: 5px;">'
                 f'<input type="button" value="Удалить" onclick="window.location.href = `/admin/products/colorimagemodel/{image.pk}/delete/?product_id={obj.product.pk}`"/>'
             '</div>'
@@ -47,7 +47,7 @@ class ProductColorImagesInline(admin.StackedInline):
         ])
 
         return mark_safe(
-            '<div style="display: flex;">' +
+            '<div style="display: flex; flex-wrap: wrap;">' +
             image_ui_block +
             '</div>'
         )
