@@ -3,7 +3,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.permissions import AllowAny
+from rest_framework import authentication
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from django.conf import settings
 from rest_framework import parsers
 import json
@@ -258,7 +259,10 @@ class ProductDetailView(APIView):
 
 class UploadImageViews(APIView):
     parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
-    permission_classes = [IsSuperUser]
+    permission_classes = [IsAuthenticated, IsSuperUser]
+    authentication_classes = [
+        authentication.SessionAuthentication
+    ]
 
     def post(self, request: Request):
         serializer = serializers.UploadImagesSerializer(data=request.data)
