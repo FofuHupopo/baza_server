@@ -174,9 +174,8 @@ class MoySkaldSynchronizer(MoySklad):
             product_instance.product_id = product["id"]
             product_instance.name = product["name"]
             product_instance.code = product["code"]
-            product_instance.description = product.get("description", "")
             product_instance.path_id = product_path.id
-            
+
             product_instance.price = int(product["salePrices"][0]["value"])
             
             if len(product["salePrices"]) > 1:
