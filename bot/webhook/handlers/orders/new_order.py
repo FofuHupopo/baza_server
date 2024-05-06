@@ -11,6 +11,8 @@ async def new_order_handler(request: Request):
     
     order_id = body["order_id"]
     data = {
+        "comment": body.get("comment", ""),
+        
         "receiving": body["receiving"],
         "is_express": body.get("is_express", False),
         "address": body.get("address", None),
@@ -41,7 +43,7 @@ async def new_order_handler(request: Request):
     
     message = "Основная информация:\n" \
         f"\tID: {order_id}\n" \
-        f"\t\tID заказчика: {order.user_id}\n" \
+        f"\tID заказчика: {order.user_id}\n" \
         f"\tСпособ получения: {receiving_ru}\n"
 
     if order.receiving == "cdek":
@@ -71,6 +73,8 @@ async def new_order_handler(request: Request):
             f"\t\tРазмер: {product.get('size', '')}\n" \
             f"\t\tКоличество: {product.get('quantity', 0)}\n" \
             f"\t\t{'=' * 40}\n" \
+                
+    message += f"\tКомментарий к заказу: {order.comment}"
 
     await notify_managers(f"Появился новый заказ.\n{message}")
     

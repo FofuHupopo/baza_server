@@ -33,6 +33,7 @@ class OrderModel(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     order_id = Column(Integer)
+    comment = Column(String)
     products = Column(String)
     
     user_id = Column(Integer)

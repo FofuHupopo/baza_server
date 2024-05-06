@@ -75,7 +75,10 @@ class OrderModel(models.Model):
         verbose_name="Код ПВЗ", default=None,
         null=True, blank=True
     )
-    
+    comment = models.TextField(
+        verbose_name="Комментарий к заказу", default="",
+        null=True, blank=True
+    )
     apartment_number = models.IntegerField(
         verbose_name="Номер квартиры", default=None,
         null=True, blank=True
