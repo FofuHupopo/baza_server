@@ -280,12 +280,10 @@ AWS_S3_SECRET_ACCESS_KEY = getenv('AWS_S3_SECRET_ACCESS_KEY')
 AWS_QUERYSTRING_AUTH = False
 
 
-REDIS_HOST = 'redis' if getenv('IS_DOKER') else '127.0.0.1'
-
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{REDIS_HOST}:6379/1",
+        "LOCATION": f"redis://127.0.0.1:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
