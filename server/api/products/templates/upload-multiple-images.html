@@ -4,33 +4,29 @@
 </form>
 
 <script>
-  function uploadImage(product_color_id) {
+  async function uploadImage(product_color_id) {
     let files = document.getElementById(`file_${product_color_id}`).files;
-
-    console.log(files)
-    
+  
     for (let i = 0; i < files.length; i++) {
       let formData = new FormData();
       formData.append("product_color", product_color_id);
       formData.append("image", files[i]);
   
-      fetch("/api/products/upload-image/", {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-        headers: {
-          'X-CSRFToken': getCookie("csrftoken")
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.detail) {
-          alert(data.detail);
-        }
-        window.location.href = window.location.href;
-      })
-      .catch(error => alert(error));
+      try {
+        await fetch("/api/products/upload-image/", {
+          method: "POST",
+          credentials: "include",
+          body: formData,
+          headers: {
+            'X-CSRFToken': getCookie("csrftoken")
+          }
+        })
+      } catch (e) {
+        alert(e)
+      }
     }
+  
+    window.location.href = window.location.href;
   };
 
   function getCookie(name) {
@@ -39,7 +35,6 @@
         var cookies = document.cookie.split(';');
         for (var i = 0; i < cookies.length; i++) {
             var cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) == (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
