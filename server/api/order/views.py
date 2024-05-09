@@ -355,7 +355,7 @@ class PaymentView(APIView):
             # for product in order_to_modifications:
             #     models.ReceiptItem.objects.create(
             #         receipt=receipt,
-            #         product_modification=product.product_modification_model,
+            #         product=product.product_modification_model,
             #         price=product.product_modification_model.product.price,
             #         quantity=product.quantity,
             #         amount=product.product_modification_model.product.price * product.quantity
@@ -368,7 +368,7 @@ class PaymentView(APIView):
             
             items = payment.with_items([
                 {
-                    "product_modification": product.product_modification_model,
+                    "product": product.product_modification_model,
                     "price": product.product_modification_model.product.price,
                     "quantity": product.quantity,
                     "amount": product.product_modification_model.product.price * product.quantity
