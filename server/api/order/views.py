@@ -1,3 +1,4 @@
+import os
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,10 +18,7 @@ from . import serializers
 from . import docs
 
 
-merchant_api = MerchantAPI(
-    terminal_key="1693394744755DEMO",
-    secret_key="cvr9aqrb3mq60a74"
-)
+merchant_api = MerchantAPI()
 
 @extend_schema_view(
     get=extend_schema(
