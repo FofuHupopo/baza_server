@@ -19,7 +19,10 @@ from . import serializers
 from . import docs
 
 
-merchant_api = MerchantAPI()
+merchant_api = MerchantAPI(
+    terminal_key=settings.TINKOFF_PAYMENTS_CONFIG['TERMINAL_KEY'],
+    secret_key=settings.TINKOFF_PAYMENTS_CONFIG['SECRET_KEY'],
+)
 
 @extend_schema_view(
     get=extend_schema(
