@@ -24,6 +24,8 @@ merchant_api = MerchantAPI(
     secret_key=os.getenv('SECRET_KEY'),
 )
 
+print(merchant_api.terminal_key, merchant_api.secret_key)
+
 @extend_schema_view(
     get=extend_schema(
         summary="Просмотр всех заказов",
