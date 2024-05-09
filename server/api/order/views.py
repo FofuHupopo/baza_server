@@ -6,6 +6,7 @@ from rest_framework.request import Request
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.http.response import HttpResponseRedirect
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter, OpenApiTypes
+from django.conf import settings
 
 from . import models
 from api.permissions import TinkoffPermission

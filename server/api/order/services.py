@@ -26,25 +26,25 @@ class MerchantAPI:
     @property
     def secret_key(self):
         if not self._secret_key:
-            self._secret_key = get_config()['SECRET_KEY']
+            self._secret_key = get_config()["TINKOFF_PAYMENTS_CONFIG"]['SECRET_KEY']
         return self._secret_key
 
     @property
     def terminal_key(self):
         if not self._terminal_key:
-            self._terminal_key = get_config()['TERMINAL_KEY']
+            self._terminal_key = get_config()["TINKOFF_PAYMENTS_CONFIG"]['TERMINAL_KEY']
         return self._terminal_key
     
     @property
     def success_url(self):
         if not self._success_url:
-            self._success_url = get_config()['SUCCESS_URL']
+            self._success_url = get_config()["TINKOFF_PAYMENTS_CONFIG"]['SUCCESS_URL']
         return self._success_url
     
     @property
     def fail_url(self):
         if not self._fail_url:
-            self._fail_url = get_config()['FAIL_URL']
+            self._fail_url = get_config()["TINKOFF_PAYMENTS_CONFIG"]['FAIL_URL']
         return self._fail_url
 
     def _request(self, url: str, method: types.FunctionType, data: dict) -> requests.Response:
