@@ -259,8 +259,8 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 20971520  # 20 MB
 
 
 TINKOFF_PAYMENTS_CONFIG = {
-    "TERMINAL_KEY": "1693394744755DEMO",
-    "SECRET_KEY": "cvr9aqrb3mq60a74",
+    "TERMINAL_KEY": getenv("TERMINAL_KEY"),
+    "SECRET_KEY": getenv("SECRET_KEY"),
     
     'SUCCESS_URL': f"{URL}/api/orders/payment/response/success",
     'FAIL_URL': f'{URL}/api/orders/payment/response/fail'
@@ -293,26 +293,3 @@ SESSION_CACHE_ALIAS = "default"
 REST_FRAMEWORK_EXTENSIONS = {
     'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60
 }
-
-
-# LOGGING = {
-#     'version': 1,
-#     'filters': {
-#         'require_debug_true': {
-#             '()': 'django.utils.log.RequireDebugTrue',
-#         }
-#     },
-#     'handlers': {
-#         'console': {
-#             'level': 'DEBUG',
-#             'filters': ['require_debug_true'],
-#             'class': 'logging.StreamHandler',
-#         }
-#     },
-#     'loggers': {
-#         'django.db.backends': {
-#             'level': 'DEBUG',
-#             'handlers': ['console'],
-#         }
-#     }
-# }
