@@ -351,22 +351,13 @@ class PaymentView(APIView):
                 order_id=order.pk,
                 description=payment_description
             )
-            
-            # for product in order_to_modifications:
-            #     models.ReceiptItem.objects.create(
-            #         receipt=receipt,
-            #         product=product.product_modification_model,
-            #         price=product.product_modification_model.product.price,
-            #         quantity=product.quantity,
-            #         amount=product.product_modification_model.product.price * product.quantity
-            #     )
-            
+
             receipt = payment.with_receipt(
                 email=request.user.email or order.email,
                 phone=request.user.phone or order.phone
             )
             
-            items = payment.with_items([
+            receipt_items = [
                 {
                     "product": product.product_modification_model,
                     "price": product.product_modification_model.product.price,
@@ -374,7 +365,36 @@ class PaymentView(APIView):
                     "amount": product.product_modification_model.product.price * product.quantity
                 }
                 for product in order_to_modifications
-            ])
+            ]
+            
+            if order.receiving == "personal" and order.is_express:
+                receipt_items.append({
+                    "product": None,
+                    "name": "Экспресс доствка",
+                    "price": 150000,
+                    "quantity": 1,
+                    "amount": 150000
+                })
+
+            if order.receiving == "personal" and not order.is_express:
+                receipt_items.append({
+                    "product": None,
+                    "name": "Обычная доствка",
+                    "price": 120000,
+                    "quantity": 1,
+                    "amount": 120000
+                })
+
+            if order.receiving == "cdek":
+                receipt_items.append({
+                    "product": None,
+                    "name": "Доствка CDEK",
+                    "price": 60000,
+                    "quantity": 1,
+                    "amount": 60000
+                })
+            
+            items = payment.with_items(receipt_items)
 
             merchant_api.init(payment)
 

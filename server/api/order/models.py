@@ -347,7 +347,12 @@ class ReceiptItem(models.Model):
     )
     product = models.ForeignKey(
         product_models.ProductModificationModel, models.PROTECT,
-        verbose_name="Товар"
+        verbose_name="Товар",
+        null=True, blank=True
+    )
+    name = models.CharField(
+        verbose_name='Название', max_length=255,
+        null=True, blank=True
     )
     price = models.IntegerField(verbose_name='Цена в копейках')
     quantity = models.IntegerField(verbose_name='Количество')
@@ -368,7 +373,7 @@ class ReceiptItem(models.Model):
 
     def to_json(self) -> dict:
         return {
-            'Name': self.product.name,
+            'Name': self.product.name if self.product else self.name,
             'Price': self.price,
             'Quantity': self.quantity,
             'Amount': self.amount,
