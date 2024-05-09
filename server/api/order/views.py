@@ -351,6 +351,30 @@ class PaymentView(APIView):
                 order_id=order.pk,
                 description=payment_description
             )
+            
+            # for product in order_to_modifications:
+            #     models.ReceiptItem.objects.create(
+            #         receipt=receipt,
+            #         product_modification=product.product_modification_model,
+            #         price=product.product_modification_model.product.price,
+            #         quantity=product.quantity,
+            #         amount=product.product_modification_model.product.price * product.quantity
+            #     )
+            
+            receipt = payment.with_receipt(
+                email=request.user.email or order.email,
+                phone=request.user.phone or order.phone
+            )
+            
+            items = payment.with_items([
+                {
+                    "product_modification": product.product_modification_model,
+                    "price": product.product_modification_model.product.price,
+                    "quantity": product.quantity,
+                    "amount": product.product_modification_model.product.price * product.quantity
+                }
+                for product in order_to_modifications
+            ])
 
             merchant_api.init(payment)
 

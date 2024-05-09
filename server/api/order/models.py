@@ -334,6 +334,7 @@ class Receipt(models.Model):
         return {
             'Email': self.email,
             'Phone': self.phone,
+            'Taxation': 'usn_income',
             'Items': [item.to_json() for item in self.receiptitem_set.all()]
         }
 
@@ -371,4 +372,5 @@ class ReceiptItem(models.Model):
             'Price': self.price,
             'Quantity': self.quantity,
             'Amount': self.amount,
+            'Tax': 'none',
         }
