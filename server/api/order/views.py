@@ -20,8 +20,8 @@ from . import docs
 
 
 merchant_api = MerchantAPI(
-    terminal_key=settings.TINKOFF_PAYMENTS_CONFIG['TERMINAL_KEY'],
-    secret_key=settings.TINKOFF_PAYMENTS_CONFIG['SECRET_KEY'],
+    terminal_key=os.getenv("TERMINAL_KEY"),
+    secret_key=os.getenv('SECRET_KEY'),
 )
 
 @extend_schema_view(
