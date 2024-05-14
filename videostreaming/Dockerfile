@@ -6,6 +6,8 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
 COPY . .
