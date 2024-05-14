@@ -97,7 +97,6 @@ class MerchantAPI:
         return token == self._token(data)
 
     def init(self, p: Payment) -> Payment:
-        print("TINKOFF DATA:", self.terminal_key, self.secret_key)
         response = self._request('INIT', requests.post, {
             **p.to_json(),
             "SuccessURL": self.success_url + f"/{p.pk}",
