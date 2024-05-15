@@ -1,6 +1,7 @@
 import hashlib
 import json
 import types
+from uuid import UUID
 
 import requests
 
@@ -71,19 +72,28 @@ class MerchantAPI:
             base.append(['TerminalKey', self.terminal_key])
 
         for k, v in data.items():
-            if k == 'Token':
+            if k in 'Token':
                 continue
             if isinstance(v, bool):
                 base.append([k, str(v).lower()])
-            elif not isinstance(v, list) or not isinstance(v, dict):
+            elif isinstance(v, UUID):
+                base.append([k, str(v)])
+            elif not isinstance(v, list) and not isinstance(v, dict):
                 base.append([k, v])
 
         base.sort(key=lambda i: i[0])
+        print(base, data)
         values = ''.join(map(lambda i: str(i[1]), base))
+        
+        print(values)
 
-        m = hashlib.sha256()
-        m.update(values.encode())
-        return m.hexdigest()
+        m = hashlib.sha256(values.encode())
+        # m.update(values.encode())
+        
+        token = m.hexdigest()
+        print(token)
+        
+        return token
 
     @staticmethod
     def update_payment_from_response(p: Payment, response: dict) -> Payment:

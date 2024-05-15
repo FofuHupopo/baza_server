@@ -20,8 +20,8 @@ from . import docs
 
 
 merchant_api = MerchantAPI(
-    terminal_key=os.getenv("TERMINAL_KEY"),
-    secret_key=os.getenv('SECRET_KEY'),
+    terminal_key="1693394744755DEMO",
+    secret_key="cvr9aqrb3mq60a74",
 )
 
 @extend_schema_view(
@@ -316,6 +316,7 @@ class CalculateView(APIView):
 )
 class PaymentView(APIView):
     serializer_class = serializers.PaymentSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request: Request):
         order_id = request.query_params.get("order_id")
@@ -358,7 +359,7 @@ class PaymentView(APIView):
                 email=request.user.email or order.email,
                 phone=request.user.phone or order.phone
             )
-            
+
             receipt_items = [
                 {
                     "product": product.product_modification_model,
@@ -368,7 +369,7 @@ class PaymentView(APIView):
                 }
                 for product in order_to_modifications
             ]
-            
+
             if order.receiving == "personal" and order.is_express:
                 receipt_items.append({
                     "product": None,
@@ -414,6 +415,7 @@ class PaymentView(APIView):
 
 class PaymentStatusView(APIView):
     serializer_class = serializers.PaymentSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request: Request):
         payment_id = request.query_params.get("payment_id")
@@ -525,14 +527,14 @@ class PaymentResponseFailView(APIView):
             id=payment_id
         )
         
-        merchant_api.status(payment)
+        payment = merchant_api.status(payment)
         payment.save()
-        
+
         if not payment.is_paid():
             payment.payment_fail = True
 
         payment.save()
-        
+
         order = models.OrderModel.objects.get(
             pk=payment.order_id
         )
