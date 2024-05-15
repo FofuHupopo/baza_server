@@ -20,8 +20,8 @@ from . import docs
 
 
 merchant_api = MerchantAPI(
-    terminal_key="1693394744755DEMO",
-    secret_key="cvr9aqrb3mq60a74",
+    terminal_key=os.getenv("TERMINAL_KEY"),
+    secret_key=os.getenv("SECRET_KEY"),
 )
 
 @extend_schema_view(
@@ -473,20 +473,20 @@ class PaymentResponseSuccessView(APIView):
             payment.save()
             
             return HttpResponseRedirect("https://thebaza.ru/order/failed") # Not payment
-        
+
         order = models.OrderModel.objects.get(
             pk=payment.order_id
         )
-        
+
         order.is_paid = True
         order.status = models.OrderModel.OrderStatusChoice.PAID
 
         order.save()
-        
+
         products = models.Order2ModificationModel.objects.filter(
             order_model_id=order.pk
         )
-        
+
         BotServer.new_order({
             "order_id": str(order.id),
             "receiving": order.receiving,
