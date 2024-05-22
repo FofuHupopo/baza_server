@@ -458,7 +458,7 @@ class PaymentStatusView(APIView):
 
 class PaymentResponseSuccessView(APIView):
     serializer_class = serializers.PaymentSerializer
-    permission_classes = [TinkoffPermission]
+    permission_classes = [AllowAny]
 
     def get(self, request: Request, payment_id: int):
         payment = models.Payment.objects.get(
@@ -520,7 +520,7 @@ class PaymentResponseSuccessView(APIView):
 
 class PaymentResponseFailView(APIView):
     serializer_class = serializers.PaymentSerializer
-    permission_classes = [TinkoffPermission]
+    permission_classes = [AllowAny]
 
     def get(self, request: Request, payment_id: int):
         payment = models.Payment.objects.get(
