@@ -8,5 +8,5 @@ class Encoder(json.JSONEncoder):
         if isinstance(o, decimal.Decimal):
             return float(o)
         if isinstance(o, UUID):
-            return o.hex
+            return str(o)
         return super().default(o)
