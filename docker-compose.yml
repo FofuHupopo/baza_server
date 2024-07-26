@@ -17,6 +17,8 @@ services:
     volumes:
       - media:/media/
       - static:/static/
+      - /etc/letsencrypt/:/etc/letsencrypt/
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
 
   # Backend
   server:
