@@ -211,19 +211,22 @@ class DolyameAPI:
         return self.update_payment_from_response(p, response)
     
     def commit(self, p: DolyameModel) -> DolyameModel:
+        if p.commited:
+            return p
+
         response = self._request('COMMIT', requests.post, p.to_json(), p.order.id).json()
         p.commited = True
 
         return self.update_payment_from_response(p, response)
-        
+
     def info(self, p: DolyameModel) -> DolyameModel:
         response = self._request('INFO', requests.get, {}, p.order.id).json()
         return self.update_payment_from_response(p, response)
-    
+
     def refund(self, p: DolyameModel) -> DolyameModel:
         response = self._request('REFUND', requests.post, p.to_json(), p.order.id).json()
         return self.update_payment_from_response(p, response)
-    
+
     def cancel(self, p: DolyameModel) -> DolyameModel:
         response = self._request('CANCEL', requests.post, p.to_json(), p.order.id).json()
         return self.update_payment_from_response(p, response)

@@ -508,6 +508,47 @@ class DolyameView(APIView):
         )
 
 
+class DolyameInfoView(APIView):
+    serializer_class = serializers.DolyameSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request: Request):
+        dolyame_id = request.query_params.get("dolyame_id")
+
+        try:
+            dolyame = models.DolyameModel.objects.get(
+                pk=dolyame_id
+            )
+        except models.DolyameModel.DoesNotExist:
+            return Response(
+                {"status": "Не был передан query параметр dolyame_id."},
+                status.HTTP_400_BAD_REQUEST
+            )
+
+        dolyame_api.info(dolyame)
+        dolyame.save()
+            
+        if dolyame.is_paid():
+            order = models.OrderModel.objects.get(
+                pk=dolyame.order.id
+            )
+
+            order.is_paid = dolyame.is_paid()
+            order.status = models.OrderModel.OrderStatusChoice.PAID
+
+            order.save()
+        else:
+            dolyame.payment_fail = True
+            dolyame.save()
+
+        serializer = self.serializer_class(dolyame)
+
+        return Response(
+            serializer.data,
+            status.HTTP_200_OK
+        )
+
+
 class PaymentResponseSuccessView(APIView):
     serializer_class = serializers.PaymentSerializer
     permission_classes = [AllowAny]
@@ -573,7 +614,7 @@ class DolyameResponseSuccessView(APIView):
     serializer_class = serializers.DolyameSerializer
     permission_classes = [AllowAny]
 
-    def get(self, request: Request, dolyame_id: int):
+    def get(self, request: Request, dolyame_id: str):
         dolyame = models.DolyameModel.objects.get(
             pk=dolyame_id
         )
@@ -609,7 +650,7 @@ class DolyameResponseFailView(APIView):
     serializer_class = serializers.DolyameSerializer
     permission_classes = [AllowAny]
 
-    def get(self, request: Request, dolyame_id: int):
+    def get(self, request: Request, dolyame_id: str):
         dolyame = models.DolyameModel.objects.get(
             id=dolyame_id
         )

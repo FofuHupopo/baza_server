@@ -14,6 +14,7 @@ urlpatterns = [
     path("payment/status/", views.PaymentStatusView.as_view(), name="order__payment_status"),
     
     path("dolyame/", views.DolyameView.as_view(), name="order__dolyame_create"),
+    path("dolyame/info", views.DolyameInfoView.as_view(), name="order__dolyame_create"),
     
     path("payment/response/success/<str:payment_id>", views.PaymentResponseSuccessView.as_view(), name="order__payment_response_success"),
     path("payment/response/fail/<str:payment_id>", views.PaymentResponseFailView.as_view(), name="order__payment_response_fail"),

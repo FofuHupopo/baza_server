@@ -495,7 +495,7 @@ class DolyameModel(models.Model):
         return f"{self.pk} ({self.order})"
     
     def is_paid(self) -> bool:
-        return self.status == 'approved' or self.status == 'wait_for_commit'
+        return self.status in ('approved', 'committed', 'completed', 'wait_for_commit', 'waiting_for_commit')
 
     @staticmethod
     def create(**kwargs):
