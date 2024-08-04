@@ -63,6 +63,12 @@ class PaymentSerializer(serializers.ModelSerializer):
         fields = "__all__"
         
         
+class DolyameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DolyameModel
+        fields = "__all__"
+
+
 class ProductsCalculateSerializer(serializers.Serializer):
     name = serializers.CharField()
     quantity = serializers.IntegerField()

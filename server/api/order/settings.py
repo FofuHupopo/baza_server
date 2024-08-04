@@ -8,12 +8,27 @@ DEFAULT_CONFIG = {
         'GET_STATE': 'https://securepay.tinkoff.ru/v2/GetState',
         'CANCEL': 'https://securepay.tinkoff.ru/v2/Cancel',
     },
+    'DOLYAME': {
+        'LOGIN': '',
+        'PASSWORD': '',
+        'CERT_PATH': '',
+        'KEY_PATH': '',
+        'URLS': {
+            'CREATE': 'https://partner.dolyame.ru/v1/orders/create',
+            'CANCEL': 'https://partner.dolyame.ru/v1/orders/{orderId}/cancel',
+            'REFUND': 'https://partner.dolyame.ru/v1/orders/{orderId}/refund',
+            'COMMIT': 'https://partner.dolyame.ru/v1/orders/{orderId}/commit',
+            'INFO': 'https://partner.dolyame.ru/v1/orders/{orderId}/info',
+            'COMPLETE_DELIVERY': 'https://partner.dolyame.ru/v1/orders/{orderId}/complete_delivery',
+        }
+    },
     'TAXATION': 'usn_income',
     'ITEM_TAX': 'none',
     'TERMINAL_KEY': '',
     'SECRET_KEY': '',
     'SUCCESS_URL': '',
-    'FAIL_URL': ''
+    'FAIL_URL': '',
+    'NOTIFIACTION_URL': '',
 }
 
 

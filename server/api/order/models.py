@@ -60,6 +60,7 @@ class OrderModel(models.Model):
         choices=[
             ("online", "Картой онлайн"),
             ("cash", "Наличными"),
+            ("dolyame", "Долями"),
             ("sbp", "СБП")
         ],
         max_length=32
@@ -139,6 +140,50 @@ class OrderModel(models.Model):
     amount = models.IntegerField(
         "Стоимость", default=0
     )
+    
+    prepaid_amount = models.IntegerField(
+        "Сумма аванса",
+        null=True, blank=True
+    )
+    
+    @property
+    def items(self):
+        items = []
+        
+        for order2modification in Order2ModificationModel.objects.filter(
+            order_model_id=self.id
+        ):
+            product = order2modification.product_modification_model
+            quantity = order2modification.quantity
+    
+            items.append({
+                "name": product.product.name,
+                "price": product.product.price,
+                "quantity": quantity,
+            })
+        
+        if self.receiving == "cdek":
+            items.append({
+                "name": "Доствка CDEK",
+                "price": 60000,
+                "quantity": 1
+            })
+        
+        if self.receiving == "personal" and self.is_express:
+            items.append({
+                "name": "Экспресс доствка",
+                "price": 150000,
+                "quantity": 1
+            })
+        
+        if self.receiving == "personal" and not self.is_express:
+            items.append({
+                "name": "Обычная доствка",
+                "price": 120000,
+                "quantity": 1
+            })
+
+        return items
 
     class Meta:
         db_table = "order__order"
@@ -379,3 +424,102 @@ class ReceiptItem(models.Model):
             'Amount': self.amount,
             'Tax': 'none',
         }
+
+
+class DolyameModel(models.Model):
+    RESPONSE_FIELDS = {
+        'amount': 'amount',
+        'status': 'status',
+        'residual_amount': 'residual_amount',
+        'link': 'payment_url',
+    }
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    order = models.ForeignKey(
+        OrderModel, models.CASCADE,
+        verbose_name="Заказ"
+    )
+    
+    status = models.CharField(
+        'Статус транзакции', max_length=20,
+        default='', editable=False
+    )
+    amount = models.FloatField(
+        'Сумма в копейках',
+        null=True, blank=True,
+    )
+    residual_amount = models.FloatField(
+        'Сумма подлежащая погашению',
+        null=True, blank=True,
+    )
+    payment_url = models.CharField(
+        verbose_name='Ссылка на страницу оплаты.',
+        max_length=500, blank=True, default='', editable=False
+    )
+    
+    payment_fail = models.BooleanField(verbose_name="Оплата провалена", default=False)
+    commited = models.BooleanField(verbose_name="Оплата проведена", default=False)
+    
+    class Meta:
+        verbose_name = 'Доляме'
+        verbose_name_plural = 'Доляме'
+        db_table = 'dolyame'
+
+    def to_json(self) -> dict:
+        items = []
+        
+        for item in self.order.items:
+            items.append({
+                **item,
+                "price": item.get("price", 0) / 100,
+            })
+        
+        return {
+            'id': self.id,
+            'order': {
+                'id': self.order.id,
+                'amount': self.order.amount / 100,
+                'prepaid_amount': self.order.prepaid_amount,
+                'items': items
+            },
+            "client_info": {
+                "first_name": self.order.user.name,
+                "last_name": self.order.user.surname,
+                "birthdate": self.order.user.birthday_date,
+                "phone": self.order.user.phone,
+                "email": self.order.user.email
+            }
+        }
+
+    def __str__(self):
+        return f"{self.pk} ({self.order})"
+    
+    def is_paid(self) -> bool:
+        return self.status == 'approved' or self.status == 'wait_for_commit'
+
+    @staticmethod
+    def create(**kwargs):
+        try:
+            dolyame = DolyameModel.objects.get(
+                order_id=kwargs.get("order_id"),
+                payment_fail=False
+            )
+
+            return dolyame
+        except DolyameModel.DoesNotExist:
+            return DolyameModel.objects.create(**kwargs)
+
+    @staticmethod
+    def get(**kwargs):
+        try:
+            dolyame = DolyameModel.objects.get(
+                order_id=kwargs.get("order_id"),
+                payment_fail=False
+            )
+
+            return dolyame
+        except DolyameModel.DoesNotExist:
+            return DolyameModel.objects.get(**kwargs)
+        
+    def save(self, *args, **kwargs) -> DolyameModel:
+        return super().save(*args, **kwargs)

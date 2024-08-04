@@ -13,6 +13,13 @@ urlpatterns = [
     path("payment/", views.PaymentView.as_view(), name="order__payment_init"),
     path("payment/status/", views.PaymentStatusView.as_view(), name="order__payment_status"),
     
+    path("dolyame/", views.DolyameView.as_view(), name="order__dolyame_create"),
+    
     path("payment/response/success/<str:payment_id>", views.PaymentResponseSuccessView.as_view(), name="order__payment_response_success"),
     path("payment/response/fail/<str:payment_id>", views.PaymentResponseFailView.as_view(), name="order__payment_response_fail"),
+    
+    path("dolyame/response/success/<str:dolyame_id>", views.DolyameResponseSuccessView.as_view(), name="order__dolyame_response_success"),
+    path("dolyame/response/fail/<str:dolyame_id>", views.DolyameResponseFailView.as_view(), name="order__dolyame_response_fail"),
+    
+    path("dolyame/notification/<str:dolyame_id>", views.DolyameNotificationView.as_view(), name="order__dolyame_notification"),
 ]

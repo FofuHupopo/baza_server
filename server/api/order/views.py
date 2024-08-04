@@ -10,11 +10,13 @@ from django.conf import settings
 
 from . import models
 from api.permissions import TinkoffPermission
-from .services import MerchantAPI
+from .services import MerchantAPI, DolyameAPI
 from api.request import Delivery
 from api.profile import models as profile_models
 from api.authentication import models as auth_models
 from api.request import BotServer
+
+from .utils import send_bot_order
 from . import serializers
 from . import docs
 
@@ -22,6 +24,13 @@ from . import docs
 merchant_api = MerchantAPI(
     terminal_key=os.getenv("TERMINAL_KEY"),
     secret_key=os.getenv("SECRET_KEY"),
+)
+
+dolyame_api = DolyameAPI(
+    login=os.getenv("DOLYAME_LOGIN"),
+    password=os.getenv("DOLYAME_PASSWORD"),
+    cert_path=os.getenv("DOLYAME_CERT_PATH"),
+    key_path=os.getenv("DOLYAME_KEY_PATH"),
 )
 
 @extend_schema_view(
@@ -454,6 +463,49 @@ class PaymentStatusView(APIView):
             serializer.data,
             status.HTTP_200_OK
         )
+        
+        
+class DolyameView(APIView):
+    serializer_class = serializers.DolyameSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request: Request):
+        order_id = request.query_params.get("order_id")
+
+        try:
+            order = models.OrderModel.objects.get(
+                pk=order_id
+            )
+        except models.OrderModel.DoesNotExist:
+            return Response(
+                {
+                    "status": "Не был передан параметр order_id."
+                },
+                status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            dolyame = models.DolyameModel.get(
+                order_id=order_id
+            )
+        except models.DolyameModel.DoesNotExist:
+            dolyame = models.DolyameModel.create(
+                amount=order.amount,
+                order_id=order.pk,
+            )
+
+            dolyame_api.create(dolyame)
+
+            dolyame.save()
+
+        serializer = self.serializer_class(
+            dolyame
+        )
+
+        return Response(
+            serializer.data,
+            status.HTTP_200_OK
+        )
 
 
 class PaymentResponseSuccessView(APIView):
@@ -487,35 +539,9 @@ class PaymentResponseSuccessView(APIView):
             order_model_id=order.pk
         )
 
-        BotServer.new_order({
-            "order_id": str(order.id),
-            "receiving": order.receiving,
-            "address": order.address,
-            "code": order.code,
-            "is_express": order.is_express,
-            "floor_number": order.floor_number,
-            "apartment_number": order.apartment_number,
-            "intercom": order.intercom,
-            "comment": order.comment,
-            "user_id": order.user.pk,
-            "user_name": order.user.name,
-            "user_surname": order.user.surname,
-            "user_phone": order.user.phone,
-            "user_email": order.user.email,
-            "products": [
-                {
-                    "name": product.product_modification_model.product.name,
-                    "color": product.product_modification_model.color.name,
-                    "size": product.product_modification_model.size.name,
-                    "quantity": product.quantity,
-                    "code": product.product_modification_model.product.code,
-                    "url": f"https://thebaza.ru/products/{product.product_modification_model.slug[:-1]}"
-                }
-                for product in products
-            ]
-        })
+        send_bot_order(order, products)
 
-        return HttpResponseRedirect("https://thebaza.ru/order/successful") # payment
+        return HttpResponseRedirect("https://thebaza.ru/order/successful")
 
 
 class PaymentResponseFailView(APIView):
@@ -532,8 +558,7 @@ class PaymentResponseFailView(APIView):
 
         if not payment.is_paid():
             payment.payment_fail = True
-
-        payment.save()
+            payment.save()
 
         order = models.OrderModel.objects.get(
             pk=payment.order_id
@@ -541,4 +566,89 @@ class PaymentResponseFailView(APIView):
         order.status = models.OrderModel.OrderStatusChoice.FAILED_PAYMENT
         order.save()
 
-        return HttpResponseRedirect("https://thebaza.ru/order/failed") # Not payment
+        return HttpResponseRedirect("https://thebaza.ru/order/failed")
+
+
+class DolyameResponseSuccessView(APIView):
+    serializer_class = serializers.DolyameSerializer
+    permission_classes = [AllowAny]
+
+    def get(self, request: Request, dolyame_id: int):
+        dolyame = models.DolyameModel.objects.get(
+            pk=dolyame_id
+        )
+
+        dolyame_api.info(dolyame)
+        dolyame.save()
+        
+        if not dolyame.is_paid():
+            dolyame.payment_fail = True
+            dolyame.save()
+            
+            return HttpResponseRedirect("https://thebaza.ru/order/failed") # Not payment
+        
+        order = models.OrderModel.objects.get(
+            pk=dolyame.order.id
+        )
+
+        order.is_paid = True
+        order.status = models.OrderModel.OrderStatusChoice.PAID
+
+        order.save()
+
+        products = models.Order2ModificationModel.objects.filter(
+            order_model_id=order.pk
+        )
+
+        send_bot_order(order, products)
+
+        return HttpResponseRedirect("https://thebaza.ru/order/successful")
+
+
+class DolyameResponseFailView(APIView):
+    serializer_class = serializers.DolyameSerializer
+    permission_classes = [AllowAny]
+
+    def get(self, request: Request, dolyame_id: int):
+        dolyame = models.DolyameModel.objects.get(
+            id=dolyame_id
+        )
+        
+        dolyame_api.info(dolyame)
+        dolyame.save()
+
+        if not dolyame.is_paid():
+            dolyame.payment_fail = True
+            dolyame.save()
+
+        order = models.OrderModel.objects.get(
+            pk=dolyame.order.id
+        )
+        order.status = models.OrderModel.OrderStatusChoice.FAILED_PAYMENT
+        order.save()
+
+        return HttpResponseRedirect("https://thebaza.ru/order/failed")
+
+
+class DolyameNotificationView(APIView):
+    
+    def get(self, request: Request, dolyame_id: str):
+        print("DOLYAME NOTIFICATION:", request.data, dolyame_id)
+        
+        dolyame = models.DolyameModel.objects.get(
+            id=dolyame_id
+        )
+        
+        dolyame_status = request.data.get("status")
+        
+        if dolyame_status == "approved":
+            dolyame_api.commit(dolyame)
+            dolyame.save()
+
+        if dolyame_status == "rejected":
+            dolyame.payment_fail = True
+            dolyame.save()
+
+        return Response({
+            "message": "ok"
+        }, status.HTTP_200_OK)

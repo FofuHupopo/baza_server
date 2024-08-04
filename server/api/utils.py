@@ -3,6 +3,7 @@ import difflib
 from uuid import UUID
 from django.conf import settings
 from functools import lru_cache
+from rest_framework.request import Request
 
 
 API_STATIC_PATH = settings.BASE_DIR / "api/static/"
@@ -41,3 +42,14 @@ class UUIDEncoder(json.JSONEncoder):
         if isinstance(obj, UUID):
             return obj.hex
         return json.JSONEncoder.default(self, obj)
+
+
+def get_ip_from_request(request: Request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+        
+    return ip

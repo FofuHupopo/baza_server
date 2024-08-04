@@ -249,7 +249,7 @@ CORS_ALLOW_HEADERS = [
     "Set-Cookie",
 ]
 
-SEND_CODE = True
+SEND_CODE = False
 
 DATE_INPUT_FORMATS = ['%d.%m.%Y', '%d-%m-%Y']
 USE_L10N = False
@@ -263,7 +263,22 @@ TINKOFF_PAYMENTS_CONFIG = {
     "SECRET_KEY": getenv("SECRET_KEY"),
     
     'SUCCESS_URL': f"{URL}/api/orders/payment/response/success",
-    'FAIL_URL': f'{URL}/api/orders/payment/response/fail'
+    'FAIL_URL': f'{URL}/api/orders/payment/response/fail',
+    'NOTIFIACTION_URL': f'{URL}/api/orders/dolyame/notification',
+
+    'DOLYAME': {
+        'LOGIN': getenv('DOLYAME_LOGIN'),
+        'PASSWORD': getenv('DOLYAME_PASSWORD'),
+        'CERT_PATH': getenv('DOLYAME_CERT_PATH'),
+        'KEY_PATH': getenv('DOLYAME_KEY_PATH'),
+        'URLS': {
+            'CREATE': 'https://partner.dolyame.ru/v1/orders/create',
+            'CANCEL': 'https://partner.dolyame.ru/v1/orders/{orderId}/cancel',
+            'COMMIT': 'https://partner.dolyame.ru/v1/orders/{orderId}/commit',
+            'INFO': 'https://partner.dolyame.ru/v1/orders/{orderId}/info',
+            'COMPLETE_DELIVERY': 'https://partner.dolyame.ru/v1/orders/{orderId}/complete_delivery',
+        }
+    },
 }
 
 
@@ -279,11 +294,11 @@ AWS_QUERYSTRING_AUTH = False
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://redis:6379/1",
+        "LOCATION": f"redis://127.0.0.1:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
+        },
+    },
 }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
