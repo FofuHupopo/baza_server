@@ -249,7 +249,7 @@ CORS_ALLOW_HEADERS = [
     "Set-Cookie",
 ]
 
-SEND_CODE = False
+SEND_CODE = True
 
 DATE_INPUT_FORMATS = ['%d.%m.%Y', '%d-%m-%Y']
 USE_L10N = False
